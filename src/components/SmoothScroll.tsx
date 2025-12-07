@@ -10,6 +10,9 @@ export default function SmoothScroll() {
       duration: 1.5,
       smoothWheel: true,
       wheelMultiplier: 0.9,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 3,
+      infinite: false,
     })
 
     function raf(time: number) {
