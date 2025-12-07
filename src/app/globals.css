@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
+/* --- 1. ORİJİNAL RENK VE TEMA AYARLARI (DOKUNULMADI) --- */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
+/* Tailwind v4 Inline Theme Ayarları */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,11 +14,30 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Base Styles */
-html {
-  scroll-behavior: smooth;
+/* --- 2. LENIS SMOOTH SCROLL AYARLARI --- */
+/* ÖNEMLİ: Tarayıcının kendi smooth scroll'unu kapattık ki Lenis çalışsın */
+html.lenis, html.lenis body {
+  height: auto;
 }
 
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+/* ---------------------------------------- */
+
+/* --- 3. GENEL STİLLER (SENİN ORİJİNAL KODLARIN) --- */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -50,7 +71,7 @@ body {
   overflow: hidden;
 }
 
-/* Prose styles for Sanity content */
+/* Prose styles */
 .prose {
   max-width: 65ch;
 }
@@ -141,7 +162,7 @@ body {
   animation: fade-in 0.5s ease-out forwards;
 }
 
-/* Stagger delays for children */
+/* Stagger delays */
 .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
 .stagger-children > *:nth-child(2) { animation-delay: 50ms; }
 .stagger-children > *:nth-child(3) { animation-delay: 100ms; }

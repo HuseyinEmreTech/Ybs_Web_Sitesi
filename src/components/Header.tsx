@@ -23,7 +23,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-neutral-900 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">YBS</span>
+              <span className="text-white font-bold text-sm">İSTE</span>
             </div>
             <span className="font-semibold text-neutral-900 hidden sm:block">
               YBS Kulübü
@@ -83,4 +83,5 @@ export default function Header() {
     </header>
   )
 }
+
 

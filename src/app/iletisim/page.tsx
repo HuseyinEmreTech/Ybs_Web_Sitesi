@@ -133,7 +133,7 @@ export default function IletisimPage() {
                     <p className="text-neutral-600">
                       Üniversite Kampüsü<br />
                       İşletme Fakültesi, Kat 3<br />
-                      İstanbul, Türkiye
+                      Hatay , Türkiye
                     </p>
                   </div>
                 </div>
@@ -205,4 +205,5 @@ export default function IletisimPage() {
     </>
   )
 }
+
 

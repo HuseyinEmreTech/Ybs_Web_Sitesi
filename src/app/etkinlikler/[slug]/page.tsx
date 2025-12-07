@@ -151,3 +151,5 @@ export default async function EventPage({ params }: Props) {
   )
 }
 
+
+
