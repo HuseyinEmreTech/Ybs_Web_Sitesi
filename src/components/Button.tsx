@@ -22,11 +22,11 @@ export default function Button({
   disabled = false,
 }: ButtonProps) {
   const baseStyles = 'inline-flex items-center justify-center font-medium transition-colors rounded-lg'
-  
+
   const variants = {
-    primary: 'bg-neutral-900 text-white hover:bg-neutral-800 disabled:bg-neutral-300',
-    secondary: 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200',
-    outline: 'border border-neutral-200 text-neutral-700 hover:bg-neutral-50',
+    primary: 'bg-foreground text-background hover:bg-slate-800 dark:hover:bg-slate-200 disabled:bg-slate-300 dark:disabled:bg-slate-700 shadow-md hover:shadow-lg hover:-translate-y-0.5',
+    secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700',
+    outline: 'border border-slate-200 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800',
   }
 
   const sizes = {

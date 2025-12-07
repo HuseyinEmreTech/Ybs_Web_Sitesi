@@ -17,12 +17,12 @@ export default function Section({
         {(title || description) && (
           <div className="max-w-2xl mb-12">
             {title && (
-              <h2 className="text-2xl font-bold text-neutral-900 sm:text-3xl">
+              <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
                 {title}
               </h2>
             )}
             {description && (
-              <p className="mt-3 text-neutral-600">{description}</p>
+              <p className="mt-3 text-slate-600 dark:text-slate-400">{description}</p>
             )}
           </div>
         )}

@@ -1,9 +1,19 @@
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 
 /* --- 1. ORİJİNAL RENK VE TEMA AYARLARI (DOKUNULMADI) --- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  /* Slate-50 */
+  --foreground: #020617;
+  /* Slate-950 */
+}
+
+.dark {
+  --background: #020617;
+  /* Slate-950 */
+  --foreground: #f8fafc;
+  /* Slate-50 */
 }
 
 /* Tailwind v4 Inline Theme Ayarları */
@@ -16,7 +26,8 @@
 
 /* --- 2. LENIS SMOOTH SCROLL AYARLARI --- */
 /* ÖNEMLİ: Tarayıcının kendi smooth scroll'unu kapattık ki Lenis çalışsın */
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -35,6 +46,7 @@ html.lenis, html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
 /* ---------------------------------------- */
 
 /* --- 3. GENEL STİLLER (SENİN ORİJİNAL KODLARIN) --- */
@@ -52,10 +64,19 @@ body {
   color: #ffffff;
 }
 
+.dark ::selection {
+  background-color: #ffffff;
+  color: #000000;
+}
+
 /* Focus styles */
 *:focus-visible {
   outline: 2px solid #171717;
   outline-offset: 2px;
+}
+
+.dark *:focus-visible {
+  outline: 2px solid #ffffff;
 }
 
 /* Line clamp utilities */
@@ -82,7 +103,7 @@ body {
   font-size: 2.25rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #171717;
+  color: var(--foreground);
 }
 
 .prose h2 {
@@ -90,7 +111,7 @@ body {
   font-weight: 600;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  color: #171717;
+  color: var(--foreground);
 }
 
 .prose h3 {
@@ -98,7 +119,7 @@ body {
   font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  color: #171717;
+  color: var(--foreground);
 }
 
 .prose p {
@@ -107,7 +128,12 @@ body {
   color: #525252;
 }
 
-.prose ul, .prose ol {
+.dark .prose p {
+  color: #a3a3a3;
+}
+
+.prose ul,
+.prose ol {
   margin-bottom: 1rem;
   padding-left: 1.5rem;
 }
@@ -118,8 +144,12 @@ body {
   color: #525252;
 }
 
+.dark .prose li {
+  color: #a3a3a3;
+}
+
 .prose a {
-  color: #171717;
+  color: var(--foreground);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -128,12 +158,21 @@ body {
   color: #525252;
 }
 
+.dark .prose a:hover {
+  color: #d4d4d4;
+}
+
 .prose blockquote {
   border-left: 3px solid #e5e5e5;
   padding-left: 1rem;
   margin: 1.5rem 0;
   font-style: italic;
   color: #737373;
+}
+
+.dark .prose blockquote {
+  border-left-color: #404040;
+  color: #a3a3a3;
 }
 
 .prose img {
@@ -148,12 +187,17 @@ body {
   font-size: 0.875rem;
 }
 
+.dark .prose code {
+  background-color: #262626;
+}
+
 /* Animations */
 @keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -165,9 +209,110 @@ body {
 }
 
 /* Stagger delays */
-.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-children>*:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.stagger-children>*:nth-child(2) {
+  animation-delay: 50ms;
+}
+
+.stagger-children>*:nth-child(3) {
+  animation-delay: 100ms;
+}
+
+.stagger-children>*:nth-child(4) {
+  animation-delay: 150ms;
+}
+
+.stagger-children>*:nth-child(5) {
+  animation-delay: 200ms;
+}
+
+.stagger-children>*:nth-child(6) {
+  animation-delay: 250ms;
+}
+
+/* --- 4. NEW PREMIUM STYLES --- */
+
+/* Aurora Gradient Background Animation */
+@keyframes aurora {
+  0% {
+    background-position: 50% 50%, 50% 50%;
+  }
+
+  33% {
+    background-position: 100% 0%, 0% 100%;
+  }
+
+  66% {
+    background-position: 0% 100%, 100% 0%;
+  }
+
+  100% {
+    background-position: 50% 50%, 50% 50%;
+  }
+}
+
+.animate-aurora {
+  animation: aurora 20s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 6s ease infinite;
+  background-size: 200% auto;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass {
+  background: rgba(2, 6, 23, 0.7);
+  /* Slate-950 base */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.dark .glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  /* Slate-900 base */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.dark .glass-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+}
