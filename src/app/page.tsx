@@ -144,7 +144,7 @@ export default async function HomePage() {
             etkinlikler düzenliyoruz. Siz de aramıza katılın!
           </p>
           <div className="mt-8">
-            <Button href="/iletisim" variant="primary" size="lg" className="bg-white text-neutral-900 hover:bg-neutral-100">
+            <Button href="/iletisim" variant="primary" size="lg" className="border border-neutral-200 text-neutral-700 hover:bg-neutral-50">
               Bize Ulaşın
             </Button>
           </div>
