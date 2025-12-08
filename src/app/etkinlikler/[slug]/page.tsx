@@ -1,27 +1,11 @@
-import { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { sanityFetch, urlFor } from '@/sanity/lib/client'
-import { eventBySlugQuery, eventsQuery, type Event } from '@/sanity/lib/queries'
-import { PortableText } from '@portabletext/react'
-import Button from '@/components/Button'
+import { getEventBySlug } from '@/lib/data'
 
-interface Props {
-  params: Promise<{ slug: string }>
-}
+export const dynamic = 'force-dynamic'
 
-export async function generateStaticParams() {
-  const events = await sanityFetch<Event[]>({ query: eventsQuery })
-  return events.map((event) => ({ slug: event.slug.current }))
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const event = await sanityFetch<Event>({
-    query: eventBySlugQuery,
-    params: { slug },
-  })
+  const event = getEventBySlug(slug)
 
   if (!event) return { title: 'Etkinlik Bulunamadı' }
 
@@ -31,125 +15,89 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function EventPage({ params }: Props) {
+export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const event = await sanityFetch<Event>({
-    query: eventBySlugQuery,
-    params: { slug },
-    tags: ['events'],
-  })
+  const event = getEventBySlug(slug)
 
-  if (!event) notFound()
+  if (!event) {
+    notFound()
+  }
 
   const eventDate = new Date(event.date)
   const isPast = eventDate < new Date()
 
   return (
     <article className="py-16 lg:py-24">
-      <div className="mx-auto max-w-4xl px-6 lg:px-8">
-        {/* Back Link */}
-        <Link
-          href="/etkinlikler"
-          className="inline-flex items-center text-sm text-neutral-500 hover:text-neutral-900 mb-8"
-        >
-          <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Etkinliklere Dön
-        </Link>
-
+      <div className="mx-auto max-w-3xl px-6 lg:px-8">
         {/* Header */}
-        <header className="mb-8">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            {event.eventType && (
-              <span className="px-3 py-1 text-xs font-medium bg-neutral-100 text-neutral-700 rounded-full uppercase">
-                {event.eventType}
-              </span>
-            )}
+        <header className="mb-12">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="px-3 py-1 text-sm font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full">
+              {event.eventType}
+            </span>
             {isPast && (
-              <span className="px-3 py-1 text-xs font-medium bg-neutral-900 text-white rounded-full">
-                Tamamlandı
+              <span className="px-3 py-1 text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full">
+                Geçmiş Etkinlik
               </span>
             )}
           </div>
-          <h1 className="text-3xl font-bold text-neutral-900 sm:text-4xl">
+          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
             {event.title}
           </h1>
+          {event.description && (
+            <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
+              {event.description}
+            </p>
+          )}
         </header>
 
-        {/* Meta */}
-        <div className="flex flex-wrap gap-6 py-6 border-y border-neutral-100 mb-8">
-          <div>
-            <p className="text-xs text-neutral-500 uppercase tracking-wide">Tarih</p>
-            <p className="mt-1 font-medium text-neutral-900">
-              {eventDate.toLocaleDateString('tr-TR', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                weekday: 'long',
-              })}
-            </p>
-            <p className="text-sm text-neutral-600">
-              {eventDate.toLocaleTimeString('tr-TR', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </p>
-          </div>
-          {event.location && (
+        {/* Event Details */}
+        <div className="mb-12 p-6 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <p className="text-xs text-neutral-500 uppercase tracking-wide">Konum</p>
-              <p className="mt-1 font-medium text-neutral-900">{event.location}</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">📅 Tarih</p>
+              <p className="text-lg font-semibold text-slate-800 dark:text-white">
+                {eventDate.toLocaleDateString('tr-TR', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </p>
             </div>
-          )}
-        </div>
-
-        {/* Image */}
-        {event.image && (
-          <div className="relative aspect-video rounded-xl overflow-hidden bg-neutral-100 mb-8">
-            <Image
-              src={urlFor(event.image).width(1200).height(675).url()}
-              alt={event.title}
-              fill
-              className="object-cover"
-              priority
-            />
+            {event.time && (
+              <div>
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">🕐 Saat</p>
+                <p className="text-lg font-semibold text-slate-800 dark:text-white">{event.time}</p>
+              </div>
+            )}
+            {event.location && (
+              <div>
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">📍 Konum</p>
+                <p className="text-lg font-semibold text-slate-800 dark:text-white">{event.location}</p>
+              </div>
+            )}
           </div>
-        )}
-
-        {/* Description */}
-        {event.description && (
-          <p className="text-lg text-neutral-600 mb-8">{event.description}</p>
-        )}
+        </div>
 
         {/* Content */}
         {event.content && (
-          <div className="prose max-w-none">
-            <PortableText value={event.content} />
+          <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
+            {event.content.split('\n').map((paragraph, index) => (
+              paragraph.trim() && <p key={index}>{paragraph}</p>
+            ))}
           </div>
         )}
 
-        {/* Registration */}
-        {event.registrationLink && !isPast && (
-          <div className="mt-12 p-8 bg-neutral-50 rounded-xl text-center">
-            <h3 className="text-lg font-semibold text-neutral-900">
-              Bu etkinliğe katılmak ister misiniz?
-            </h3>
-            <p className="mt-2 text-neutral-600">Hemen kayıt olun!</p>
-            <a
-              href={event.registrationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex mt-4 px-6 py-3 bg-neutral-900 text-white font-medium rounded-lg hover:bg-neutral-800 transition-colors"
-            >
-              Kayıt Ol
-            </a>
-          </div>
-        )}
+        {/* Back Link */}
+        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+          <a
+            href="/etkinlikler"
+            className="text-indigo-600 dark:text-indigo-400 hover:underline"
+          >
+            ← Tüm Etkinliklere Dön
+          </a>
+        </div>
       </div>
     </article>
   )
 }
-
-
-

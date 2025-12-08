@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Hassas veri dosyaları (şifreler içerir)
+/data/users.json

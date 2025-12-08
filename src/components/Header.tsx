@@ -68,7 +68,7 @@ export default function Header() {
               </Link>
             ))}
             {/* Theme Toggle Desktop */}
-            <div className="pl-4 border-l border-neutral-200 dark:border-neutral-700 ml-4">
+            <div className="pl-4 border-l border-slate-200 dark:border-slate-700 ml-4">
               <ThemeToggle />
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function Header() {
             <ThemeToggle />
             <button
               type="button"
-              className="p-2 text-neutral-600 dark:text-neutral-300"
+              className="p-2 text-slate-600 dark:text-slate-300"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <span className="sr-only">Menüyü aç</span>
@@ -102,7 +102,7 @@ export default function Header() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden overflow-hidden glass dark:bg-neutral-900/90 rounded-b-2xl border-t border-neutral-200/50 dark:border-white/10"
+              className="lg:hidden overflow-hidden glass dark:bg-slate-900/90 rounded-b-2xl border-t border-slate-200/50 dark:border-white/10"
             >
               <div className="flex flex-col gap-2 p-6">
                 {navigation.map((item) => (

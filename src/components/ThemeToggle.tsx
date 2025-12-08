@@ -23,8 +23,8 @@ export function ThemeToggle() {
         <button
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className={clsx(
-                "relative rounded-full p-2.5 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800",
-                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+                "relative rounded-full p-2.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800",
+                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
             )}
             aria-label={isDark ? "Aydınlık moda geç" : "Karanlık moda geç"}
         >

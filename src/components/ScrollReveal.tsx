@@ -1,0 +1,143 @@
+'use client'
+
+import { motion, useInView, Variant } from 'framer-motion'
+import { useRef, ReactNode } from 'react'
+
+type AnimationDirection = 'up' | 'down' | 'left' | 'right' | 'fade'
+
+interface ScrollRevealProps {
+    children: ReactNode
+    direction?: AnimationDirection
+    delay?: number
+    duration?: number
+    className?: string
+    once?: boolean
+    amount?: number
+}
+
+const getVariants = (direction: AnimationDirection) => {
+    const directions: Record<AnimationDirection, { initial: Variant; animate: Variant }> = {
+        up: {
+            initial: { opacity: 0, y: 60, filter: 'blur(4px)' },
+            animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        },
+        down: {
+            initial: { opacity: 0, y: -60, filter: 'blur(4px)' },
+            animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        },
+        left: {
+            initial: { opacity: 0, x: -60, filter: 'blur(4px)' },
+            animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+        },
+        right: {
+            initial: { opacity: 0, x: 60, filter: 'blur(4px)' },
+            animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+        },
+        fade: {
+            initial: { opacity: 0, scale: 0.95, filter: 'blur(4px)' },
+            animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
+        },
+    }
+    return directions[direction]
+}
+
+export default function ScrollReveal({
+    children,
+    direction = 'up',
+    delay = 0,
+    duration = 0.6,
+    className = '',
+    once = true,
+    amount = 0.3,
+}: ScrollRevealProps) {
+    const ref = useRef<HTMLDivElement>(null)
+    const isInView = useInView(ref, { once, amount })
+    const variants = getVariants(direction)
+
+    return (
+        <motion.div
+            ref={ref}
+            initial="initial"
+            animate={isInView ? 'animate' : 'initial'}
+            variants={variants}
+            transition={{
+                duration,
+                delay,
+                ease: [0.22, 1, 0.36, 1],
+            }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    )
+}
+
+// Staggered container for multiple children
+interface StaggerContainerProps {
+    children: ReactNode
+    className?: string
+    staggerDelay?: number
+    once?: boolean
+}
+
+export function StaggerContainer({
+    children,
+    className = '',
+    staggerDelay = 0.1,
+    once = true,
+}: StaggerContainerProps) {
+    const ref = useRef<HTMLDivElement>(null)
+    const isInView = useInView(ref, { once, amount: 0.2 })
+
+    return (
+        <motion.div
+            ref={ref}
+            initial="initial"
+            animate={isInView ? 'animate' : 'initial'}
+            variants={{
+                initial: {},
+                animate: {
+                    transition: {
+                        staggerChildren: staggerDelay,
+                    },
+                },
+            }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    )
+}
+
+// Stagger item to be used inside StaggerContainer
+interface StaggerItemProps {
+    children: ReactNode
+    direction?: AnimationDirection
+    className?: string
+}
+
+export function StaggerItem({
+    children,
+    direction = 'up',
+    className = '',
+}: StaggerItemProps) {
+    const variants = getVariants(direction)
+
+    return (
+        <motion.div
+            variants={{
+                initial: variants.initial,
+                animate: {
+                    ...variants.animate,
+                    transition: {
+                        duration: 0.5,
+                        ease: [0.22, 1, 0.36, 1],
+                    },
+                },
+            }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    )
+}
