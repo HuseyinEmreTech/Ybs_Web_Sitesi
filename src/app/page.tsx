@@ -158,7 +158,7 @@ export default async function HomePage() {
       {/* CTA */}
       <section className="relative py-16 lg:py-24 overflow-hidden">
         {/* Dark Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 z-0" />
+        <div className="absolute inset-0 bg-slate-900 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 z-0" />
 
         {/* Animated Glow Effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 overflow-hidden opacity-40 pointer-events-none">
