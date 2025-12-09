@@ -18,7 +18,7 @@ export async function POST(request: Request) {
             )
         }
 
-        const user = validateUser(email, password)
+        const user = await validateUser(email, password)
 
         if (!user) {
             return NextResponse.json(

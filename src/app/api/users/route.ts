@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
-import { getUsers, saveUsers, hashPassword, type User } from '@/lib/data'
+import { getUsers, createUser, deleteUser, hashPassword, type User } from '@/lib/data'
 
 export async function GET() {
     try {
-        const users = getUsers()
+        const users = await getUsers()
         // Don't return passwords
         const safeUsers = users.map(({ password, ...rest }) => rest)
         return NextResponse.json(safeUsers)
@@ -16,7 +16,7 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json()
-        const users = getUsers()
+        const users = await getUsers() // Needed to check email duplication
 
         // Check if email already exists
         if (users.find(u => u.email === body.email)) {
@@ -24,15 +24,13 @@ export async function POST(request: Request) {
         }
 
         // Hash the password before storing
-        const newUser: User = {
+        // createUser expects data (Omit id)
+        const newUser = await createUser({
             email: body.email,
             password: hashPassword(body.password),
             name: body.name,
             role: body.role || 'editor',
-        }
-
-        users.push(newUser)
-        saveUsers(users)
+        })
 
         const { password, ...safeUser } = newUser
         return NextResponse.json(safeUser, { status: 201 })
@@ -51,7 +49,7 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: 'E-posta gerekli' }, { status: 400 })
         }
 
-        const users = getUsers()
+        const users = await getUsers()
 
         // Don't allow deleting the last admin
         const admins = users.filter(u => u.role === 'admin')
@@ -61,13 +59,11 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: 'Son admin silinemez' }, { status: 400 })
         }
 
-        const filtered = users.filter(u => u.email !== email)
-
-        if (filtered.length === users.length) {
+        if (!userToDelete) {
             return NextResponse.json({ error: 'Kullanıcı bulunamadı' }, { status: 404 })
         }
 
-        saveUsers(filtered)
+        await deleteUser(email)
         return NextResponse.json({ success: true })
     } catch (error) {
         console.error('Delete user error:', error)

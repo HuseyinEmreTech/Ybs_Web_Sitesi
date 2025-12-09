@@ -3,7 +3,7 @@ import { getSettings, saveSettings, type Settings } from '@/lib/data'
 
 export async function GET() {
     try {
-        const settings = getSettings()
+        const settings = await getSettings()
         return NextResponse.json(settings)
     } catch (error) {
         console.error('Get settings error:', error)
@@ -14,7 +14,7 @@ export async function GET() {
 export async function PUT(request: Request) {
     try {
         const body: Settings = await request.json()
-        saveSettings(body)
+        await saveSettings(body)
         return NextResponse.json(body)
     } catch (error) {
         console.error('Update settings error:', error)

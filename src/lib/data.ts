@@ -1,53 +1,8 @@
-import fs from 'fs'
-import path from 'path'
+import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
-const dataDir = path.join(process.cwd(), 'data')
-
-// Generic read function
-export function readData<T>(filename: string, defaultValue: T): T {
-    const filePath = path.join(dataDir, filename)
-
-    // Create data directory if it doesn't exist
-    if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true })
-    }
-
-    // If file doesn't exist, return default value and optionally write it
-    if (!fs.existsSync(filePath)) {
-        // In development, we might want to create the file
-        // In production (Vercel), we might not be able to write, but we can return the default
-        try {
-            if (process.env.NODE_ENV === 'development') {
-                fs.writeFileSync(filePath, JSON.stringify(defaultValue, null, 2), 'utf-8')
-            }
-        } catch (error) {
-            console.warn(`Could not create default file ${filename}:`, error)
-        }
-        return defaultValue
-    }
-
-    try {
-        const data = fs.readFileSync(filePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        console.error(`Error reading ${filename}:`, error)
-        return defaultValue
-    }
-}
-
-// Generic write function
-export function writeData<T>(filename: string, data: T): void {
-    const filePath = path.join(dataDir, filename)
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8')
-}
-
-// Generate unique ID
-export function generateId(): string {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2)
-}
-
-// Types
+// Types (Mirrors of Prisma Models but with String dates for frontend compatibility)
+// We keep the interfaces close to what they were to minimize frontend breakage
 export interface Post {
     id: string
     title: string
@@ -55,7 +10,7 @@ export interface Post {
     excerpt: string
     content: string
     category: string
-    imageUrl?: string
+    imageUrl?: string | null
     publishedAt: string
     createdAt: string
     updatedAt: string
@@ -68,10 +23,10 @@ export interface Event {
     description: string
     content: string
     eventType: string
-    date: string
+    date: string // ISO String
     time: string
     location: string
-    imageUrl?: string
+    imageUrl?: string | null
     createdAt: string
     updatedAt: string
 }
@@ -82,7 +37,7 @@ export interface TeamMember {
     role: string
     department: string
     bio: string
-    imageUrl?: string
+    imageUrl?: string | null
     socialLinks: {
         linkedin?: string
         twitter?: string
@@ -95,13 +50,15 @@ export interface TeamMember {
 }
 
 export interface User {
+    id: string
     email: string
     password: string
     name: string
-    role: 'admin' | 'editor'
+    role: string // 'admin' | 'editor'
 }
 
 export interface Settings {
+    id: string
     stats: {
         activeMembers: string
         events: string
@@ -119,127 +76,12 @@ export interface Settings {
         phone: string
         address: string
     }
+    updatedAt: string
 }
 
-// Data access functions
-export function getPosts(): Post[] {
-    const data = readData<{ posts: Post[] }>('posts.json', { posts: [] })
-    return data.posts
-}
-
-export function getPostBySlug(slug: string): Post | undefined {
-    const posts = getPosts()
-    return posts.find(p => p.slug === slug)
-}
-
-export function savePosts(posts: Post[]): void {
-    writeData('posts.json', { posts })
-}
-
-export function getEvents(): Event[] {
-    const data = readData<{ events: Event[] }>('events.json', { events: [] })
-    return data.events
-}
-
-export function getEventBySlug(slug: string): Event | undefined {
-    const events = getEvents()
-    return events.find(e => e.slug === slug)
-}
-
-export function saveEvents(events: Event[]): void {
-    writeData('events.json', { events })
-}
-
-export function getTeamMembers(): TeamMember[] {
-    const data = readData<{ members: TeamMember[] }>('team.json', { members: [] })
-    return data.members.sort((a, b) => a.order - b.order)
-}
-
-export function saveTeamMembers(members: TeamMember[]): void {
-    writeData('team.json', { members })
-}
-
-export function getSettings(): Settings {
-    return readData<Settings>('settings.json', {
-        stats: {
-            activeMembers: '0',
-            events: '0',
-            projects: '0',
-            yearsOfExperience: '0'
-        },
-        socialLinks: {
-            instagram: '',
-            twitter: '',
-            linkedin: '',
-            github: ''
-        },
-        contact: {
-            email: '',
-            phone: '',
-            address: ''
-        }
-    })
-}
-
-export function saveSettings(settings: Settings): void {
-    writeData('settings.json', settings)
-}
-
-export function getUsers(): User[] {
-    const data = readData<{ users: User[] }>('users.json', { users: [] })
-    const users = data.users
-
-    // IF no users exist (or file was just created), AND we have ENV vars, seed the admin
-    if (users.length === 0 && process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
-        const adminUser: User = {
-            email: process.env.ADMIN_EMAIL,
-            password: hashPassword(process.env.ADMIN_PASSWORD),
-            name: 'Admin',
-            role: 'admin'
-        }
-        // Return a list including this temp admin
-        // Note: We try to save it so it persists in local dev
-        // In Vercel, this save might fail or be ephemeral, but at least the login will work for this request
-        try {
-            users.push(adminUser)
-            // Attempt to write back to file
-            const filePath = path.join(dataDir, 'users.json')
-            if (process.env.NODE_ENV === 'development' || fs.existsSync(dataDir)) { // Try to write if dir exists
-                // We can use saveUsers but that imports us... causing cycle? No, saveUsers is in this file.
-                // safe to call saveUsers(users) ? saveUsers calls writeData.
-                saveUsers(users)
-            }
-        } catch (e) {
-            console.warn("Could not save seed admin to disk (expected on Vercel)", e)
-        }
-        return users
-    }
-
-    return users
-}
-
-export function saveUsers(users: User[]): void {
-    writeData('users.json', { users })
-}
-
-export function validateUser(email: string, password: string): User | null {
-    const users = getUsers()
-    const user = users.find(u => u.email === email)
-    if (!user) return null
-
-    // Check if password is hashed (bcrypt hashes start with $2)
-    if (user.password.startsWith('$2')) {
-        const isValid = bcrypt.compareSync(password, user.password)
-        return isValid ? user : null
-    } else {
-        // Legacy plain text password - compare directly
-        return user.password === password ? user : null
-    }
-}
-
-// Hash password for secure storage
-export function hashPassword(password: string): string {
-    return bcrypt.hashSync(password, 10)
+// Helpers
+export function generateId(): string {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2)
 }
 
 // Slug generator
@@ -254,4 +96,300 @@ export function generateSlug(text: string): string {
         .replace(/ç/g, 'c')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '')
+}
+
+export function hashPassword(password: string): string {
+    return bcrypt.hashSync(password, 10)
+}
+
+// --- POSTS ---
+
+export async function getPosts(): Promise<Post[]> {
+    const posts = await prisma.post.findMany({
+        orderBy: { publishedAt: 'desc' }
+    })
+    return posts.map(p => ({
+        ...p,
+        publishedAt: p.publishedAt.toISOString(),
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+    }))
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+    const post = await prisma.post.findUnique({ where: { slug } })
+    if (!post) return null
+    return {
+        ...post,
+        publishedAt: post.publishedAt.toISOString(),
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+    }
+}
+
+export async function createPost(data: Omit<Post, 'id' | 'createdAt' | 'updatedAt'>): Promise<Post> {
+    const post = await prisma.post.create({
+        data: {
+            ...data,
+            publishedAt: new Date(data.publishedAt),
+        }
+    })
+    return {
+        ...post,
+        publishedAt: post.publishedAt.toISOString(),
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+    }
+}
+
+export async function updatePost(id: string, data: Partial<Post>): Promise<Post> {
+    const post = await prisma.post.update({
+        where: { id },
+        data: {
+            ...data,
+            publishedAt: data.publishedAt ? new Date(data.publishedAt) : undefined,
+            updatedAt: new Date(), // Force update
+        }
+    })
+    return {
+        ...post,
+        publishedAt: post.publishedAt.toISOString(),
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+    }
+}
+
+export async function deletePost(id: string): Promise<void> {
+    await prisma.post.delete({ where: { id } })
+}
+
+// --- EVENTS ---
+
+export async function getEvents(): Promise<Event[]> {
+    const events = await prisma.event.findMany({
+        orderBy: { date: 'asc' }
+    })
+    return events.map(e => ({
+        ...e,
+        date: e.date.toISOString(),
+        createdAt: e.createdAt.toISOString(),
+        updatedAt: e.updatedAt.toISOString(),
+    }))
+}
+
+export async function getEventBySlug(slug: string): Promise<Event | null> {
+    const event = await prisma.event.findUnique({ where: { slug } })
+    if (!event) return null
+    return {
+        ...event,
+        date: event.date.toISOString(),
+        createdAt: event.createdAt.toISOString(),
+        updatedAt: event.updatedAt.toISOString(),
+    }
+}
+
+export async function createEvent(data: Omit<Event, 'id' | 'createdAt' | 'updatedAt'>): Promise<Event> {
+    const event = await prisma.event.create({
+        data: {
+            ...data,
+            date: new Date(data.date),
+        }
+    })
+    return {
+        ...event,
+        date: event.date.toISOString(),
+        createdAt: event.createdAt.toISOString(),
+        updatedAt: event.updatedAt.toISOString(),
+    }
+}
+
+export async function updateEvent(id: string, data: Partial<Event>): Promise<Event> {
+    const event = await prisma.event.update({
+        where: { id },
+        data: {
+            ...data,
+            date: data.date ? new Date(data.date) : undefined,
+        }
+    })
+    return {
+        ...event,
+        date: event.date.toISOString(),
+        createdAt: event.createdAt.toISOString(),
+        updatedAt: event.updatedAt.toISOString(),
+    }
+}
+
+export async function deleteEvent(id: string): Promise<void> {
+    await prisma.event.delete({ where: { id } })
+}
+
+// --- TEAM ---
+
+export async function getTeamMembers(): Promise<TeamMember[]> {
+    const members = await prisma.teamMember.findMany({
+        orderBy: { order: 'asc' }
+    })
+    return members.map(m => ({
+        ...m,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        socialLinks: m.socialLinks as any,
+        createdAt: m.createdAt.toISOString(),
+        updatedAt: m.updatedAt.toISOString(),
+    }))
+}
+
+export async function createTeamMember(data: Omit<TeamMember, 'id' | 'createdAt' | 'updatedAt'>): Promise<TeamMember> {
+    const member = await prisma.teamMember.create({
+        data: {
+            ...data,
+            socialLinks: data.socialLinks, // JSON
+        }
+    })
+    return {
+        ...member,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        socialLinks: member.socialLinks as any,
+        createdAt: member.createdAt.toISOString(),
+        updatedAt: member.updatedAt.toISOString(),
+    }
+}
+
+export async function updateTeamMember(id: string, data: Partial<TeamMember>): Promise<TeamMember> {
+    const member = await prisma.teamMember.update({
+        where: { id },
+        data: {
+            ...data,
+            socialLinks: data.socialLinks,
+        }
+    })
+    return {
+        ...member,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        socialLinks: member.socialLinks as any,
+        createdAt: member.createdAt.toISOString(),
+        updatedAt: member.updatedAt.toISOString(),
+    }
+}
+
+export async function deleteTeamMember(id: string): Promise<void> {
+    await prisma.teamMember.delete({ where: { id } })
+}
+
+// --- USERS ---
+
+export async function getUsers(): Promise<User[]> {
+    const users = await prisma.user.findMany()
+
+    // Auto-seed admin if no users
+    if (users.length === 0 && process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+        // Double check to prevent race conditions roughly
+        const adminExists = await prisma.user.findUnique({ where: { email: process.env.ADMIN_EMAIL } })
+        if (!adminExists) {
+            const admin = await prisma.user.create({
+                data: {
+                    email: process.env.ADMIN_EMAIL,
+                    password: hashPassword(process.env.ADMIN_PASSWORD),
+                    name: 'Admin',
+                    role: 'admin'
+                }
+            })
+            // Return list with admin
+            return [{ ...admin }]
+        }
+    }
+
+    return users
+}
+
+export async function createUser(data: Omit<User, 'id'>): Promise<User> {
+    // Password should already be hashed by caller ideally, or we ensure it here
+    // Currently API route hashes it.
+    return await prisma.user.create({ data })
+}
+
+export async function deleteUser(email: string): Promise<void> {
+    // We use email as ID in deletion logic of existing API
+    const user = await prisma.user.findUnique({ where: { email } })
+    if (user) {
+        await prisma.user.delete({ where: { id: user.id } })
+    }
+}
+
+export async function validateUser(email: string, password: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({ where: { email } })
+    if (!user) return null
+
+    // Check if password is hashed (bcrypt hashes start with $2)
+    if (user.password.startsWith('$2')) {
+        const isValid = await bcrypt.compare(password, user.password)
+        return isValid ? user : null
+    } else {
+        // Legacy plain text password
+        return user.password === password ? user : null
+    }
+}
+
+// --- SETTINGS ---
+
+export async function getSettings(): Promise<Settings> {
+    const settings = await prisma.settings.findFirst()
+    if (!settings) {
+        // Return default structure
+        return {
+            id: 'default',
+            stats: {
+                activeMembers: '0',
+                events: '0',
+                projects: '0',
+                yearsOfExperience: '0'
+            },
+            socialLinks: {
+                instagram: '',
+                twitter: '',
+                linkedin: '',
+                github: ''
+            },
+            contact: {
+                email: '',
+                phone: '',
+                address: ''
+            },
+            updatedAt: new Date().toISOString()
+        }
+    }
+    return {
+        ...settings,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        stats: settings.stats as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        socialLinks: settings.socialLinks as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        contact: settings.contact as any,
+        updatedAt: settings.updatedAt.toISOString(),
+    }
+}
+
+export async function saveSettings(data: Settings): Promise<void> {
+    // We only have one settings row. Upsert it.
+    // We need a stable ID for upsert, or findFirst and update.
+    const existing = await prisma.settings.findFirst()
+
+    if (existing) {
+        await prisma.settings.update({
+            where: { id: existing.id },
+            data: {
+                stats: data.stats,
+                socialLinks: data.socialLinks,
+                contact: data.contact,
+            }
+        })
+    } else {
+        await prisma.settings.create({
+            data: {
+                stats: data.stats,
+                socialLinks: data.socialLinks,
+                contact: data.contact,
+            }
+        })
+    }
 }

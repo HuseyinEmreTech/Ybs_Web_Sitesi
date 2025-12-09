@@ -9,12 +9,12 @@ import { getPosts, getEvents, getSettings, type Post, type Event } from '@/lib/d
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
-  const posts = getPosts().slice(0, 3)
-  const events = getEvents()
+  const posts = (await getPosts()).slice(0, 3)
+  const events = (await getEvents())
     .filter(e => new Date(e.date) >= new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3)
-  const settings = getSettings()
+  const settings = await getSettings()
 
   return (
     <>

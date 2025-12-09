@@ -11,7 +11,7 @@ export const metadata = {
 }
 
 export default async function BlogPage() {
-  const posts = getPosts().sort((a, b) =>
+  const posts = (await getPosts()).sort((a, b) =>
     new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
 

@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const event = getEventBySlug(slug)
+  const event = await getEventBySlug(slug)
 
   if (!event) return { title: 'Etkinlik Bulunamadı' }
 
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const event = getEventBySlug(slug)
+  const event = await getEventBySlug(slug)
 
   if (!event) {
     notFound()

@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
-import { getTeamMembers, saveTeamMembers, generateId, type TeamMember } from '@/lib/data'
+import { getTeamMembers, createTeamMember, updateTeamMember, deleteTeamMember, type TeamMember } from '@/lib/data'
 
 export async function GET() {
     try {
-        const members = getTeamMembers()
+        const members = await getTeamMembers()
         return NextResponse.json(members)
     } catch (error) {
         console.error('Get team error:', error)
@@ -14,10 +14,9 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json()
-        const members = getTeamMembers()
+        const members = await getTeamMembers()
 
-        const newMember: TeamMember = {
-            id: generateId(),
+        const newMember = await createTeamMember({
             name: body.name,
             role: body.role || '',
             department: body.department || '',
@@ -25,12 +24,7 @@ export async function POST(request: Request) {
             imageUrl: body.imageUrl || '',
             socialLinks: body.socialLinks || {},
             order: body.order ?? members.length,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        }
-
-        members.push(newMember)
-        saveTeamMembers(members)
+        })
 
         return NextResponse.json(newMember, { status: 201 })
     } catch (error) {
@@ -42,27 +36,22 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
     try {
         const body = await request.json()
-        const members = getTeamMembers()
-        const index = members.findIndex(m => m.id === body.id)
 
-        if (index === -1) {
-            return NextResponse.json({ error: 'Üye bulunamadı' }, { status: 404 })
+        if (!body.id) {
+            return NextResponse.json({ error: 'ID gerekli' }, { status: 400 })
         }
 
-        members[index] = {
-            ...members[index],
-            name: body.name ?? members[index].name,
-            role: body.role ?? members[index].role,
-            department: body.department ?? members[index].department,
-            bio: body.bio ?? members[index].bio,
-            imageUrl: body.imageUrl ?? members[index].imageUrl,
-            socialLinks: body.socialLinks ?? members[index].socialLinks,
-            order: body.order ?? members[index].order,
-            updatedAt: new Date().toISOString(),
-        }
+        const updatedMember = await updateTeamMember(body.id, {
+            name: body.name,
+            role: body.role,
+            department: body.department,
+            bio: body.bio,
+            imageUrl: body.imageUrl,
+            socialLinks: body.socialLinks,
+            order: body.order,
+        })
 
-        saveTeamMembers(members)
-        return NextResponse.json(members[index])
+        return NextResponse.json(updatedMember)
     } catch (error) {
         console.error('Update member error:', error)
         return NextResponse.json({ error: 'Üye güncellenemedi' }, { status: 500 })
@@ -78,14 +67,7 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: 'ID gerekli' }, { status: 400 })
         }
 
-        const members = getTeamMembers()
-        const filtered = members.filter(m => m.id !== id)
-
-        if (filtered.length === members.length) {
-            return NextResponse.json({ error: 'Üye bulunamadı' }, { status: 404 })
-        }
-
-        saveTeamMembers(filtered)
+        await deleteTeamMember(id)
         return NextResponse.json({ success: true })
     } catch (error) {
         console.error('Delete member error:', error)

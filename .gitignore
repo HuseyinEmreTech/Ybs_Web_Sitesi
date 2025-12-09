@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Hassas veri dosyaları (şifreler içerir)
 /data/users.json
+
+/src/generated/prisma

@@ -9,7 +9,7 @@ export const metadata = {
 }
 
 export default async function EventsPage() {
-  const allEvents = getEvents()
+  const allEvents = await getEvents()
   const now = new Date()
 
   const upcomingEvents = allEvents

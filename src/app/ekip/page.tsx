@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function EkipPage() {
-  const members = getTeamMembers()
+  const members = await getTeamMembers()
 
   // Grup üyeleri: Yönetim vs Üyeler
   const yonetim = members.filter((m) => m.department === 'Yönetim' || m.role?.toLowerCase().includes('başkan'))
