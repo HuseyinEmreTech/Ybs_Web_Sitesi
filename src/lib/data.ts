@@ -5,10 +5,35 @@ import bcrypt from 'bcryptjs'
 const dataDir = path.join(process.cwd(), 'data')
 
 // Generic read function
-export function readData<T>(filename: string): T {
+export function readData<T>(filename: string, defaultValue: T): T {
     const filePath = path.join(dataDir, filename)
-    const data = fs.readFileSync(filePath, 'utf-8')
-    return JSON.parse(data)
+
+    // Create data directory if it doesn't exist
+    if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true })
+    }
+
+    // If file doesn't exist, return default value and optionally write it
+    if (!fs.existsSync(filePath)) {
+        // In development, we might want to create the file
+        // In production (Vercel), we might not be able to write, but we can return the default
+        try {
+            if (process.env.NODE_ENV === 'development') {
+                fs.writeFileSync(filePath, JSON.stringify(defaultValue, null, 2), 'utf-8')
+            }
+        } catch (error) {
+            console.warn(`Could not create default file ${filename}:`, error)
+        }
+        return defaultValue
+    }
+
+    try {
+        const data = fs.readFileSync(filePath, 'utf-8')
+        return JSON.parse(data)
+    } catch (error) {
+        console.error(`Error reading ${filename}:`, error)
+        return defaultValue
+    }
 }
 
 // Generic write function
@@ -98,7 +123,7 @@ export interface Settings {
 
 // Data access functions
 export function getPosts(): Post[] {
-    const data = readData<{ posts: Post[] }>('posts.json')
+    const data = readData<{ posts: Post[] }>('posts.json', { posts: [] })
     return data.posts
 }
 
@@ -112,7 +137,7 @@ export function savePosts(posts: Post[]): void {
 }
 
 export function getEvents(): Event[] {
-    const data = readData<{ events: Event[] }>('events.json')
+    const data = readData<{ events: Event[] }>('events.json', { events: [] })
     return data.events
 }
 
@@ -126,7 +151,7 @@ export function saveEvents(events: Event[]): void {
 }
 
 export function getTeamMembers(): TeamMember[] {
-    const data = readData<{ members: TeamMember[] }>('team.json')
+    const data = readData<{ members: TeamMember[] }>('team.json', { members: [] })
     return data.members.sort((a, b) => a.order - b.order)
 }
 
@@ -135,7 +160,25 @@ export function saveTeamMembers(members: TeamMember[]): void {
 }
 
 export function getSettings(): Settings {
-    return readData<Settings>('settings.json')
+    return readData<Settings>('settings.json', {
+        stats: {
+            activeMembers: '0',
+            events: '0',
+            projects: '0',
+            yearsOfExperience: '0'
+        },
+        socialLinks: {
+            instagram: '',
+            twitter: '',
+            linkedin: '',
+            github: ''
+        },
+        contact: {
+            email: '',
+            phone: '',
+            address: ''
+        }
+    })
 }
 
 export function saveSettings(settings: Settings): void {
@@ -143,8 +186,36 @@ export function saveSettings(settings: Settings): void {
 }
 
 export function getUsers(): User[] {
-    const data = readData<{ users: User[] }>('users.json')
-    return data.users
+    const data = readData<{ users: User[] }>('users.json', { users: [] })
+    const users = data.users
+
+    // IF no users exist (or file was just created), AND we have ENV vars, seed the admin
+    if (users.length === 0 && process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+        const adminUser: User = {
+            email: process.env.ADMIN_EMAIL,
+            password: hashPassword(process.env.ADMIN_PASSWORD),
+            name: 'Admin',
+            role: 'admin'
+        }
+        // Return a list including this temp admin
+        // Note: We try to save it so it persists in local dev
+        // In Vercel, this save might fail or be ephemeral, but at least the login will work for this request
+        try {
+            users.push(adminUser)
+            // Attempt to write back to file
+            const filePath = path.join(dataDir, 'users.json')
+            if (process.env.NODE_ENV === 'development' || fs.existsSync(dataDir)) { // Try to write if dir exists
+                // We can use saveUsers but that imports us... causing cycle? No, saveUsers is in this file.
+                // safe to call saveUsers(users) ? saveUsers calls writeData.
+                saveUsers(users)
+            }
+        } catch (e) {
+            console.warn("Could not save seed admin to disk (expected on Vercel)", e)
+        }
+        return users
+    }
+
+    return users
 }
 
 export function saveUsers(users: User[]): void {
