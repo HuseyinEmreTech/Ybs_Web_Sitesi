@@ -54,6 +54,7 @@ export interface User {
     email: string
     password: string
     name: string
+    imageUrl?: string | null
     role: string // 'admin' | 'editor'
 }
 

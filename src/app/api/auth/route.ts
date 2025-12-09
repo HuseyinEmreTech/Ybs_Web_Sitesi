@@ -44,6 +44,7 @@ export async function POST(request: Request) {
         cookieStore.set('admin_user', JSON.stringify({
             email: user.email,
             name: user.name,
+            imageUrl: user.imageUrl,
             role: user.role,
         }), {
             httpOnly: true,
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
             user: {
                 email: user.email,
                 name: user.name,
+                imageUrl: user.imageUrl,
                 role: user.role,
             },
         })

@@ -50,9 +50,16 @@ export default async function EkipPage() {
             {yonetim.map((member, index) => (
               <ScrollReveal key={member.id} direction="up" delay={index * 0.1}>
                 <div className="bg-white dark:bg-slate-800 rounded-xl p-6 text-center shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:-translate-y-1 transition-all">
-                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold mb-4">
-                    {member.name.charAt(0)}
-                  </div>
+                  {member.imageUrl ? (
+                    <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 border-2 border-indigo-100 dark:border-indigo-900">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold mb-4">
+                      {member.name.charAt(0)}
+                    </div>
+                  )}
                   <h3 className="font-semibold text-slate-800 dark:text-white">{member.name}</h3>
                   <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">{member.role}</p>
                   <p className="text-xs text-slate-500 mt-1">{member.department}</p>
@@ -104,9 +111,16 @@ export default async function EkipPage() {
             {diger.map((member, index) => (
               <ScrollReveal key={member.id} direction="up" delay={index * 0.05}>
                 <div className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center shadow-sm border border-slate-200 dark:border-slate-700">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white text-xl font-bold mb-3">
-                    {member.name.charAt(0)}
-                  </div>
+                  {member.imageUrl ? (
+                    <div className="w-16 h-16 mx-auto rounded-full overflow-hidden mb-3 border-2 border-slate-200 dark:border-slate-700">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white text-xl font-bold mb-3">
+                      {member.name.charAt(0)}
+                    </div>
+                  )}
                   <h3 className="font-medium text-sm text-slate-800 dark:text-white">{member.name}</h3>
                   <p className="text-xs text-slate-500">{member.department}</p>
                 </div>

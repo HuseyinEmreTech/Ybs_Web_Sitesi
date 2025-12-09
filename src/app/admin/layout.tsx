@@ -7,6 +7,7 @@ import Link from 'next/link'
 interface User {
     email: string
     name: string
+    imageUrl?: string | null
     role: string
 }
 
@@ -91,8 +92,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     key={item.href}
                                     href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                            ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-medium'
-                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
+                                        ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-medium'
+                                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                                         }`}
                                 >
                                     <span className="text-xl">{item.icon}</span>
@@ -105,9 +106,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     {/* User Info */}
                     <div className="p-4 border-t border-slate-200 dark:border-slate-700">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
-                                {user.name.charAt(0).toUpperCase()}
-                            </div>
+                            {user.imageUrl ? (
+                                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden border border-slate-200 dark:border-slate-600">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={user.imageUrl} alt={user.name} className="w-full h-full object-cover" />
+                                </div>
+                            ) : (
+                                <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
+                                    {user.name.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                             <div>
                                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{user.name}</p>
                                 <p className="text-xs text-slate-500 dark:text-slate-400">{user.role}</p>
