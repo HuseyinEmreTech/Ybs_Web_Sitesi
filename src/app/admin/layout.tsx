@@ -16,7 +16,11 @@ const menuItems = [
     { href: '/admin/blog', label: 'Blog Yazıları', icon: '📝' },
     { href: '/admin/etkinlikler', label: 'Etkinlikler', icon: '🎉' },
     { href: '/admin/ekip', label: 'Ekip', icon: '👥' },
-    { href: '/admin/ayarlar', label: 'Ayarlar', icon: '⚙️' },
+    { href: '/admin/yapilandirma', label: 'Yapılandırma', icon: '🏗️' },
+    { href: '/admin/hakkimizda', label: 'Hakkımızda', icon: '🏢' },
+    { href: '/admin/mesajlar', label: 'Gelen Kutusu', icon: '✉️' },
+    { href: '/admin/ayarlar', label: 'Site Ayarları', icon: '⚙️' },
+
     { href: '/admin/kullanicilar', label: 'Kullanıcılar', icon: '🔐' },
 ]
 

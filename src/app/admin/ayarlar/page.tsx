@@ -1,233 +1,188 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import type { SiteSettings } from '@/lib/settings'
 
-interface Settings {
-    stats: {
-        activeMembers: string
-        events: string
-        projects: string
-        yearsOfExperience: string
-    }
-    socialLinks: {
-        instagram: string
-        twitter: string
-        linkedin: string
-        github: string
-    }
-    contact: {
-        email: string
-        phone: string
-        address: string
-    }
-}
-
-export default function SettingsManagement() {
-    const [settings, setSettings] = useState<Settings | null>(null)
+export default function SettingsAdminPage() {
+    const [settings, setSettings] = useState<SiteSettings | null>(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
-    const [message, setMessage] = useState('')
 
     useEffect(() => {
-        fetchSettings()
+        fetch('/api/settings')
+            .then(res => res.json())
+            .then(data => {
+                setSettings(data)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error(err)
+                setLoading(false)
+            })
     }, [])
 
-    async function fetchSettings() {
-        try {
-            const res = await fetch('/api/settings')
-            const data = await res.json()
-            setSettings(data)
-        } catch (error) {
-            console.error('Failed to fetch settings:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    async function handleSubmit(e: React.FormEvent) {
+    async function handleSave(e: React.FormEvent) {
         e.preventDefault()
         if (!settings) return
 
         setSaving(true)
-        setMessage('')
-
         try {
             const res = await fetch('/api/settings', {
-                method: 'PUT',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings),
             })
-
             if (res.ok) {
-                setMessage('✅ Ayarlar başarıyla kaydedildi!')
-                setTimeout(() => setMessage(''), 3000)
+                alert('Ayarlar kaydedildi!')
+            } else {
+                alert('Hata oluştu')
             }
         } catch (error) {
-            setMessage('❌ Kaydetme başarısız')
+            console.error(error)
+            alert('Hata oluştu')
         } finally {
             setSaving(false)
         }
     }
 
-    if (loading) {
-        return <div className="p-8 text-center text-slate-500">Yükleniyor...</div>
-    }
-
-    if (!settings) {
-        return <div className="p-8 text-center text-red-500">Ayarlar yüklenemedi</div>
-    }
+    if (loading || !settings) return <div className="p-8 text-center text-slate-500">Ayarlar yükleniyor...</div>
 
     return (
-        <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Site Ayarları</h1>
-                <p className="text-slate-500 dark:text-slate-400">Ana sayfa istatistikleri ve iletişim bilgilerini güncelleyin</p>
+        <div className="space-y-8 pb-12">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Site Ayarları</h1>
+                    <p className="text-slate-500 dark:text-slate-400">Genel site yapılandırması ve iletişim bilgileri.</p>
+                </div>
+                <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold disabled:opacity-50 transition-colors"
+                >
+                    {saving ? 'Kaydediliyor...' : 'Kaydet'}
+                </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Stats Section */}
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-                    <h2 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">📊 İstatistikler</h2>
-                    <p className="text-sm text-slate-500 mb-4">Ana sayfada gösterilen istatistik değerleri</p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <form onSubmit={handleSave} className="space-y-8 max-w-4xl">
+                {/* General Info */}
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <h2 className="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400">Genel Bilgiler</h2>
+                    <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Aktif Üye</label>
+                            <label className="block text-sm font-medium mb-1">Site Adı</label>
                             <input
                                 type="text"
-                                value={settings.stats.activeMembers}
-                                onChange={(e) => setSettings({ ...settings, stats: { ...settings.stats, activeMembers: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="50+"
+                                value={settings.siteName}
+                                onChange={e => setSettings({ ...settings, siteName: e.target.value })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Etkinlik Sayısı</label>
-                            <input
-                                type="text"
-                                value={settings.stats.events}
-                                onChange={(e) => setSettings({ ...settings, stats: { ...settings.stats, events: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="20+"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Proje Sayısı</label>
-                            <input
-                                type="text"
-                                value={settings.stats.projects}
-                                onChange={(e) => setSettings({ ...settings, stats: { ...settings.stats, projects: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="10+"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Yıllık Deneyim</label>
-                            <input
-                                type="text"
-                                value={settings.stats.yearsOfExperience}
-                                onChange={(e) => setSettings({ ...settings, stats: { ...settings.stats, yearsOfExperience: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="5"
+                            <label className="block text-sm font-medium mb-1">Site Açıklaması (Footer)</label>
+                            <textarea
+                                value={settings.description}
+                                onChange={e => setSettings({ ...settings, description: e.target.value })}
+                                rows={3}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
                         </div>
                     </div>
                 </div>
 
-                {/* Social Links Section */}
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-                    <h2 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">🔗 Sosyal Medya</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Contact Info */}
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <h2 className="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400">İletişim Bilgileri</h2>
+                    <div className="grid md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Instagram</label>
-                            <input
-                                type="url"
-                                value={settings.socialLinks.instagram}
-                                onChange={(e) => setSettings({ ...settings, socialLinks: { ...settings.socialLinks, instagram: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="https://instagram.com/..."
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Twitter</label>
-                            <input
-                                type="url"
-                                value={settings.socialLinks.twitter}
-                                onChange={(e) => setSettings({ ...settings, socialLinks: { ...settings.socialLinks, twitter: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="https://twitter.com/..."
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">LinkedIn</label>
-                            <input
-                                type="url"
-                                value={settings.socialLinks.linkedin}
-                                onChange={(e) => setSettings({ ...settings, socialLinks: { ...settings.socialLinks, linkedin: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="https://linkedin.com/..."
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">GitHub</label>
-                            <input
-                                type="url"
-                                value={settings.socialLinks.github}
-                                onChange={(e) => setSettings({ ...settings, socialLinks: { ...settings.socialLinks, github: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
-                                placeholder="https://github.com/..."
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Contact Section */}
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-                    <h2 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">📧 İletişim Bilgileri</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">E-posta</label>
+                            <label className="block text-sm font-medium mb-1">E-posta</label>
                             <input
                                 type="email"
                                 value={settings.contact.email}
-                                onChange={(e) => setSettings({ ...settings, contact: { ...settings.contact, email: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
+                                onChange={e => setSettings({ ...settings, contact: { ...settings.contact, email: e.target.value } })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Telefon</label>
+                            <label className="block text-sm font-medium mb-1">Telefon</label>
                             <input
-                                type="tel"
+                                type="text"
                                 value={settings.contact.phone}
-                                onChange={(e) => setSettings({ ...settings, contact: { ...settings.contact, phone: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
+                                onChange={e => setSettings({ ...settings, contact: { ...settings.contact, phone: e.target.value } })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Adres</label>
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium mb-1">Adres</label>
                             <input
                                 type="text"
                                 value={settings.contact.address}
-                                onChange={(e) => setSettings({ ...settings, contact: { ...settings.contact, address: e.target.value } })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white"
+                                onChange={e => setSettings({ ...settings, contact: { ...settings.contact, address: e.target.value } })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
                         </div>
                     </div>
                 </div>
 
-                {/* Submit */}
-                <div className="flex items-center gap-4">
-                    <button
-                        type="submit"
-                        disabled={saving}
-                        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-lg font-medium transition-colors"
-                    >
-                        {saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}
-                    </button>
-                    {message && (
-                        <span className={message.includes('✅') ? 'text-green-600' : 'text-red-600'}>
-                            {message}
-                        </span>
-                    )}
+                {/* Social Media */}
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <h2 className="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400">Sosyal Medya Linkleri</h2>
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <span className="w-24 text-sm font-medium">Instagram</span>
+                            <input
+                                type="text"
+                                value={settings.socialMedia.instagram}
+                                onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, instagram: e.target.value } })}
+                                className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <span className="w-24 text-sm font-medium">Twitter (X)</span>
+                            <input
+                                type="text"
+                                value={settings.socialMedia.twitter}
+                                onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, twitter: e.target.value } })}
+                                className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <span className="w-24 text-sm font-medium">LinkedIn</span>
+                            <input
+                                type="text"
+                                value={settings.socialMedia.linkedin}
+                                onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, linkedin: e.target.value } })}
+                                className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <span className="w-24 text-sm font-medium">GitHub</span>
+                            <input
+                                type="text"
+                                value={settings.socialMedia.github}
+                                onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, github: e.target.value } })}
+                                className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Maintenance Mode */}
+                <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-xl border border-red-200 dark:border-red-900/30">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="text-lg font-bold text-red-600 dark:text-red-400">Bakım Modu</h2>
+                            <p className="text-sm text-red-700 dark:text-red-300">Bu özellik aktif edildiğinde site ziyaretçilere kapatılır.</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={settings.maintenanceMode}
+                                onChange={e => setSettings({ ...settings, maintenanceMode: e.target.checked })}
+                            />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                        </label>
+                    </div>
                 </div>
             </form>
         </div>

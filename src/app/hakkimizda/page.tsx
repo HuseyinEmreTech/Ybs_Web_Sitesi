@@ -1,12 +1,15 @@
 import { Metadata } from 'next'
 import Section from '@/components/Section'
+import { getAboutData } from '@/lib/about'
 
 export const metadata: Metadata = {
   title: 'Hakkımızda',
   description: 'YBS Kulübü hakkında bilgi edinin - Misyonumuz, vizyonumuz ve tarihçemiz',
 }
 
-export default function HakkimizdaPage() {
+export default async function HakkimizdaPage() {
+  const data = await getAboutData()
+
   return (
     <>
       {/* Hero */}
@@ -14,11 +17,10 @@ export default function HakkimizdaPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-3xl font-bold text-foreground sm:text-4xl">
-              Hakkımızda
+              {data.hero.title}
             </h1>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-              Yönetim Bilişim Sistemleri öğrencilerini bir araya getiren,
-              teknoloji ve yönetim alanında etkinlikler düzenleyen öğrenci kulübüyüz.
+              {data.hero.description}
             </p>
           </div>
         </div>
@@ -28,21 +30,9 @@ export default function HakkimizdaPage() {
       <Section className="bg-slate-50 dark:bg-slate-900/50">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">Hikayemiz</h2>
-            <div className="mt-4 space-y-4 text-slate-600 dark:text-slate-300">
-              <p>
-                YBS Kulübü, Yönetim Bilişim Sistemleri bölümü öğrencilerinin
-                akademik ve sosyal gelişimlerine katkıda bulunmak amacıyla kurulmuştur.
-              </p>
-              <p>
-                Kurulduğumuz günden bu yana, öğrencilerimize teknoloji, yönetim
-                ve kariyer alanlarında değerli deneyimler sunmayı hedefliyoruz.
-              </p>
-              <p>
-                Seminerler, workshoplar, sosyal etkinlikler ve projelerle
-                üyelerimizin hem kişisel hem de profesyonel gelişimlerine
-                katkıda bulunuyoruz.
-              </p>
+            <h2 className="text-2xl font-bold text-foreground">{data.story.title}</h2>
+            <div className="mt-4 space-y-4 text-slate-600 dark:text-slate-300 whitespace-pre-line">
+              {data.story.content}
             </div>
           </div>
           <div className="bg-slate-200 dark:bg-slate-800 rounded-xl aspect-video flex items-center justify-center">
@@ -60,10 +50,9 @@ export default function HakkimizdaPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-foreground">Misyonumuz</h3>
+            <h3 className="text-xl font-semibold text-foreground">{data.mission.title}</h3>
             <p className="mt-3 text-slate-600 dark:text-slate-400">
-              YBS öğrencilerini teknoloji ve yönetim alanlarında donatarak,
-              onları iş dünyasına hazırlamak ve akademik başarılarını desteklemek.
+              {data.mission.description}
             </p>
           </div>
 
@@ -74,10 +63,9 @@ export default function HakkimizdaPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-foreground">Vizyonumuz</h3>
+            <h3 className="text-xl font-semibold text-foreground">{data.vision.title}</h3>
             <p className="mt-3 text-slate-600 dark:text-slate-400">
-              Türkiye'nin en aktif ve etkili YBS öğrenci kulübü olmak;
-              mezunlarımızın sektörde öncü konumlarda yer almasını sağlamak.
+              {data.vision.description}
             </p>
           </div>
         </div>
@@ -90,15 +78,10 @@ export default function HakkimizdaPage() {
         className="bg-slate-50 dark:bg-slate-900/50"
       >
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            { title: 'Yenilikçilik', desc: 'Teknolojideki gelişmeleri yakından takip ediyoruz' },
-            { title: 'İşbirliği', desc: 'Birlikte çalışmanın gücüne inanıyoruz' },
-            { title: 'Öğrenme', desc: 'Sürekli gelişim ve öğrenmeyi teşvik ediyoruz' },
-            { title: 'Topluluk', desc: 'Güçlü bir topluluk oluşturmayı hedefliyoruz' },
-          ].map((value) => (
+          {data.values.map((value) => (
             <div key={value.title} className="p-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
               <h3 className="font-semibold text-foreground">{value.title}</h3>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{value.desc}</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{value.description}</p>
             </div>
           ))}
         </div>
@@ -106,6 +89,7 @@ export default function HakkimizdaPage() {
     </>
   )
 }
+
 
 
 

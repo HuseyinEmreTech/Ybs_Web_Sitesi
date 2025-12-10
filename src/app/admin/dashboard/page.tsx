@@ -7,10 +7,11 @@ interface Stats {
     posts: number
     events: number
     team: number
+    positions: number
 }
 
 export default function AdminDashboard() {
-    const [stats, setStats] = useState<Stats>({ posts: 0, events: 0, team: 0 })
+    const [stats, setStats] = useState<Stats>({ posts: 0, events: 0, team: 0, positions: 0 })
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -19,22 +20,25 @@ export default function AdminDashboard() {
 
     async function fetchStats() {
         try {
-            const [postsRes, eventsRes, teamRes] = await Promise.all([
+            const [postsRes, eventsRes, teamRes, orgRes] = await Promise.all([
                 fetch('/api/posts'),
                 fetch('/api/events'),
                 fetch('/api/team'),
+                fetch('/api/organization'),
             ])
 
-            const [posts, events, team] = await Promise.all([
+            const [posts, events, team, org] = await Promise.all([
                 postsRes.json(),
                 eventsRes.json(),
                 teamRes.json(),
+                orgRes.json(),
             ])
 
             setStats({
                 posts: Array.isArray(posts) ? posts.length : 0,
                 events: Array.isArray(events) ? events.length : 0,
                 team: Array.isArray(team) ? team.length : 0,
+                positions: Array.isArray(org) ? org.length : 0,
             })
         } catch (error) {
             console.error('Failed to fetch stats:', error)
@@ -47,13 +51,14 @@ export default function AdminDashboard() {
         { label: 'Blog Yazıları', value: stats.posts, icon: '📝', href: '/admin/blog', color: 'indigo' },
         { label: 'Etkinlikler', value: stats.events, icon: '🎉', href: '/admin/etkinlikler', color: 'purple' },
         { label: 'Ekip Üyeleri', value: stats.team, icon: '👥', href: '/admin/ekip', color: 'pink' },
+        { label: 'Pozisyonlar', value: stats.positions, icon: '🏗️', href: '/admin/yapilandirma', color: 'blue' },
     ]
 
     const quickActions = [
         { label: 'Yeni Yazı', href: '/admin/blog?new=true', icon: '✏️' },
         { label: 'Yeni Etkinlik', href: '/admin/etkinlikler?new=true', icon: '📅' },
         { label: 'Üye Ekle', href: '/admin/ekip?new=true', icon: '👤' },
-        { label: 'Ayarlar', href: '/admin/ayarlar', icon: '⚙️' },
+        { label: 'Yapılandırma', href: '/admin/yapilandirma', icon: '🏗️' },
     ]
 
     return (
@@ -65,7 +70,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {statCards.map((card) => (
                     <Link
                         key={card.label}

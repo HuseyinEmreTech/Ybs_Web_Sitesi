@@ -1,0 +1,99 @@
+[
+  {
+    "id": "president",
+    "title": "Topluluk Başkanı",
+    "roleKeywords": [
+      "Başkan"
+    ],
+    "department": "Yönetim"
+  },
+  {
+    "id": "vp",
+    "title": "Topluluk Başkan Yardımcısı",
+    "roleKeywords": [
+      "Başkan Yardımcısı"
+    ],
+    "department": "Yönetim"
+  },
+  {
+    "id": "gensec",
+    "title": "Topluluk Genel Sekreteri",
+    "roleKeywords": [
+      "Genel Sekreter"
+    ],
+    "department": "Yönetim"
+  },
+  {
+    "id": "board",
+    "title": "Yönetim Kurulu Üyesi",
+    "roleKeywords": [
+      "Yönetim Kurulu Üyesi"
+    ],
+    "department": "Yönetim"
+  },
+  {
+    "id": "project",
+    "title": "Proje ve Ar-Ge Koordinatörlüğü",
+    "roleKeywords": [
+      "Proje Koordinatörü",
+      "Ar-Ge Koordinatörü"
+    ],
+    "department": "Proje ve Ar-Ge"
+  },
+  {
+    "id": "1765394515619",
+    "title": "Sayman",
+    "roleKeywords": [
+      "Sayman"
+    ],
+    "department": "Yönetim"
+  },
+  {
+    "id": "social",
+    "title": "Sosyal Medya Koordinatörlüğü",
+    "roleKeywords": [
+      "Sosyal Medya Koordinatörü"
+    ],
+    "department": "Sosyal Medya"
+  },
+  {
+    "id": "social_design",
+    "parentId": "social",
+    "title": "Afiş Tasarım",
+    "roleKeywords": [
+      "Tasarım",
+      "Grafik"
+    ],
+    "department": "Afiş Tasarım"
+  },
+  {
+    "id": "social_video",
+    "parentId": "social",
+    "title": "Video İçerik",
+    "roleKeywords": [
+      "Video",
+      "Kurgu",
+      "Montaj"
+    ],
+    "department": "Video İçerik"
+  },
+  {
+    "id": "social_analysis",
+    "parentId": "social",
+    "title": "Rapor ve Analiz",
+    "roleKeywords": [
+      "Rapor",
+      "Analiz"
+    ],
+    "department": "Rapor ve Analiz"
+  },
+  {
+    "id": "organization",
+    "title": "Organizasyon Koordinatörlüğü",
+    "roleKeywords": [
+      "Organizasyon",
+      "Etkinlik"
+    ],
+    "department": "Organizasyon"
+  }
+]

@@ -19,8 +19,12 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative py-24 lg:py-32 overflow-hidden">
+        {/* Animated Background Blobs */}
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[100px] animate-pulse pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/30 rounded-full blur-[100px] animate-pulse delay-1000 pointer-events-none" />
+
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <ScrollReveal direction="left">
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6">

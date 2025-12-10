@@ -25,6 +25,7 @@ export default function EventsManagement() {
     const [loading, setLoading] = useState(true)
     const [editing, setEditing] = useState<Event | null>(null)
     const [showForm, setShowForm] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
     const searchParams = useSearchParams()
 
     const [form, setForm] = useState({
@@ -112,6 +113,12 @@ export default function EventsManagement() {
         setEditing(event)
         setShowForm(true)
     }
+
+    const filteredEvents = events.filter(event =>
+        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.eventType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.location.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
     return (
         <div className="space-y-6">
@@ -231,20 +238,37 @@ export default function EventsManagement() {
                 </div>
             )}
 
+            {/* Search */}
+            {!showForm && (
+                <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="🔍 Etkinlik ara (Başlık, tür veya konum)..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full px-4 py-3 pl-10 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                </div>
+            )}
+
             {/* Events List */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
                 {loading ? (
-                    <div className="p-8 text-center text-slate-500">Yükleniyor...</div>
-                ) : events.length === 0 ? (
-                    <div className="p-8 text-center text-slate-500">Henüz etkinlik yok.</div>
+                    <div className="p-12 flex justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    </div>
+                ) : filteredEvents.length === 0 ? (
+                    <div className="p-8 text-center text-slate-500">
+                        {searchTerm ? 'Aradığınız kriterlere uygun etkinlik bulunamadı.' : 'Henüz etkinlik yok.'}
+                    </div>
                 ) : (
                     <div className="divide-y divide-slate-200 dark:divide-slate-700">
-                        {events.map((event) => (
+                        {filteredEvents.map((event) => (
                             <div key={event.id} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50">
                                 <div className="flex-1">
-                                    <h3 className="font-medium text-slate-800 dark:text-white">{event.title}</h3>
+                                    <h3 className="font-medium text-slate-800 dark:text-white text-lg">{event.title}</h3>
                                     <div className="flex items-center gap-3 mt-1 text-sm text-slate-500">
-                                        <span className="px-2 py-0.5 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded">
+                                        <span className="px-2 py-0.5 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full text-xs font-semibold">
                                             {event.eventType}
                                         </span>
                                         <span>📅 {new Date(event.date).toLocaleDateString('tr-TR')}</span>
@@ -252,11 +276,11 @@ export default function EventsManagement() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button onClick={() => startEdit(event)} className="px-3 py-1.5 text-sm bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg">
-                                        Düzenle
+                                    <button onClick={() => startEdit(event)} className="px-3 py-1.5 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors">
+                                        ✏️ Düzenle
                                     </button>
-                                    <button onClick={() => handleDelete(event.id)} className="px-3 py-1.5 text-sm bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">
-                                        Sil
+                                    <button onClick={() => handleDelete(event.id)} className="px-3 py-1.5 text-sm bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg transition-colors">
+                                        🗑️ Sil
                                     </button>
                                 </div>
                             </div>

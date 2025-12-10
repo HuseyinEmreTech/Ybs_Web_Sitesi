@@ -9,7 +9,8 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 const navigation = [
   { name: 'Ana Sayfa', href: '/' },
   { name: 'Hakkımızda', href: '/hakkimizda' },
-  { name: 'Ekibimiz', href: '/ekip' },
+  { name: 'Yönetim Kurulu', href: '/ekip' },
+  { name: 'Koordinatörlükler', href: '/koordinatorlukler' },
   { name: 'Etkinlikler', href: '/etkinlikler' },
   { name: 'Blog', href: '/blog' },
   { name: 'Projeler', href: '/projeler' },
@@ -45,9 +46,7 @@ export default function Header() {
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-foreground rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <span className="text-background font-bold text-sm">İSTE</span>
-            </div>
+            <img src="/ekip/logo.jpeg" alt="YBS Logo" className="w-10 h-10 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform" />
             <span className={clsx(
               "font-bold text-lg hidden sm:block transition-colors text-foreground"
             )}>

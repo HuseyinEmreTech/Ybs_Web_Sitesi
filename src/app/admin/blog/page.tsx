@@ -23,6 +23,7 @@ export default function BlogManagement() {
     const [loading, setLoading] = useState(true)
     const [editing, setEditing] = useState<Post | null>(null)
     const [showForm, setShowForm] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
     const searchParams = useSearchParams()
 
     const [form, setForm] = useState({
@@ -104,6 +105,11 @@ export default function BlogManagement() {
         setEditing(post)
         setShowForm(true)
     }
+
+    const filteredPosts = posts.filter(post =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.category.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
     return (
         <div className="space-y-6">
@@ -199,25 +205,43 @@ export default function BlogManagement() {
                 </div>
             )}
 
+            {/* Search */}
+            {!showForm && (
+                <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="🔍 Başlık veya kategori ara..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full px-4 py-3 pl-10 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+
+                    </div>
+                </div>
+            )}
+
             {/* Posts List */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
                 {loading ? (
-                    <div className="p-8 text-center text-slate-500">Yükleniyor...</div>
-                ) : posts.length === 0 ? (
+                    <div className="p-12 flex justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    </div>
+                ) : filteredPosts.length === 0 ? (
                     <div className="p-8 text-center text-slate-500">
-                        Henüz yazı yok. İlk yazınızı ekleyin!
+                        {searchTerm ? 'Aradığınız kriterlere uygun yazı bulunamadı.' : 'Henüz yazı yok. İlk yazınızı ekleyin!'}
                     </div>
                 ) : (
                     <div className="divide-y divide-slate-200 dark:divide-slate-700">
-                        {posts.map((post) => (
-                            <div key={post.id} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                        {filteredPosts.map((post) => (
+                            <div key={post.id} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                                 <div className="flex-1">
-                                    <h3 className="font-medium text-slate-800 dark:text-white">{post.title}</h3>
+                                    <h3 className="font-medium text-slate-800 dark:text-white text-lg">{post.title}</h3>
                                     <div className="flex items-center gap-3 mt-1 text-sm text-slate-500">
-                                        <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded">
+                                        <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-semibold">
                                             {post.category}
                                         </span>
-                                        <span>{new Date(post.publishedAt).toLocaleDateString('tr-TR')}</span>
+                                        <span>📅 {new Date(post.publishedAt).toLocaleDateString('tr-TR')}</span>
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
@@ -225,13 +249,13 @@ export default function BlogManagement() {
                                         onClick={() => startEdit(post)}
                                         className="px-3 py-1.5 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors"
                                     >
-                                        Düzenle
+                                        ✏️ Düzenle
                                     </button>
                                     <button
                                         onClick={() => handleDelete(post.id)}
                                         className="px-3 py-1.5 text-sm bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg transition-colors"
                                     >
-                                        Sil
+                                        🗑️ Sil
                                     </button>
                                 </div>
                             </div>
