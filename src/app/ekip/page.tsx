@@ -37,15 +37,24 @@ export default async function EkipPage() {
     });
   }
 
-  // Helper to get members for a department (excluding leaders)
-  const getDepartmentMembers = (deptName: string | undefined, leaders: TeamMember[]) => {
+  // Pre-calculate ALL leaders to prevent them from appearing as normal members
+  const allLeaders = new Set<string>();
+  if (president) allLeaders.add(president.id);
+
+  organizationChart.forEach(node => {
+    const leaders = getLeadersForNode(node.roleKeywords);
+    leaders.forEach(l => allLeaders.add(l.id));
+  });
+
+  // Helper to get members for a department (excluding ANY leader)
+  const getDepartmentMembers = (deptName: string | undefined) => {
     if (!deptName) return [];
     return members.filter(m =>
       m.department === deptName &&
-      !leaders.find(l => l.id === m.id) &&
-      m.id !== president?.id
+      !allLeaders.has(m.id)
     );
   }
+
 
   return (
     <>
@@ -88,7 +97,8 @@ export default async function EkipPage() {
                   if (node.id === 'president') return null;
 
                   const leaders = getLeadersForNode(node.roleKeywords);
-                  const deptMembers = getDepartmentMembers(node.department, leaders);
+                  const deptMembers = getDepartmentMembers(node.department);
+
 
                   // Specific fix: For "Board Member" node, we might have many. Join them with leaders if any?
                   // Usually "Yönetim Kurulu Üyesi" are just leaders of that node?
