@@ -1,0 +1,12 @@
+[
+    {
+        "id": "1",
+        "name": "YBS Web Ekibi",
+        "role": "Geliştirme & Tasarım",
+        "image": "/ekip/logo.jpeg",
+        "social": {
+            "github": "https://github.com/ybskulubu",
+            "instagram": "https://instagram.com/ybskulubu"
+        }
+    }
+]

@@ -160,21 +160,22 @@ export default async function HomePage() {
       </Section>
 
       {/* CTA */}
-      <section className="relative py-16 lg:py-24 overflow-hidden">
-        {/* Dark Gradient Background */}
-        <div className="absolute inset-0 bg-slate-900 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 z-0" />
+      <section className="relative py-16 lg:py-24 overflow-hidden border-t border-slate-200 dark:border-slate-800">
+        {/* Backgrounds */}
+        <div className="absolute inset-0 bg-white dark:hidden z-0" />
+        <div className="absolute inset-0 bg-slate-900 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 hidden dark:block z-0" />
 
-        {/* Animated Glow Effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 overflow-hidden opacity-40 pointer-events-none">
+        {/* Animated Glow Effects (Dark Mode Only) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 overflow-hidden opacity-40 pointer-events-none hidden dark:block">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
           <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-purple-500 rounded-full blur-[100px] mix-blend-screen" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
             Kulübümüze Katılın
           </h2>
-          <p className="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
             YBS Kulübü olarak teknoloji, yönetim ve kariyer alanlarında
             etkinlikler düzenliyoruz. Siz de aramıza katılın!
           </p>
@@ -182,7 +183,7 @@ export default async function HomePage() {
             <Button
               href="/iletisim"
               size="lg"
-              className="bg-white text-slate-900 hover:bg-indigo-50 border-none shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 font-semibold"
+              className="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-white dark:text-slate-900 dark:hover:bg-indigo-50 border-none shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 font-semibold"
             >
               Bize Ulaşın
             </Button>
@@ -190,7 +191,7 @@ export default async function HomePage() {
               href="/etkinlikler"
               variant="outline"
               size="lg"
-              className="border-slate-500 text-white hover:bg-white/10 hover:border-white backdrop-blur-sm"
+              className="border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-indigo-600 dark:border-slate-500 dark:text-white dark:hover:bg-white/10 dark:hover:border-white backdrop-blur-sm"
             >
               Etkinlikleri İncele
             </Button>
