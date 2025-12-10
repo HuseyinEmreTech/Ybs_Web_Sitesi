@@ -4,6 +4,7 @@ import Card from '@/components/Card'
 import Button from '@/components/Button'
 import ScrollReveal from '@/components/ScrollReveal'
 import AnimatedGradientText from '@/components/AnimatedGradientText'
+import MatrixRain from '@/components/MatrixRain'
 import { getPosts, getEvents, getSettings, type Post, type Event } from '@/lib/data'
 
 export const dynamic = 'force-dynamic'
@@ -19,10 +20,13 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative py-24 lg:py-32 overflow-hidden bg-grid-pattern">
+        {/* Matrix Rain Effect */}
+        <MatrixRain />
+
         {/* Animated Background Blobs */}
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[100px] animate-pulse pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/30 rounded-full blur-[100px] animate-pulse delay-1000 pointer-events-none" />
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[100px] animate-float pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/30 rounded-full blur-[100px] animate-float-delayed pointer-events-none" />
 
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
@@ -60,7 +64,7 @@ export default async function HomePage() {
 
           {/* Stats */}
           <ScrollReveal direction="up" delay={0.3}>
-            <div className="mt-16 p-8 rounded-3xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-2xl dark:shadow-none ring-1 ring-black/5 dark:ring-white/10">
+            <div className="mt-16 p-8 rounded-3xl glass-card">
               <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 divide-x divide-slate-200/50 dark:divide-slate-800/50">
                 <div className="text-center px-4">
                   <p className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-br from-indigo-600 to-purple-600 bg-clip-text text-transparent">{settings.stats.activeMembers}</p>
@@ -165,10 +169,10 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-white dark:hidden z-0" />
         <div className="absolute inset-0 bg-slate-900 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 hidden dark:block z-0" />
 
-        {/* Animated Glow Effects (Dark Mode Only) */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 overflow-hidden opacity-40 pointer-events-none hidden dark:block">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
-          <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-purple-500 rounded-full blur-[100px] mix-blend-screen" />
+        {/* Animated Glow Effects */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-300 dark:bg-indigo-500 rounded-full blur-[120px] opacity-30 dark:opacity-40 dark:mix-blend-screen animate-pulse" />
+          <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-purple-300 dark:bg-purple-500 rounded-full blur-[100px] opacity-30 dark:opacity-40 dark:mix-blend-screen" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center">

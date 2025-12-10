@@ -37,8 +37,12 @@ export default async function CreditsPage() {
     const contributors = await getContributors()
 
     return (
-        <div className="min-h-screen pt-24 pb-16">
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="min-h-screen pt-24 pb-16 bg-grid-pattern relative overflow-hidden">
+            {/* Animated Background Blobs */}
+            <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[100px] animate-float pointer-events-none" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/30 rounded-full blur-[100px] animate-float-delayed pointer-events-none" />
+
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
                 <div className="text-center mb-16">
                     <h1 className="text-4xl font-bold tracking-tight mb-4">
                         <AnimatedGradientText>Emeği Geçenler</AnimatedGradientText>
@@ -52,9 +56,9 @@ export default async function CreditsPage() {
                     {contributors.map((person) => (
                         <div
                             key={person.id}
-                            className="bg-white dark:bg-slate-900 rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all border border-slate-100 dark:border-slate-800 group hover:-translate-y-1"
+                            className="glass-card p-6 text-center group"
                         >
-                            <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 border-4 border-indigo-50 dark:border-slate-800 shadow-inner group-hover:border-indigo-100 transition-colors">
+                            <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 border-4 border-white/50 dark:border-slate-700 shadow-inner group-hover:border-indigo-200 transition-colors">
                                 {person.image ? (
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={person.image} alt={person.name} className="w-full h-full object-cover" />

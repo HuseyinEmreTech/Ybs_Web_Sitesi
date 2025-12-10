@@ -15,8 +15,12 @@ export default async function IletisimPage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative py-16 lg:py-24 bg-grid-pattern overflow-hidden">
+        {/* Animated Background Blobs */}
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[100px] animate-float pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/30 rounded-full blur-[100px] animate-float-delayed pointer-events-none" />
+
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <h1 className="text-3xl font-bold text-foreground sm:text-4xl">
               İletişim
@@ -30,13 +34,15 @@ export default async function IletisimPage() {
       </section>
 
       {/* Contact Form & Info */}
-      <Section className="bg-slate-50 dark:bg-slate-900/50">
+      <Section className="relative">
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Form */}
-          <ContactForm />
+          <div className="glass-card p-8 rounded-3xl">
+            <ContactForm />
+          </div>
 
           {/* Contact Info */}
-          <div className="space-y-8">
+          <div className="glass-card p-8 rounded-3xl space-y-8">
             <div>
               <h2 className="text-xl font-semibold text-foreground mb-6">
                 İletişim Bilgileri
@@ -137,7 +143,7 @@ export default async function IletisimPage() {
             </div>
 
             {/* FAQ */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div className="bg-white/50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-100 dark:border-slate-800">
               <h3 className="font-semibold text-foreground mb-4">Sık Sorulan Sorular</h3>
               <div className="space-y-4">
                 <div>

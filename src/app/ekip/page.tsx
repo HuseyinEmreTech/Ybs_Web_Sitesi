@@ -61,7 +61,7 @@ export default async function EkipPage() {
 
   return (
     <>
-      <section className="py-16 lg:py-24 bg-slate-50 dark:bg-slate-950 min-h-screen">
+      <section className="py-16 lg:py-24 bg-slate-50 dark:bg-slate-950 min-h-screen bg-grid-pattern overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Header */}
