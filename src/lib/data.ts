@@ -334,38 +334,35 @@ export async function validateUser(email: string, password: string): Promise<Use
 
 export async function getSettings(): Promise<Settings> {
     const settings = await prisma.settings.findFirst()
+
+    // Default stats
+    const defaultStats = {
+        activeMembers: '0',
+        events: '0',
+        projects: '0',
+        yearsOfExperience: '0'
+    }
+
     if (!settings) {
         // Return default structure
         return {
             id: 'default',
-            stats: {
-                activeMembers: '0',
-                events: '0',
-                projects: '0',
-                yearsOfExperience: '0'
-            },
-            socialLinks: {
-                instagram: '',
-                twitter: '',
-                linkedin: '',
-                github: ''
-            },
-            contact: {
-                email: '',
-                phone: '',
-                address: ''
-            },
+            stats: defaultStats,
+            socialLinks: { instagram: '', twitter: '', linkedin: '', github: '' },
+            contact: { email: '', phone: '', address: '' },
             updatedAt: new Date().toISOString()
         }
     }
+
     return {
         ...settings,
+        // Calculate or provide default stats since they are removed from DB model
+        stats: defaultStats,
+        // Cast JSON fields
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        stats: settings.stats as any,
+        socialLinks: (settings.socialMedia || { instagram: '', twitter: '', linkedin: '', github: '' }) as any,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        socialLinks: settings.socialLinks as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        contact: settings.contact as any,
+        contact: (settings.contact || { email: '', phone: '', address: '' }) as any,
         updatedAt: settings.updatedAt.toISOString(),
     }
 }
@@ -415,14 +412,16 @@ export interface Project {
 }
 
 export async function getProjects(): Promise<Project[]> {
-    const projects = await (prisma as any).project.findMany({
+    const projects = await prisma.project.findMany({
         orderBy: { createdAt: 'desc' },
         include: { teamMembers: true }
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return projects.map((p: any) => ({
         ...p,
         createdAt: p.createdAt.toISOString(),
         updatedAt: p.updatedAt.toISOString(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         teamMembers: p.teamMembers.map((m: any) => ({
             ...m,
             socialLinks: m.socialLinks as any,
