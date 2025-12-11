@@ -21,17 +21,27 @@ export interface SiteSettings {
 }
 
 export async function getSettings(): Promise<SiteSettings> {
+    const defaultSettings: SiteSettings = {
+        siteName: 'YBS Kulübü',
+        description: '',
+        contact: { email: '', phone: '', address: '' },
+        socialMedia: { instagram: '', twitter: '', linkedin: '', github: '' },
+        maintenanceMode: false
+    }
+
     try {
         const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
+        const parsed = JSON.parse(data)
+
+        // Deep merge with defaults to ensure all fields exist
         return {
-            siteName: 'YBS Kulübü',
-            description: '',
-            contact: { email: '', phone: '', address: '' },
-            socialMedia: { instagram: '', twitter: '', linkedin: '', github: '' },
-            maintenanceMode: false
+            ...defaultSettings,
+            ...parsed,
+            contact: { ...defaultSettings.contact, ...(parsed.contact || {}) },
+            socialMedia: { ...defaultSettings.socialMedia, ...(parsed.socialMedia || {}) }
         }
+    } catch (error) {
+        return defaultSettings
     }
 }
 

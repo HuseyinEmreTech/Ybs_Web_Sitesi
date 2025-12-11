@@ -125,7 +125,7 @@ export default function SettingsAdminPage() {
                             <label className="block text-sm font-medium mb-1">E-posta</label>
                             <input
                                 type="email"
-                                value={settings.contact.email}
+                                value={settings.contact?.email || ''}
                                 onChange={e => setSettings({ ...settings, contact: { ...settings.contact, email: e.target.value } })}
                                 className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
@@ -134,7 +134,7 @@ export default function SettingsAdminPage() {
                             <label className="block text-sm font-medium mb-1">Telefon</label>
                             <input
                                 type="text"
-                                value={settings.contact.phone}
+                                value={settings.contact?.phone || ''}
                                 onChange={e => setSettings({ ...settings, contact: { ...settings.contact, phone: e.target.value } })}
                                 className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
@@ -143,7 +143,7 @@ export default function SettingsAdminPage() {
                             <label className="block text-sm font-medium mb-1">Adres</label>
                             <input
                                 type="text"
-                                value={settings.contact.address}
+                                value={settings.contact?.address || ''}
                                 onChange={e => setSettings({ ...settings, contact: { ...settings.contact, address: e.target.value } })}
                                 className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
@@ -159,7 +159,7 @@ export default function SettingsAdminPage() {
                             <span className="w-24 text-sm font-medium">Instagram</span>
                             <input
                                 type="text"
-                                value={settings.socialMedia.instagram}
+                                value={settings.socialMedia?.instagram || ''}
                                 onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, instagram: e.target.value } })}
                                 className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
@@ -168,7 +168,7 @@ export default function SettingsAdminPage() {
                             <span className="w-24 text-sm font-medium">Twitter (X)</span>
                             <input
                                 type="text"
-                                value={settings.socialMedia.twitter}
+                                value={settings.socialMedia?.twitter || ''}
                                 onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, twitter: e.target.value } })}
                                 className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
@@ -177,7 +177,7 @@ export default function SettingsAdminPage() {
                             <span className="w-24 text-sm font-medium">LinkedIn</span>
                             <input
                                 type="text"
-                                value={settings.socialMedia.linkedin}
+                                value={settings.socialMedia?.linkedin || ''}
                                 onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, linkedin: e.target.value } })}
                                 className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
@@ -186,7 +186,7 @@ export default function SettingsAdminPage() {
                             <span className="w-24 text-sm font-medium">GitHub</span>
                             <input
                                 type="text"
-                                value={settings.socialMedia.github}
+                                value={settings.socialMedia?.github || ''}
                                 onChange={e => setSettings({ ...settings, socialMedia: { ...settings.socialMedia, github: e.target.value } })}
                                 className="flex-1 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
