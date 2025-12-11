@@ -215,6 +215,31 @@ export default function StructurePage() {
         )
     }
 
+    // A small helper component to handle individual input state for array joining/splitting
+    const RoleKeywordInput = ({ initialValue, onSave }: { initialValue: string[], onSave: (val: string[]) => void }) => {
+        const [value, setValue] = useState(initialValue.join(', '))
+
+        useEffect(() => {
+            setValue(initialValue.join(', '))
+        }, [initialValue])
+
+        const handleBlur = () => {
+            const split = value.split(',').map(s => s.trim()).filter(Boolean)
+            onSave(split)
+        }
+
+        return (
+            <input
+                type="text"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                onBlur={handleBlur}
+                className="w-full px-3 py-2 border rounded bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-white text-sm"
+                placeholder="Örn: Başkan, Koordinatör"
+            />
+        )
+    }
+
     return (
         <div className="flex flex-col h-screen bg-slate-100 dark:bg-slate-900 relative overflow-hidden">
             {/* Background Effects */}
@@ -378,12 +403,9 @@ export default function StructurePage() {
                                             {/* Role Keywords */}
                                             <div>
                                                 <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Rol Tanımı (Virgülle)</label>
-                                                <input
-                                                    type="text"
-                                                    value={node.roleKeywords.join(', ')}
-                                                    onChange={(e) => updateSchemaNode(index, 'roleKeywords', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
-                                                    className="w-full px-3 py-2 border rounded bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-white text-sm"
-                                                    placeholder="Örn: Başkan, Koordinatör"
+                                                <RoleKeywordInput
+                                                    initialValue={node.roleKeywords}
+                                                    onSave={(val) => updateSchemaNode(index, 'roleKeywords', val)}
                                                 />
                                             </div>
 

@@ -106,7 +106,9 @@ export default async function CoordinatorsPage() {
 
                                                             {/* Member Count */}
                                                             <div className="text-center">
-                                                                <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{childMembers.length}</span>
+                                                                <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                                                                    {child.memberCount || childMembers.length}
+                                                                </span>
                                                                 <span className="text-xs text-slate-500 block font-medium">Aktif Üye</span>
                                                             </div>
                                                         </div>
@@ -116,7 +118,9 @@ export default async function CoordinatorsPage() {
                                         ) : (
                                             // No subgroups -> Show direct members count
                                             <div className="flex flex-col items-center justify-center py-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                                                <span className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{deptMembers.length}</span>
+                                                <span className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                                                    {node.memberCount || deptMembers.length}
+                                                </span>
                                                 <span className="text-sm text-slate-500 font-medium">Aktif Üye</span>
                                             </div>
                                         )}
