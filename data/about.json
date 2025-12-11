@@ -1,36 +1,36 @@
 {
-    "hero": {
-        "title": "Hakkımızda",
-        "description": "Yönetim Bilişim Sistemleri öğrencilerini bir araya getiren, teknoloji ve yönetim alanında etkinlikler düzenleyen öğrenci kulübüyüz."
+  "hero": {
+    "title": "Hakkımızda",
+    "description": "Yönetim Bilişim Sistemleri öğrencilerini bir araya getiren, teknoloji ve yönetim alanında etkinlikler düzenleyen öğrenci kulübüyüz."
+  },
+  "story": {
+    "title": "Hikayemiz",
+    "content": "YBS Kulübü, Yönetim Bilişim Sistemleri bölümü öğrencilerinin akademik ve sosyal gelişimlerine katkıda bulunmak amacıyla kurulmuştur.\n\nKurulduğumuz günden bu yana, öğrencilerimize teknoloji, yönetim ve kariyer alanlarında değerli deneyimler sunmayı hedefliyoruz.\n\nSeminerler, workshoplar, sosyal etkinlikler ve projelerle üyelerimizin hem kişisel hem de profesyonel gelişimlerine katkıda bulunuyoruz."
+  },
+  "mission": {
+    "title": "Misyonumuz",
+    "description": "YBS öğrencilerini teknoloji ve yönetim alanlarında donatarak, onları iş dünyasına hazırlamak ve akademik başarılarını desteklemek."
+  },
+  "vision": {
+    "title": "Vizyonumuz",
+    "description": "Türkiye'nin en aktif ve etkili YBS öğrenci kulübü olmak; mezunlarımızın sektörde öncü konumlarda yer almasını sağlamak."
+  },
+  "values": [
+    {
+      "title": "Yenilikçilik",
+      "description": "Teknolojideki gelişmeleri yakından takip ediyoruz"
     },
-    "story": {
-        "title": "Hikayemiz",
-        "content": "YBS Kulübü, Yönetim Bilişim Sistemleri bölümü öğrencilerinin akademik ve sosyal gelişimlerine katkıda bulunmak amacıyla kurulmuştur.\n\nKurulduğumuz günden bu yana, öğrencilerimize teknoloji, yönetim ve kariyer alanlarında değerli deneyimler sunmayı hedefliyoruz.\n\nSeminerler, workshoplar, sosyal etkinlikler ve projelerle üyelerimizin hem kişisel hem de profesyonel gelişimlerine katkıda bulunuyoruz."
+    {
+      "title": "İşbirliği",
+      "description": "Birlikte çalışmanın gücüne inanıyoruz"
     },
-    "mission": {
-        "title": "Misyonumuz",
-        "description": "YBS öğrencilerini teknoloji ve yönetim alanlarında donatarak, onları iş dünyasına hazırlamak ve akademik başarılarını desteklemek."
+    {
+      "title": "Öğrenme",
+      "description": "Sürekli gelişim ve öğrenmeyi teşvik ediyoruz"
     },
-    "vision": {
-        "title": "Vizyonumuz",
-        "description": "Türkiye'nin en aktif ve etkili YBS öğrenci kulübü olmak; mezunlarımızın sektörde öncü konumlarda yer almasını sağlamak."
-    },
-    "values": [
-        {
-            "title": "Yenilikçilik",
-            "description": "Teknolojideki gelişmeleri yakından takip ediyoruz"
-        },
-        {
-            "title": "İşbirliği",
-            "description": "Birlikte çalışmanın gücüne inanıyoruz"
-        },
-        {
-            "title": "Öğrenme",
-            "description": "Sürekli gelişim ve öğrenmeyi teşvik ediyoruz"
-        },
-        {
-            "title": "Topluluk",
-            "description": "Güçlü bir topluluk oluşturmayı hedefliyoruz"
-        }
-    ]
+    {
+      "title": "Topluluk",
+      "description": "Güçlü bir topluluk oluşturmayı hedefliyoruz"
+    }
+  ]
 }

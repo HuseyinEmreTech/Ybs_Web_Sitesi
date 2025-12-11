@@ -394,3 +394,117 @@ export async function saveSettings(data: Settings): Promise<void> {
         })
     }
 }
+
+// --- PROJECTS ---
+
+export interface Project {
+    id: string
+    title: string
+    slug: string
+    description: string
+    content: string
+    imageUrl?: string | null
+    technologies: string[]
+    status: string
+    year?: string | null
+    githubUrl?: string | null
+    liveUrl?: string | null
+    teamMembers: TeamMember[]
+    createdAt: string
+    updatedAt: string
+}
+
+export async function getProjects(): Promise<Project[]> {
+    const projects = await (prisma as any).project.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: { teamMembers: true }
+    })
+    return projects.map((p: any) => ({
+        ...p,
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+        teamMembers: p.teamMembers.map((m: any) => ({
+            ...m,
+            socialLinks: m.socialLinks as any,
+            createdAt: m.createdAt.toISOString(),
+            updatedAt: m.updatedAt.toISOString(),
+        }))
+    }))
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+    const project = await (prisma as any).project.findUnique({
+        where: { slug },
+        include: { teamMembers: true }
+    })
+    if (!project) return null
+    return {
+        ...project,
+        createdAt: project.createdAt.toISOString(),
+        updatedAt: project.updatedAt.toISOString(),
+        teamMembers: project.teamMembers.map((m: any) => ({
+            ...m,
+            socialLinks: m.socialLinks as any,
+            createdAt: m.createdAt.toISOString(),
+            updatedAt: m.updatedAt.toISOString(),
+        }))
+    }
+}
+
+export async function createProject(data: Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'teamMembers'> & { teamMemberIds?: string[] }): Promise<Project> {
+    const { teamMemberIds, ...rest } = data
+    const project = await (prisma as any).project.create({
+        data: {
+            ...rest,
+            teamMembers: {
+                connect: teamMemberIds?.map(id => ({ id })) || []
+            }
+        },
+        include: { teamMembers: true }
+    })
+    return {
+        ...project,
+        createdAt: project.createdAt.toISOString(),
+        updatedAt: project.updatedAt.toISOString(),
+        teamMembers: project.teamMembers.map((m: any) => ({
+            ...m,
+            socialLinks: m.socialLinks as any,
+            createdAt: m.createdAt.toISOString(),
+            updatedAt: m.updatedAt.toISOString(),
+        }))
+    }
+}
+
+export async function updateProject(id: string, data: Partial<Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'teamMembers'> & { teamMemberIds?: string[] }>): Promise<Project> {
+    const { teamMemberIds, ...rest } = data
+
+    // Construct update data
+    const updateData: any = { ...rest }
+
+    if (teamMemberIds) {
+        updateData.teamMembers = {
+            set: teamMemberIds.map(id => ({ id }))
+        }
+    }
+
+    const project = await (prisma as any).project.update({
+        where: { id },
+        data: updateData,
+        include: { teamMembers: true }
+    })
+    return {
+        ...project,
+        createdAt: project.createdAt.toISOString(),
+        updatedAt: project.updatedAt.toISOString(),
+        teamMembers: project.teamMembers.map((m: any) => ({
+            ...m,
+            socialLinks: m.socialLinks as any,
+            createdAt: m.createdAt.toISOString(),
+            updatedAt: m.updatedAt.toISOString(),
+        }))
+    }
+}
+
+export async function deleteProject(id: string): Promise<void> {
+    await (prisma as any).project.delete({ where: { id } })
+}

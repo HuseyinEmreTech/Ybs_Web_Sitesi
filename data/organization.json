@@ -95,5 +95,14 @@
       "Etkinlik"
     ],
     "department": "Organizasyon"
+  },
+  {
+    "id": "1765456500590",
+    "title": "Fikir",
+    "roleKeywords": [
+      "Fikir"
+    ],
+    "parentId": "project",
+    "department": "Fikir"
   }
 ]

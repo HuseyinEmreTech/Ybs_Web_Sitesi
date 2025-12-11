@@ -11,9 +11,12 @@ export default function ContactForm() {
     })
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
 
+    const [errorMessage, setErrorMessage] = useState('')
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setStatus('submitting')
+        setErrorMessage('')
 
         try {
             const res = await fetch('/api/contact', {
@@ -22,14 +25,18 @@ export default function ContactForm() {
                 body: JSON.stringify(formData)
             })
 
+            const data = await res.json()
+
             if (res.ok) {
                 setStatus('success')
                 setFormData({ name: '', email: '', subject: '', message: '' })
             } else {
                 setStatus('error')
+                setErrorMessage(data.error || 'Bir hata oluştu.')
             }
         } catch {
             setStatus('error')
+            setErrorMessage('Sunucuya erişilemedi.')
         }
     }
 
@@ -134,7 +141,7 @@ export default function ContactForm() {
 
                 {status === 'error' && (
                     <p className="text-sm text-red-600 dark:text-red-400">
-                        Bir hata oluştu. Lütfen tekrar deneyin.
+                        {errorMessage || 'Bir hata oluştu. Lütfen tekrar deneyin.'}
                     </p>
                 )}
 

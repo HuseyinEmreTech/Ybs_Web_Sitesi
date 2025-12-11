@@ -8,18 +8,30 @@ export default function SettingsAdminPage() {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
 
+    const [error, setError] = useState('')
+
     useEffect(() => {
+        fetchSettings()
+    }, [])
+
+    const fetchSettings = () => {
+        setLoading(true)
+        setError('')
         fetch('/api/settings')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('API yanıt vermedi')
+                return res.json()
+            })
             .then(data => {
                 setSettings(data)
                 setLoading(false)
             })
             .catch(err => {
                 console.error(err)
+                setError('Ayarlar yüklenirken bir hata oluştu.')
                 setLoading(false)
             })
-    }, [])
+    }
 
     async function handleSave(e: React.FormEvent) {
         e.preventDefault()
@@ -45,7 +57,23 @@ export default function SettingsAdminPage() {
         }
     }
 
-    if (loading || !settings) return <div className="p-8 text-center text-slate-500">Ayarlar yükleniyor...</div>
+    if (loading) return <div className="p-8 text-center text-slate-500">Ayarlar yükleniyor...</div>
+
+    if (error) {
+        return (
+            <div className="p-8 text-center">
+                <p className="text-red-500 mb-4">{error}</p>
+                <button
+                    onClick={fetchSettings}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+                >
+                    Tekrar Dene
+                </button>
+            </div>
+        )
+    }
+
+    if (!settings) return <div className="p-8 text-center text-slate-500">Ayarlar bulunamadı.</div>
 
     return (
         <div className="space-y-8 pb-12">

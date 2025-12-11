@@ -7,13 +7,19 @@ export default function MessagesAdminPage() {
     const [messages, setMessages] = useState<ContactMessage[]>([])
     const [loading, setLoading] = useState(true)
 
+    const [error, setError] = useState('')
+
     const fetchMessages = async () => {
+        setLoading(true)
+        setError('')
         try {
             const res = await fetch('/api/contact')
+            if (!res.ok) throw new Error('API hatası')
             const data = await res.json()
             setMessages(data)
         } catch (error) {
             console.error('Failed to fetch messages', error)
+            setError('Mesajlar yüklenemedi.')
         } finally {
             setLoading(false)
         }
@@ -53,6 +59,20 @@ export default function MessagesAdminPage() {
 
     if (loading) return <div className="p-8 text-center text-slate-500">Mesajlar yükleniyor...</div>
 
+    if (error) {
+        return (
+            <div className="p-8 text-center">
+                <p className="text-red-500 mb-4">{error}</p>
+                <button
+                    onClick={fetchMessages}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+                >
+                    Tekrar Dene
+                </button>
+            </div>
+        )
+    }
+
     return (
         <div className="space-y-8 pb-12">
             <div>
@@ -76,8 +96,8 @@ export default function MessagesAdminPage() {
                         <div
                             key={message.id}
                             className={`bg-white dark:bg-slate-800 p-6 rounded-xl border transition-all ${message.read
-                                    ? 'border-slate-200 dark:border-slate-700 opacity-75'
-                                    : 'border-indigo-200 dark:border-indigo-900 shadow-md ring-1 ring-indigo-50 dark:ring-indigo-900/20'
+                                ? 'border-slate-200 dark:border-slate-700 opacity-75'
+                                : 'border-indigo-200 dark:border-indigo-900 shadow-md ring-1 ring-indigo-50 dark:ring-indigo-900/20'
                                 }`}
                         >
                             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">

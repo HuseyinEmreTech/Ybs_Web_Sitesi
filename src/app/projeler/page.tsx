@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
-import { sanityFetch, urlFor } from '@/sanity/lib/client'
-import { projectsQuery, type Project } from '@/sanity/lib/queries'
+import { getProjects, type Project } from '@/lib/data'
 import Section from '@/components/Section'
 import AnimatedGradientText from '@/components/AnimatedGradientText'
 import Button from '@/components/Button'
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
   description: 'YBS Kulübü projeleri ve çalışmaları',
 }
 
-export const revalidate = 60
+export const revalidate = 0 // Dynamic data!
 
 const statusLabels: Record<string, { label: string; color: string }> = {
   devam: { label: 'Devam Ediyor', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' },
@@ -20,10 +19,7 @@ const statusLabels: Record<string, { label: string; color: string }> = {
 }
 
 export default async function ProjelerPage() {
-  const projects = await sanityFetch<Project[]>({
-    query: projectsQuery,
-    tags: ['projects'],
-  })
+  const projects = await getProjects()
 
   return (
     <>
@@ -47,18 +43,22 @@ export default async function ProjelerPage() {
           <div className="grid gap-8 md:grid-cols-2">
             {projects.map((project) => (
               <article
-                key={project._id}
+                key={project.id}
                 className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group"
               >
                 {/* Image */}
-                {project.image && (
+                {project.imageUrl ? (
                   <div className="aspect-video relative bg-slate-100 dark:bg-slate-800 overflow-hidden">
                     <Image
-                      src={urlFor(project.image).width(800).height(450).url()}
+                      src={project.imageUrl}
                       alt={project.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                  </div>
+                ) : (
+                  <div className="aspect-video relative bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center">
+                    <span className="text-4xl">🚀</span>
                   </div>
                 )}
 
@@ -108,16 +108,16 @@ export default async function ProjelerPage() {
                       <div className="flex -space-x-2">
                         {project.teamMembers.slice(0, 4).map((member, i) => (
                           <div
-                            key={i}
+                            key={member.id}
                             className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 border-2 border-white dark:border-slate-900 flex items-center justify-center overflow-hidden ring-1 ring-slate-100 dark:ring-slate-800"
                           >
-                            {member.image ? (
+                            {member.imageUrl ? (
                               <Image
-                                src={urlFor(member.image).width(64).height(64).url()}
+                                src={member.imageUrl}
                                 alt={member.name}
                                 width={32}
                                 height={32}
-                                className="object-cover"
+                                className="object-cover w-full h-full"
                               />
                             ) : (
                               <span className="text-xs text-slate-500 font-medium">
@@ -175,7 +175,7 @@ export default async function ProjelerPage() {
             </div>
             <h3 className="text-lg font-medium text-foreground">Henüz proje yok</h3>
             <p className="mt-2 text-slate-500 dark:text-slate-400">
-              Projeler admin panelinden eklenebilir.
+              Yakında yeni projelerimiz burada listelenecek.
             </p>
           </div>
         )}

@@ -1,16 +1,16 @@
 {
-    "siteName": "YBS Kulübü",
-    "description": "Yönetim Bilişim Sistemleri öğrencilerini bir araya getiren, teknoloji ve yönetim alanında etkinlikler düzenleyen öğrenci kulübü.",
-    "contact": {
-        "email": "ybs@university.edu.tr",
-        "phone": "+90 555 123 45 67",
-        "address": "Üniversite Kampüsü, İşletme Fakültesi, Kat 3, Hatay, Türkiye"
-    },
-    "socialMedia": {
-        "instagram": "https://instagram.com/ybskulubu",
-        "twitter": "https://twitter.com/ybskulubu",
-        "linkedin": "https://linkedin.com/company/ybskulubu",
-        "github": "https://github.com/ybskulubu"
-    },
-    "maintenanceMode": false
+  "siteName": "YBS Kulübü",
+  "description": "Yönetim Bilişim Sistemleri öğrencilerini bir araya getiren, teknoloji ve yönetim alanında etkinlikler düzenleyen öğrenci kulübü.",
+  "contact": {
+    "email": "ybs@university.edu.tr",
+    "phone": "+90 505",
+    "address": "Üniversite Kampüsü, İşletme Fakültesi, Kat 3, Hatay, Türkiye"
+  },
+  "socialMedia": {
+    "instagram": "https://instagram.com/ybskulubu",
+    "twitter": "https://twitter.com/ybskulubu",
+    "linkedin": "https://linkedin.com/company/ybskulubu",
+    "github": "https://github.com/ybskulubu"
+  },
+  "maintenanceMode": false
 }

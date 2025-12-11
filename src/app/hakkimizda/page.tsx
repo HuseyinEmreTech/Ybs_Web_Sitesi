@@ -23,7 +23,7 @@ export default async function HakkimizdaPage() {
             <h1 className="text-3xl font-bold text-foreground sm:text-4xl">
               {data.hero.title}
             </h1>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+            <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 whitespace-pre-wrap">
               {data.hero.description}
             </p>
           </div>
@@ -57,7 +57,7 @@ export default async function HakkimizdaPage() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-foreground">{data.mission.title}</h3>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">
+            <p className="mt-3 text-slate-600 dark:text-slate-400 whitespace-pre-wrap">
               {data.mission.description}
             </p>
           </div>
@@ -70,7 +70,7 @@ export default async function HakkimizdaPage() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-foreground">{data.vision.title}</h3>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">
+            <p className="mt-3 text-slate-600 dark:text-slate-400 whitespace-pre-wrap">
               {data.vision.description}
             </p>
           </div>

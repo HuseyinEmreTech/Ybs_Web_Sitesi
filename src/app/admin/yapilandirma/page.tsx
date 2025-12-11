@@ -24,20 +24,30 @@ export default function StructurePage() {
     const [loading, setLoading] = useState(true)
     const [isEditMode, setIsEditMode] = useState(false) // Toggle Mode
 
+    const [error, setError] = useState('')
+
     useEffect(() => {
         loadData()
     }, [])
 
     async function loadData() {
+        setLoading(true)
+        setError('')
         try {
             const [nodesRes, membersRes] = await Promise.all([
                 fetch('/api/organization'),
                 fetch('/api/team')
             ])
+
+            if (!nodesRes.ok || !membersRes.ok) {
+                throw new Error('Veriler alınamadı')
+            }
+
             setNodes(await nodesRes.json())
             setMembers(await membersRes.json())
         } catch (error) {
             console.error(error)
+            setError('Yapılandırma verileri yüklenemedi.')
         } finally {
             setLoading(false)
         }
@@ -191,6 +201,20 @@ export default function StructurePage() {
     ) : [];
 
     if (loading) return <div className="p-8 text-center text-slate-500">Yükleniyor...</div>
+
+    if (error) {
+        return (
+            <div className="p-8 text-center">
+                <p className="text-red-500 mb-4">{error}</p>
+                <button
+                    onClick={loadData}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+                >
+                    Tekrar Dene
+                </button>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col h-screen bg-slate-100 dark:bg-slate-900 relative overflow-hidden">

@@ -56,6 +56,7 @@ model TeamMember {
   imageUrl    String?
   socialLinks Json     // Stores { linkedin, twitter, github, instagram }
   order       Int      @default(0)
+  projects    Project[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -66,4 +67,22 @@ model Settings {
   socialLinks Json     // Stores { instagram, twitter, linkedin, github }
   contact     Json     // Stores { email, phone, address }
   updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String
+  content      String
+  image        String?  // Changed from imageUrl to image to match Sanity or keep consistent? Let's use image to be simple, or imageUrl to match others. The plan said Image URL. Let's stick to 'imageUrl' for consistency with other models, but the public page used 'image' object from Sanity. I will use 'imageUrl' here and map it later.
+  imageUrl     String?
+  technologies String[]
+  status       String   // 'devam', 'tamamlandi', 'planlaniyor'
+  year         String?
+  githubUrl    String?
+  liveUrl      String?
+  teamMembers  TeamMember[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
