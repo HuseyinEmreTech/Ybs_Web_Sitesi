@@ -8,6 +8,7 @@ type OrganizationNode = {
     roleKeywords: string[];
     department?: string;
     parentId?: string;
+    memberCount?: number;
 };
 
 interface TeamMember {
@@ -124,13 +125,11 @@ export default function StructurePage() {
         await updateMember(member.id, { role: newRole });
     }
 
-    async function addMember(memberId: string) {
+    async function updateMemberCount(count: number) {
         if (!selectedNode) return;
-        if (!selectedNode.department) {
-            alert('Bu pozisyonun departmanı tanımlanmamış.');
-            return;
-        }
-        await updateMember(memberId, { department: selectedNode.department });
+        const newNodes = nodes.map(n => n.id === selectedNode.id ? { ...n, memberCount: count } : n);
+        setNodes(newNodes);
+        await saveNodes(newNodes);
     }
 
     async function updateMember(id: string, updates: Partial<TeamMember>) {
@@ -195,10 +194,10 @@ export default function StructurePage() {
         return roles.some(r => selectedNode.roleKeywords.some(k => r.includes(k.toLowerCase())));
     }) : [];
 
-    const nodeMembers = selectedNode && selectedNode.department ? members.filter(m =>
-        m.department === selectedNode.department &&
-        !leaders.find(l => l.id === m.id)
-    ) : [];
+    // const nodeMembers = selectedNode && selectedNode.department ? members.filter(m =>
+    //     m.department === selectedNode.department &&
+    //     !leaders.find(l => l.id === m.id)
+    // ) : [];
 
     if (loading) return <div className="p-8 text-center text-slate-500">Yükleniyor...</div>
 
@@ -320,51 +319,22 @@ export default function StructurePage() {
                                         </div>
                                     </div>
 
-                                    {/* Team Members Section */}
+                                    {/* Team Members Count Section */}
                                     {selectedNode.department && (
                                         <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
                                             <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
-                                                <span>👥</span> Ekip Üyeleri ({nodeMembers.length})
+                                                <span>👥</span> Aktif Üye Sayısı
                                             </h3>
-                                            <div className="space-y-3 mb-6">
-                                                {nodeMembers.map(member => (
-                                                    <div key={member.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700">
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600 text-xs">{member.name[0]}</div>
-                                                            <div>
-                                                                <div className="font-medium text-slate-800 dark:text-white">{member.name}</div>
-                                                                <div className="text-xs text-slate-500">{member.department}</div>
-                                                            </div>
-                                                        </div>
-                                                        <button
-                                                            onClick={() => updateMember(member.id, { department: '' })}
-                                                            className="text-red-500 text-sm hover:underline"
-                                                        >
-                                                            Çıkar
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                            </div>
 
-                                            <div className="relative group">
-                                                <button className="w-full py-2 border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 rounded-lg hover:border-green-500 hover:text-green-500 transition-colors font-medium">
-                                                    + Üye Ekle
-                                                </button>
-                                                <select
-                                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-slate-900 dark:text-white"
-                                                    onChange={(e) => {
-                                                        if (e.target.value) {
-                                                            addMember(e.target.value);
-                                                            e.target.value = "";
-                                                        }
-                                                    }}
-                                                    defaultValue=""
-                                                >
-                                                    <option value="" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Seçiniz...</option>
-                                                    {members.map(m => (
-                                                        <option key={m.id} value={m.id} className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">{m.name} ({m.department || 'Dep. yok'})</option>
-                                                    ))}
-                                                </select>
+                                            <div className="flex items-center gap-4">
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    value={selectedNode.memberCount || 0}
+                                                    onChange={(e) => updateMemberCount(parseInt(e.target.value) || 0)}
+                                                    className="w-32 px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none text-xl font-bold text-center"
+                                                />
+                                                <span className="text-slate-500 dark:text-slate-400">kişi bu ekipte görev alıyor.</span>
                                             </div>
                                         </div>
                                     )}
@@ -442,6 +412,17 @@ export default function StructurePage() {
                                                         <option key={n.id} value={n.id} className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">{n.title}</option>
                                                     ))}
                                                 </select>
+                                            </div>
+                                            {/* Member Count (Edit mode) */}
+                                            <div>
+                                                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Üye Sayısı</label>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    value={node.memberCount || 0}
+                                                    onChange={(e) => updateSchemaNode(index, 'memberCount', parseInt(e.target.value) || 0)}
+                                                    className="w-full px-3 py-2 border rounded bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-white text-sm"
+                                                />
                                             </div>
                                         </div>
 

@@ -9,6 +9,7 @@ export type OrganizationNode = {
     roleKeywords: string[];
     department?: string;
     parentId?: string;
+    memberCount?: number;
 };
 
 export async function getOrganizationChart(): Promise<OrganizationNode[]> {
