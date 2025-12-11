@@ -13,7 +13,7 @@ const footerLinks = {
     { name: 'Blog', href: '/blog' },
     { name: 'Etkinlikler', href: '/etkinlikler' },
     { name: 'Projeler', href: '/projeler' },
-    { name: 'Emeği Geçenler', href: '/emegi-gecenler' },
+    { name: 'Geliştirici', href: '/emegi-gecenler' },
   ],
 }
 

@@ -1,12 +1,13 @@
 [
     {
-        "id": "1",
-        "name": "YBS Web Ekibi",
-        "role": "Geliştirme & Tasarım",
-        "image": "/ekip/logo.jpeg",
+        "id": "developer",
+        "name": "Hüseyin Emre Tech",
+        "role": "Siteyi Kodlayan",
+        "image": "/ekip/huseyinemre.JPG",
         "social": {
-            "github": "https://github.com/ybskulubu",
-            "instagram": "https://instagram.com/ybskulubu"
+            "github": "https://github.com/HuseyinEmreTech",
+            "linkedin": "https://www.linkedin.com/in/huseyinemretech/",
+            "instagram": "https://www.instagram.com/huseyin_emre_80/"
         }
     }
 ]

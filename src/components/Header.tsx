@@ -15,11 +15,23 @@ const navigation = [
   { name: 'Blog', href: '/blog' },
   { name: 'Projeler', href: '/projeler' },
   { name: 'İletişim', href: '/iletisim' },
+  { name: 'Geliştirici', href: '/emegi-gecenler' },
 ]
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [siteName, setSiteName] = useState('YBS Kulübü')
+
+  // Fetch site name from settings
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.siteName) setSiteName(data.siteName)
+      })
+      .catch(() => { })
+  }, [])
 
   // Handle scroll effect
   useEffect(() => {
@@ -50,7 +62,7 @@ export default function Header() {
             <span className={clsx(
               "font-bold text-lg hidden sm:block transition-colors text-foreground"
             )}>
-              YBS Kulübü
+              {siteName}
             </span>
           </Link>
 
