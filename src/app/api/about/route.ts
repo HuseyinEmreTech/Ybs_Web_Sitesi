@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getAboutData, saveAboutData } from '@/lib/about'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
     try {
         const data = await getAboutData()

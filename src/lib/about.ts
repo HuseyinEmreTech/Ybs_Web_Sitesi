@@ -43,5 +43,6 @@ export async function getAboutData(): Promise<AboutData> {
 }
 
 export async function saveAboutData(data: AboutData) {
+    await fs.mkdir(path.dirname(DATA_FILE), { recursive: true })
     await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8')
 }
