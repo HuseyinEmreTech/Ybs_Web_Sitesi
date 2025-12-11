@@ -114,12 +114,12 @@ export default function ContactForm() {
                         onChange={handleChange}
                         className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-shadow bg-white dark:bg-slate-950 dark:text-white"
                     >
-                        <option value="">Konu Seçin</option>
-                        <option value="membership">Üyelik Başvurusu</option>
-                        <option value="event">Etkinlik Hakkında</option>
-                        <option value="collaboration">İşbirliği Teklifi</option>
-                        <option value="sponsorship">Sponsorluk</option>
-                        <option value="other">Diğer</option>
+                        <option value="" className="dark:bg-slate-950">Konu Seçin</option>
+                        <option value="membership" className="dark:bg-slate-950">Üyelik Başvurusu</option>
+                        <option value="event" className="dark:bg-slate-950">Etkinlik Hakkında</option>
+                        <option value="collaboration" className="dark:bg-slate-950">İşbirliği Teklifi</option>
+                        <option value="sponsorship" className="dark:bg-slate-950">Sponsorluk</option>
+                        <option value="other" className="dark:bg-slate-950">Diğer</option>
                     </select>
                 </div>
 

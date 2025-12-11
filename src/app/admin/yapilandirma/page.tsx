@@ -303,18 +303,18 @@ export default function StructurePage() {
                                                 + Lider Ekle
                                             </button>
                                             <select
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-slate-900 dark:text-white"
                                                 onChange={(e) => {
                                                     if (e.target.value) {
                                                         addLeader(e.target.value);
                                                         e.target.value = "";
                                                     }
                                                 }}
-                                                value=""
+                                                defaultValue=""
                                             >
-                                                <option value="">Seçiniz...</option>
+                                                <option value="" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Seçiniz...</option>
                                                 {members.map(m => (
-                                                    <option key={m.id} value={m.id}>{m.name} ({m.role || 'Rol yok'})</option>
+                                                    <option key={m.id} value={m.id} className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">{m.name} ({m.role || 'Rol yok'})</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -351,18 +351,18 @@ export default function StructurePage() {
                                                     + Üye Ekle
                                                 </button>
                                                 <select
-                                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-slate-900 dark:text-white"
                                                     onChange={(e) => {
                                                         if (e.target.value) {
                                                             addMember(e.target.value);
                                                             e.target.value = "";
                                                         }
                                                     }}
-                                                    value=""
+                                                    defaultValue=""
                                                 >
-                                                    <option value="">Seçiniz...</option>
+                                                    <option value="" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Seçiniz...</option>
                                                     {members.map(m => (
-                                                        <option key={m.id} value={m.id}>{m.name} ({m.department || 'Dep. yok'})</option>
+                                                        <option key={m.id} value={m.id} className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">{m.name} ({m.department || 'Dep. yok'})</option>
                                                     ))}
                                                 </select>
                                             </div>
@@ -437,9 +437,9 @@ export default function StructurePage() {
                                                     onChange={(e) => updateSchemaNode(index, 'parentId', e.target.value || undefined)}
                                                     className="w-full px-3 py-2 border rounded bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-white text-sm"
                                                 >
-                                                    <option value="">(En Üst Seviye)</option>
+                                                    <option value="" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">(En Üst Seviye)</option>
                                                     {nodes.filter(n => n.id !== node.id).map(n => (
-                                                        <option key={n.id} value={n.id}>{n.title}</option>
+                                                        <option key={n.id} value={n.id} className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">{n.title}</option>
                                                     ))}
                                                 </select>
                                             </div>
