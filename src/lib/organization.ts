@@ -1,7 +1,4 @@
-import fs from 'fs/promises'
-import path from 'path'
-
-const CONFIG_FILE = path.join(process.cwd(), 'data', 'organization.json')
+import { prisma } from '@/lib/prisma'
 
 export type OrganizationNode = {
     id: string;
@@ -14,15 +11,31 @@ export type OrganizationNode = {
 
 export async function getOrganizationChart(): Promise<OrganizationNode[]> {
     try {
-        const data = await fs.readFile(CONFIG_FILE, 'utf-8')
-        return JSON.parse(data)
+        const chart = await prisma.organizationChart.findUnique({
+            where: { id: 'default' }
+        })
+
+        if (!chart || !chart.nodes) return []
+
+        return chart.nodes as OrganizationNode[]
     } catch (error) {
         console.error('Failed to read organization chart:', error)
-        // Fallback to default if file likely doesn't exist or is corrupt
         return []
     }
 }
 
 export async function saveOrganizationChart(chart: OrganizationNode[]): Promise<void> {
-    await fs.writeFile(CONFIG_FILE, JSON.stringify(chart, null, 2), 'utf-8')
+    try {
+        await prisma.organizationChart.upsert({
+            where: { id: 'default' },
+            update: { nodes: chart as any }, // strict typing for Json might need 'as any' or proper InputJsonValue
+            create: {
+                id: 'default',
+                nodes: chart as any
+            }
+        })
+    } catch (error) {
+        console.error('Failed to save organization chart:', error)
+        throw error
+    }
 }

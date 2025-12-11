@@ -62,11 +62,21 @@ model TeamMember {
 }
 
 model Settings {
-  id          String   @id @default(cuid())
-  stats       Json     // Stores { activeMembers, events, projects, yearsOfExperience }
-  socialLinks Json     // Stores { instagram, twitter, linkedin, github }
-  contact     Json     // Stores { email, phone, address }
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default("default") // Singleton pattern
+  siteName        String   @default("YBS Kulübü")
+  description     String   @default("")
+  contact         Json     // Stores { email, phone, address }
+  socialMedia     Json     // Stores { instagram, twitter, linkedin, github }
+  maintenanceMode Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+  // Removed 'stats' as it's not in the main settings interface currently, 
+  // or logic can be adapted if needed.
+}
+
+model OrganizationChart {
+  id        String   @id @default("default") // Singleton pattern
+  nodes     Json     // Stores OrganizationNode[]
+  updatedAt DateTime @updatedAt
 }
 
 model Project {
