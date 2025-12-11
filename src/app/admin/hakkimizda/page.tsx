@@ -18,8 +18,11 @@ export default function AboutAdminPage() {
         setLoading(true)
         setError('')
         fetch('/api/about')
-            .then(res => {
-                if (!res.ok) throw new Error('API yanıt vermedi')
+            .then(async res => {
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}))
+                    throw new Error(errorData.details || errorData.error || 'API yanıt vermedi')
+                }
                 return res.json()
             })
             .then(data => {
@@ -28,7 +31,7 @@ export default function AboutAdminPage() {
             })
             .catch(err => {
                 console.error(err)
-                setError('Veriler yüklenirken bir hata oluştu.')
+                setError(err.message || 'Veriler yüklenirken bir hata oluştu.')
                 setLoading(false)
             })
     }

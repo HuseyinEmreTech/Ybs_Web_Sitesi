@@ -47,6 +47,8 @@ model Event {
   updatedAt   DateTime @updatedAt
 }
 
+// ... (User, Post, Event models remain unchanged)
+
 model TeamMember {
   id          String   @id @default(cuid())
   name        String
@@ -65,13 +67,12 @@ model Settings {
   id              String   @id @default("default") // Singleton pattern
   siteName        String   @default("YBS Kulübü")
   description     String   @default("")
+  logoUrl         String?  @default("/ekip/logo.jpeg")
   contact         Json     // Stores { email, phone, address }
   socialMedia     Json     // Stores { instagram, twitter, linkedin, github }
   stats           Json     // Stores { activeMembers, events, projects, yearsOfExperience }
   maintenanceMode Boolean  @default(false)
   updatedAt       DateTime @updatedAt
-  // Removed 'stats' as it's not in the main settings interface currently, 
-  // or logic can be adapted if needed.
 }
 
 model OrganizationChart {
@@ -86,8 +87,8 @@ model Project {
   slug         String   @unique
   description  String
   content      String
-  image        String?  // Changed from imageUrl to image to match Sanity or keep consistent? Let's use image to be simple, or imageUrl to match others. The plan said Image URL. Let's stick to 'imageUrl' for consistency with other models, but the public page used 'image' object from Sanity. I will use 'imageUrl' here and map it later.
-  imageUrl     String?
+  image        String?  // Frontend expects 'image' for cover.
+  imageUrl     String?  // Consistent naming.
   technologies String[]
   status       String   // 'devam', 'tamamlandi', 'planlaniyor'
   year         String?
@@ -96,4 +97,24 @@ model Project {
   teamMembers  TeamMember[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model About {
+  id          String   @id @default("default")
+  hero        Json     // { title, description }
+  story       Json     // { title, content }
+  mission     Json     // { title, description }
+  vision      Json     // { title, description }
+  values      Json     // { title, description }[]
+  updatedAt   DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }

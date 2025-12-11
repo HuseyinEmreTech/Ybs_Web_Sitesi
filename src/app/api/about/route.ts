@@ -5,10 +5,13 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
     try {
+        console.log('API /api/about: Fetching data...')
         const data = await getAboutData()
+        console.log('API /api/about: Data fetched successfully')
         return NextResponse.json(data)
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 })
+        console.error('API /api/about Error:', error)
+        return NextResponse.json({ error: 'Failed to fetch data', details: String(error) }, { status: 500 })
     }
 }
 
