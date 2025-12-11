@@ -360,7 +360,7 @@ export async function getSettings(): Promise<Settings> {
         stats: defaultStats,
         // Cast JSON fields
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        socialLinks: (settings.socialMedia || { instagram: '', twitter: '', linkedin: '', github: '' }) as any,
+        socialLinks: ((settings as any).socialMedia || { instagram: '', twitter: '', linkedin: '', github: '' }) as any,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         contact: (settings.contact || { email: '', phone: '', address: '' }) as any,
         updatedAt: settings.updatedAt.toISOString(),
