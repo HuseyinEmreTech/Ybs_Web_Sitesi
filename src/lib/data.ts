@@ -308,6 +308,28 @@ export async function createUser(data: Omit<User, 'id'>): Promise<User> {
     return await prisma.user.create({ data })
 }
 
+export async function updateUser(currentEmail: string, data: Partial<User>): Promise<User> {
+    const user = await prisma.user.findUnique({ where: { email: currentEmail } })
+    if (!user) throw new Error('Kullanıcı bulunamadı')
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updateData: any = {
+        name: data.name,
+        role: data.role,
+        email: data.email,
+        imageUrl: data.imageUrl,
+    }
+
+    if (data.password) {
+        updateData.password = hashPassword(data.password)
+    }
+
+    return await prisma.user.update({
+        where: { id: user.id },
+        data: updateData
+    })
+}
+
 export async function deleteUser(email: string): Promise<void> {
     // We use email as ID in deletion logic of existing API
     const user = await prisma.user.findUnique({ where: { email } })
@@ -335,19 +357,16 @@ export async function validateUser(email: string, password: string): Promise<Use
 export async function getSettings(): Promise<Settings> {
     const settings = await prisma.settings.findFirst()
 
-    // Default stats
-    const defaultStats = {
-        activeMembers: '0',
-        events: '0',
-        projects: '0',
-        yearsOfExperience: '0'
-    }
-
     if (!settings) {
         // Return default structure
         return {
             id: 'default',
-            stats: defaultStats,
+            stats: {
+                activeMembers: '0',
+                events: '0',
+                projects: '0',
+                yearsOfExperience: '0'
+            },
             socialLinks: { instagram: '', twitter: '', linkedin: '', github: '' },
             contact: { email: '', phone: '', address: '' },
             updatedAt: new Date().toISOString()
@@ -356,8 +375,8 @@ export async function getSettings(): Promise<Settings> {
 
     return {
         ...settings,
-        // Calculate or provide default stats since they are removed from DB model
-        stats: defaultStats,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        stats: ((settings as any).stats || { activeMembers: '0', events: '0', projects: '0', yearsOfExperience: '0' }) as any,
         // Cast JSON fields
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         socialLinks: ((settings as any).socialMedia || { instagram: '', twitter: '', linkedin: '', github: '' }) as any,

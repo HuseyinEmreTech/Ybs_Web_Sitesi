@@ -67,6 +67,7 @@ model Settings {
   description     String   @default("")
   contact         Json     // Stores { email, phone, address }
   socialMedia     Json     // Stores { instagram, twitter, linkedin, github }
+  stats           Json     // Stores { activeMembers, events, projects, yearsOfExperience }
   maintenanceMode Boolean  @default(false)
   updatedAt       DateTime @updatedAt
   // Removed 'stats' as it's not in the main settings interface currently, 

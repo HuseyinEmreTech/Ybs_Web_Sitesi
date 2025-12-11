@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getUsers, createUser, deleteUser, hashPassword, type User } from '@/lib/data'
+import { getUsers, createUser, updateUser, deleteUser, hashPassword, type User } from '@/lib/data'
 
 export async function GET() {
     try {
@@ -30,6 +30,7 @@ export async function POST(request: Request) {
             password: hashPassword(body.password),
             name: body.name,
             role: body.role || 'editor',
+            imageUrl: body.imageUrl,
         })
 
         const { password, ...safeUser } = newUser
@@ -37,6 +38,25 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error('Create user error:', error)
         return NextResponse.json({ error: 'Kullanıcı oluşturulamadı' }, { status: 500 })
+    }
+}
+
+export async function PUT(request: Request) {
+    try {
+        const body = await request.json()
+        const { currentEmail, ...updates } = body
+
+        if (!currentEmail) {
+            return NextResponse.json({ error: 'Mevcut e-posta gerekli' }, { status: 400 })
+        }
+
+        const updatedUser = await updateUser(currentEmail, updates)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...safeUser } = updatedUser
+        return NextResponse.json(safeUser)
+    } catch (error) {
+        console.error('Update user error:', error)
+        return NextResponse.json({ error: 'Kullanıcı güncellenemedi' }, { status: 500 })
     }
 }
 

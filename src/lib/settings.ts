@@ -18,6 +18,12 @@ export interface SiteSettings {
         linkedin: string
         github: string
     }
+    stats: {
+        activeMembers: string
+        events: string
+        projects: string
+        yearsOfExperience: string
+    }
     maintenanceMode: boolean
 }
 
@@ -26,6 +32,7 @@ const defaultSettings: SiteSettings = {
     description: '',
     contact: { email: '', phone: '', address: '' },
     socialMedia: { instagram: '', twitter: '', linkedin: '', github: '' },
+    stats: { activeMembers: '0', events: '0', projects: '0', yearsOfExperience: '0' },
     maintenanceMode: false
 }
 
@@ -40,12 +47,15 @@ export async function getSettings(): Promise<SiteSettings> {
             // Cast JSON fields to expected types
             const contact = settings.contact as SiteSettings['contact'] || defaultSettings.contact
             const socialMedia = settings.socialMedia as SiteSettings['socialMedia'] || defaultSettings.socialMedia
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const stats = settings.stats as any || defaultSettings.stats
 
             return {
                 siteName: settings.siteName,
                 description: settings.description,
                 contact: { ...defaultSettings.contact, ...contact },
                 socialMedia: { ...defaultSettings.socialMedia, ...socialMedia },
+                stats: { ...defaultSettings.stats, ...stats },
                 maintenanceMode: settings.maintenanceMode
             }
         }
@@ -59,7 +69,8 @@ export async function getSettings(): Promise<SiteSettings> {
                 ...defaultSettings,
                 ...parsed,
                 contact: { ...defaultSettings.contact, ...(parsed.contact || {}) },
-                socialMedia: { ...defaultSettings.socialMedia, ...(parsed.socialMedia || {}) }
+                socialMedia: { ...defaultSettings.socialMedia, ...(parsed.socialMedia || {}) },
+                stats: { ...defaultSettings.stats, ...(parsed.stats || {}) }
             }
 
             // Save to DB for next time
@@ -86,6 +97,7 @@ export async function saveSettings(settings: SiteSettings) {
                 description: settings.description,
                 contact: settings.contact,
                 socialMedia: settings.socialMedia,
+                stats: settings.stats,
                 maintenanceMode: settings.maintenanceMode
             },
             create: {
@@ -94,6 +106,7 @@ export async function saveSettings(settings: SiteSettings) {
                 description: settings.description,
                 contact: settings.contact,
                 socialMedia: settings.socialMedia,
+                stats: settings.stats,
                 maintenanceMode: settings.maintenanceMode
             }
         })

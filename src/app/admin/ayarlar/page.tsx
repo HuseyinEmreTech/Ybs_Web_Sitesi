@@ -194,6 +194,49 @@ export default function SettingsAdminPage() {
                     </div>
                 </div>
 
+                {/* Stats */}
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <h2 className="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400">İstatistikler (Sayaçlar)</h2>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Aktif Üye Sayısı</label>
+                            <input
+                                type="text"
+                                value={settings.stats?.activeMembers || ''}
+                                onChange={e => setSettings({ ...settings, stats: { ...settings.stats, activeMembers: e.target.value } })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Etkinlik Sayısı</label>
+                            <input
+                                type="text"
+                                value={settings.stats?.events || ''}
+                                onChange={e => setSettings({ ...settings, stats: { ...settings.stats, events: e.target.value } })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Proje Sayısı</label>
+                            <input
+                                type="text"
+                                value={settings.stats?.projects || ''}
+                                onChange={e => setSettings({ ...settings, stats: { ...settings.stats, projects: e.target.value } })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Yıllık Deneyim</label>
+                            <input
+                                type="text"
+                                value={settings.stats?.yearsOfExperience || ''}
+                                onChange={e => setSettings({ ...settings, stats: { ...settings.stats, yearsOfExperience: e.target.value } })}
+                                className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Maintenance Mode */}
                 <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-xl border border-red-200 dark:border-red-900/30">
                     <div className="flex items-center justify-between">
