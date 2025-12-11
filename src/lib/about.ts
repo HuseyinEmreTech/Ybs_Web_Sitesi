@@ -3,28 +3,7 @@ import path from 'path'
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'about.json')
 
-export interface AboutData {
-    hero: {
-        title: string
-        description: string
-    }
-    story: {
-        title: string
-        content: string
-    }
-    mission: {
-        title: string
-        description: string
-    }
-    vision: {
-        title: string
-        description: string
-    }
-    values: {
-        title: string
-        description: string
-    }[]
-}
+import { AboutData } from '@/lib/types'
 
 export async function getAboutData(): Promise<AboutData> {
     try {

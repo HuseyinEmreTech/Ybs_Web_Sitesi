@@ -7,6 +7,7 @@ const DATA_FILE = path.join(process.cwd(), 'data', 'settings.json')
 export interface SiteSettings {
     siteName: string
     description: string
+    logoUrl: string
     contact: {
         email: string
         phone: string
@@ -30,6 +31,7 @@ export interface SiteSettings {
 const defaultSettings: SiteSettings = {
     siteName: 'YBS Kulübü',
     description: '',
+    logoUrl: '/ekip/logo.jpeg',
     contact: { email: '', phone: '', address: '' },
     socialMedia: { instagram: '', twitter: '', linkedin: '', github: '' },
     stats: { activeMembers: '0', events: '0', projects: '0', yearsOfExperience: '0' },
@@ -53,6 +55,7 @@ export async function getSettings(): Promise<SiteSettings> {
             return {
                 siteName: settings.siteName,
                 description: settings.description,
+                logoUrl: (settings as any).logoUrl || defaultSettings.logoUrl,
                 contact: { ...defaultSettings.contact, ...contact },
                 socialMedia: { ...defaultSettings.socialMedia, ...socialMedia },
                 stats: { ...defaultSettings.stats, ...stats },

@@ -22,6 +22,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [siteName, setSiteName] = useState('YBS Kulübü')
+  const [logoUrl, setLogoUrl] = useState('/ekip/logo.jpeg')
 
   // Fetch site name from settings
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function Header() {
       .then(res => res.json())
       .then(data => {
         if (data.siteName) setSiteName(data.siteName)
+        if (data.logoUrl) setLogoUrl(data.logoUrl)
       })
       .catch(() => { })
   }, [])
@@ -58,7 +60,7 @@ export default function Header() {
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <img src="/ekip/logo.jpeg" alt="YBS Logo" className="w-10 h-10 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform" />
+            <img src={logoUrl} alt="YBS Logo" className="w-10 h-10 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform" />
             <span className={clsx(
               "font-bold text-lg hidden sm:block transition-colors text-foreground"
             )}>

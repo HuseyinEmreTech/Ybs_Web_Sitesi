@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import type { AboutData } from '@/lib/about'
+import type { AboutData } from '@/lib/types'
 
 export default function AboutAdminPage() {
     const [data, setData] = useState<AboutData | null>(null)
