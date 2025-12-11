@@ -396,7 +396,7 @@ export async function saveSettings(data: Settings): Promise<void> {
             where: { id: existing.id },
             data: {
                 stats: data.stats,
-                socialLinks: data.socialLinks,
+                socialMedia: data.socialLinks,
                 contact: data.contact,
             }
         })
@@ -404,7 +404,7 @@ export async function saveSettings(data: Settings): Promise<void> {
         await prisma.settings.create({
             data: {
                 stats: data.stats,
-                socialLinks: data.socialLinks,
+                socialMedia: data.socialLinks,
                 contact: data.contact,
             }
         })
