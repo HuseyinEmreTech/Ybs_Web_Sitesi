@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'YBS Kulübü yönetim kurulu',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60 // Cache for 60 seconds (ISR)
 
 export default async function EkipPage() {
   const [members, fullChart] = await Promise.all([

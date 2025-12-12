@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: 'YBS Kulübü çalışma grupları ve koordinatörlükler',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60 // Cache for 60 seconds (ISR)
 
 export default async function CoordinatorsPage() {
     const [members, fullChart] = await Promise.all([
