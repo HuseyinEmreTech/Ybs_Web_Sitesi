@@ -20,9 +20,9 @@ const menuItems = [
     { href: '/admin/hakkimizda', label: 'Hakkımızda', icon: '🏢' },
     { href: '/admin/mesajlar', label: 'Gelen Kutusu', icon: '✉️' },
     { href: '/admin/ayarlar', label: 'Site Ayarları', icon: '⚙️' },
-
     { href: '/admin/kullanicilar', label: 'Kullanıcılar', icon: '🔐' },
     { href: '/admin/projeler', label: 'Projeler', icon: '🚀' },
+    { href: '/admin/rehber', label: 'Rehber', icon: '📚' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
