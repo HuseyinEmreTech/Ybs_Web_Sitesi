@@ -1,7 +1,7 @@
 import { getEvents } from '@/lib/data'
 import EventsClient from './EventsClient'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60 // ISR: Cache for 60 seconds
 
 export const metadata = {
   title: 'Etkinlikler',

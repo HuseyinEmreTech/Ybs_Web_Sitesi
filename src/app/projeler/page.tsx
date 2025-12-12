@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'YBS Kulübü projeleri ve çalışmaları',
 }
 
-export const revalidate = 0 // Dynamic data!
+export const revalidate = 60 // ISR: Cache for 60 seconds
 
 const statusLabels: Record<string, { label: string; color: string }> = {
   devam: { label: 'Devam Ediyor', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' },

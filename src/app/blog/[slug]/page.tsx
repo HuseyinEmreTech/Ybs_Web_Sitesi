@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getPostBySlug, getPosts } from '@/lib/data'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300 // ISR: Cache for 5 minutes
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

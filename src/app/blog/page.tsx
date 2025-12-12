@@ -3,7 +3,7 @@ import Section from '@/components/Section'
 import Card from '@/components/Card'
 import { getPosts, type Post } from '@/lib/data'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60 // ISR: Cache for 60 seconds
 
 export const metadata = {
   title: 'Blog',
