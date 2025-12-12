@@ -1,8 +1,30 @@
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { Prisma } from '@prisma/client'
 
 // Types (Mirrors of Prisma Models but with String dates for frontend compatibility)
 // We keep the interfaces close to what they were to minimize frontend breakage
+
+export interface SocialLinks {
+    linkedin?: string
+    twitter?: string
+    github?: string
+    instagram?: string
+}
+
+export interface Stats {
+    activeMembers: string
+    events: string
+    projects: string
+    yearsOfExperience: string
+}
+
+export interface SettingsContact {
+    email: string
+    phone: string
+    address: string
+}
+
 export interface Post {
     id: string
     title: string
@@ -38,12 +60,7 @@ export interface TeamMember {
     department: string
     bio: string
     imageUrl?: string | null
-    socialLinks: {
-        linkedin?: string
-        twitter?: string
-        github?: string
-        instagram?: string
-    }
+    socialLinks: SocialLinks
     order: number
     createdAt: string
     updatedAt: string
@@ -60,23 +77,9 @@ export interface User {
 
 export interface Settings {
     id: string
-    stats: {
-        activeMembers: string
-        events: string
-        projects: string
-        yearsOfExperience: string
-    }
-    socialLinks: {
-        instagram: string
-        twitter: string
-        linkedin: string
-        github: string
-    }
-    contact: {
-        email: string
-        phone: string
-        address: string
-    }
+    stats: Stats
+    socialLinks: SocialLinks
+    contact: SettingsContact
     updatedAt: string
 }
 
@@ -232,8 +235,8 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     })
     return members.map(m => ({
         ...m,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        socialLinks: m.socialLinks as any,
+        // Prisma stores JsonValue, we trust it matches SocialLinks interface
+        socialLinks: m.socialLinks ? (m.socialLinks as unknown as SocialLinks) : {},
         createdAt: m.createdAt.toISOString(),
         updatedAt: m.updatedAt.toISOString(),
     }))
@@ -243,13 +246,12 @@ export async function createTeamMember(data: Omit<TeamMember, 'id' | 'createdAt'
     const member = await prisma.teamMember.create({
         data: {
             ...data,
-            socialLinks: data.socialLinks, // JSON
+            socialLinks: data.socialLinks as unknown as Prisma.InputJsonValue,
         }
     })
     return {
         ...member,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        socialLinks: member.socialLinks as any,
+        socialLinks: member.socialLinks ? (member.socialLinks as unknown as SocialLinks) : {},
         createdAt: member.createdAt.toISOString(),
         updatedAt: member.updatedAt.toISOString(),
     }
@@ -260,13 +262,12 @@ export async function updateTeamMember(id: string, data: Partial<TeamMember>): P
         where: { id },
         data: {
             ...data,
-            socialLinks: data.socialLinks,
+            socialLinks: data.socialLinks as unknown as Prisma.InputJsonValue,
         }
     })
     return {
         ...member,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        socialLinks: member.socialLinks as any,
+        socialLinks: member.socialLinks ? (member.socialLinks as unknown as SocialLinks) : {},
         createdAt: member.createdAt.toISOString(),
         updatedAt: member.updatedAt.toISOString(),
     }
@@ -312,8 +313,7 @@ export async function updateUser(currentEmail: string, data: Partial<User>): Pro
     const user = await prisma.user.findUnique({ where: { email: currentEmail } })
     if (!user) throw new Error('Kullanıcı bulunamadı')
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const updateData: any = {
+    const updateData: Prisma.UserUpdateInput = {
         name: data.name,
         role: data.role,
         email: data.email,
@@ -375,13 +375,10 @@ export async function getSettings(): Promise<Settings> {
 
     return {
         ...settings,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        stats: ((settings as any).stats || { activeMembers: '0', events: '0', projects: '0', yearsOfExperience: '0' }) as any,
+        stats: (settings.stats as unknown as Stats) || { activeMembers: '0', events: '0', projects: '0', yearsOfExperience: '0' },
         // Cast JSON fields
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        socialLinks: ((settings as any).socialMedia || { instagram: '', twitter: '', linkedin: '', github: '' }) as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        contact: (settings.contact || { email: '', phone: '', address: '' }) as any,
+        socialLinks: (settings.socialMedia as unknown as SocialLinks) || { instagram: '', twitter: '', linkedin: '', github: '' },
+        contact: (settings.contact as unknown as SettingsContact) || { email: '', phone: '', address: '' },
         updatedAt: settings.updatedAt.toISOString(),
     }
 }
@@ -395,17 +392,17 @@ export async function saveSettings(data: Settings): Promise<void> {
         await prisma.settings.update({
             where: { id: existing.id },
             data: {
-                stats: data.stats,
-                socialMedia: data.socialLinks,
-                contact: data.contact,
+                stats: data.stats as unknown as Prisma.InputJsonValue,
+                socialMedia: data.socialLinks as unknown as Prisma.InputJsonValue,
+                contact: data.contact as unknown as Prisma.InputJsonValue,
             }
         })
     } else {
         await prisma.settings.create({
             data: {
-                stats: data.stats,
-                socialMedia: data.socialLinks,
-                contact: data.contact,
+                stats: data.stats as unknown as Prisma.InputJsonValue,
+                socialMedia: data.socialLinks as unknown as Prisma.InputJsonValue,
+                contact: data.contact as unknown as Prisma.InputJsonValue,
             }
         })
     }
@@ -435,15 +432,14 @@ export async function getProjects(): Promise<Project[]> {
         orderBy: { createdAt: 'desc' },
         include: { teamMembers: true }
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return projects.map((p: any) => ({
+
+    return projects.map((p) => ({
         ...p,
         createdAt: p.createdAt.toISOString(),
         updatedAt: p.updatedAt.toISOString(),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        teamMembers: p.teamMembers.map((m: any) => ({
+        teamMembers: p.teamMembers.map((m) => ({
             ...m,
-            socialLinks: m.socialLinks as any,
+            socialLinks: m.socialLinks ? (m.socialLinks as unknown as SocialLinks) : {},
             createdAt: m.createdAt.toISOString(),
             updatedAt: m.updatedAt.toISOString(),
         }))
@@ -451,7 +447,7 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-    const project = await (prisma as any).project.findUnique({
+    const project = await prisma.project.findUnique({
         where: { slug },
         include: { teamMembers: true }
     })
@@ -460,9 +456,9 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         ...project,
         createdAt: project.createdAt.toISOString(),
         updatedAt: project.updatedAt.toISOString(),
-        teamMembers: project.teamMembers.map((m: any) => ({
+        teamMembers: project.teamMembers.map((m) => ({
             ...m,
-            socialLinks: m.socialLinks as any,
+            socialLinks: m.socialLinks ? (m.socialLinks as unknown as SocialLinks) : {},
             createdAt: m.createdAt.toISOString(),
             updatedAt: m.updatedAt.toISOString(),
         }))
@@ -471,7 +467,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 
 export async function createProject(data: Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'teamMembers'> & { teamMemberIds?: string[] }): Promise<Project> {
     const { teamMemberIds, ...rest } = data
-    const project = await (prisma as any).project.create({
+    const project = await prisma.project.create({
         data: {
             ...rest,
             teamMembers: {
@@ -484,9 +480,9 @@ export async function createProject(data: Omit<Project, 'id' | 'createdAt' | 'up
         ...project,
         createdAt: project.createdAt.toISOString(),
         updatedAt: project.updatedAt.toISOString(),
-        teamMembers: project.teamMembers.map((m: any) => ({
+        teamMembers: project.teamMembers.map((m) => ({
             ...m,
-            socialLinks: m.socialLinks as any,
+            socialLinks: m.socialLinks ? (m.socialLinks as unknown as SocialLinks) : {},
             createdAt: m.createdAt.toISOString(),
             updatedAt: m.updatedAt.toISOString(),
         }))
@@ -496,8 +492,8 @@ export async function createProject(data: Omit<Project, 'id' | 'createdAt' | 'up
 export async function updateProject(id: string, data: Partial<Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'teamMembers'> & { teamMemberIds?: string[] }>): Promise<Project> {
     const { teamMemberIds, ...rest } = data
 
-    // Construct update data
-    const updateData: any = { ...rest }
+    // Construct update data with strict typing (not any)
+    const updateData: Prisma.ProjectUpdateInput = { ...rest }
 
     if (teamMemberIds) {
         updateData.teamMembers = {
@@ -505,7 +501,7 @@ export async function updateProject(id: string, data: Partial<Omit<Project, 'id'
         }
     }
 
-    const project = await (prisma as any).project.update({
+    const project = await prisma.project.update({
         where: { id },
         data: updateData,
         include: { teamMembers: true }
@@ -514,9 +510,9 @@ export async function updateProject(id: string, data: Partial<Omit<Project, 'id'
         ...project,
         createdAt: project.createdAt.toISOString(),
         updatedAt: project.updatedAt.toISOString(),
-        teamMembers: project.teamMembers.map((m: any) => ({
+        teamMembers: project.teamMembers.map((m) => ({
             ...m,
-            socialLinks: m.socialLinks as any,
+            socialLinks: m.socialLinks ? (m.socialLinks as unknown as SocialLinks) : {},
             createdAt: m.createdAt.toISOString(),
             updatedAt: m.updatedAt.toISOString(),
         }))
@@ -524,5 +520,5 @@ export async function updateProject(id: string, data: Partial<Omit<Project, 'id'
 }
 
 export async function deleteProject(id: string): Promise<void> {
-    await (prisma as any).project.delete({ where: { id } })
+    await prisma.project.delete({ where: { id } })
 }

@@ -18,12 +18,42 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://ybskulubu.com'),
   title: {
     default: 'YBS Kulübü',
     template: '%s | YBS Kulübü',
   },
   description: 'Yönetim Bilişim Sistemleri öğrenci kulübü - Etkinlikler, projeler ve daha fazlası',
-  keywords: ['YBS', 'Yönetim Bilişim Sistemleri', 'öğrenci kulübü', 'üniversite'],
+  keywords: ['YBS', 'Yönetim Bilişim Sistemleri', 'öğrenci kulübü', 'üniversite', 'teknoloji', 'yazılım', 'kariyer'],
+  authors: [{ name: 'YBS Kulübü' }],
+  creator: 'YBS Kulübü',
+  publisher: 'YBS Kulübü',
+  openGraph: {
+    type: 'website',
+    locale: 'tr_TR',
+    url: 'https://ybskulubu.com',
+    title: 'YBS Kulübü',
+    description: 'Yönetim Bilişim Sistemleri öğrenci kulübü',
+    siteName: 'YBS Kulübü',
+    images: [
+      {
+        url: '/og-image.jpg', // Make sure this exists or is replaced by a real one later
+        width: 1200,
+        height: 630,
+        alt: 'YBS Kulübü',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'YBS Kulübü',
+    description: 'Yönetim Bilişim Sistemleri öğrenci kulübü',
+    images: ['/og-image.jpg'],
+    creator: '@ybskulubu',
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({
@@ -47,6 +77,23 @@ export default function RootLayout({
           </main>
           <Footer />
         </ThemeProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'YBS Kulübü',
+              url: 'https://ybskulubu.com',
+              logo: 'https://ybskulubu.com/ekip/logo.jpeg',
+              sameAs: [
+                'https://twitter.com/ybskulubu',
+                'https://instagram.com/ybskulubu',
+                'https://linkedin.com/company/ybskulubu'
+              ]
+            })
+          }}
+        />
       </body>
     </html>
   )

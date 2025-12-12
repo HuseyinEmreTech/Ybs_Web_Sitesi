@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
     try {
-        console.log('API /api/about: Fetching data...')
+
         const data = await getAboutData()
         console.log('API /api/about: Data fetched successfully')
         return NextResponse.json(data)

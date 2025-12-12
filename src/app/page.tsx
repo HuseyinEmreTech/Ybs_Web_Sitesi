@@ -7,7 +7,7 @@ import AnimatedGradientText from '@/components/AnimatedGradientText'
 import MatrixRain from '@/components/MatrixRain'
 import { getPosts, getEvents, getSettings, type Post, type Event } from '@/lib/data'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function HomePage() {
   const posts = (await getPosts()).slice(0, 3)

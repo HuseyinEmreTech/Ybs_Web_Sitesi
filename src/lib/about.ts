@@ -7,7 +7,7 @@ const DATA_FILE = path.join(process.cwd(), 'data', 'about.json')
 
 export async function getAboutData(): Promise<AboutData> {
     try {
-        console.log('getAboutData: Fetching from DB...')
+
         const record = await prisma.about.findUnique({
             where: { id: 'default' }
         })

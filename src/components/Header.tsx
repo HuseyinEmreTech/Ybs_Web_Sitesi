@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import AnimatedGradientText from '@/components/AnimatedGradientText'
 
 const navigation = [
   { name: 'Ana Sayfa', href: '/' },
@@ -61,11 +62,9 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <img src={logoUrl} alt="YBS Logo" className="w-10 h-10 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform" />
-            <span className={clsx(
-              "font-bold text-lg hidden sm:block transition-colors text-foreground"
-            )}>
+            <AnimatedGradientText className="font-semibold text-base sm:text-lg hidden sm:block whitespace-nowrap">
               {siteName}
-            </span>
+            </AnimatedGradientText>
           </Link>
 
           {/* Desktop Navigation */}
@@ -96,11 +95,25 @@ export default function Header() {
             >
               <span className="sr-only">Menüyü aç</span>
               {mobileMenuOpen ? (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg
+                  suppressHydrationWarning
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg
+                  suppressHydrationWarning
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
               )}

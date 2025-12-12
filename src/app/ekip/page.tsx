@@ -18,9 +18,12 @@ export default async function EkipPage() {
     getOrganizationChart()
   ])
 
-  // Filter for Board Members only - ordered: President, VP, Sayman, GenSec, Board
-  const boardIds = ['president', 'vp', '1765394515619', 'gensec', 'board'];
-  const organizationChart = boardIds.map(id => fullChart.find(node => node.id === id)).filter(Boolean) as typeof fullChart;
+  // 1. Define Groups
+  const executiveIds = ['vp', '1765394515619', 'gensec']; // VP, Sayman, GenSec
+  const boardNodeId = 'board';
+
+  const executiveChart = executiveIds.map(id => fullChart.find(node => node.id === id)).filter(Boolean) as typeof fullChart;
+  const boardNode = fullChart.find(node => node.id === boardNodeId);
 
   // 1. Find President (Strict check)
   const president = members.find(m => {
@@ -59,7 +62,10 @@ export default async function EkipPage() {
   const allLeaders = new Set<string>();
   if (president) allLeaders.add(president.id);
 
-  organizationChart.forEach(node => {
+  const nodesToCheck = [...executiveChart];
+  if (boardNode) nodesToCheck.push(boardNode);
+
+  nodesToCheck.forEach(node => {
     const leaders = getLeadersForNode(node.roleKeywords);
     leaders.forEach(l => allLeaders.add(l.id));
   });
@@ -73,9 +79,9 @@ export default async function EkipPage() {
     );
   }
 
-  // Track leaders displayed so far to prevent duplicates in grid
-  const appLeadersCombined = new Set<string>();
-  if (president) appLeadersCombined.add(president.id);
+  // Track displayed members to prevent duplicates
+  const displayedMembers = new Set<string>();
+  if (president) displayedMembers.add(president.id);
 
   return (
     <>
@@ -107,75 +113,74 @@ export default async function EkipPage() {
               </div>
             )}
 
-            {/* Level 2: Board Members */}
-            <div className="relative w-full">
-              {/* Horizontal Connector Line (Only for desktop) */}
-              <div className="absolute top-0 left-[20%] right-[20%] h-0.5 bg-indigo-300 dark:bg-indigo-800 -translate-y-px hidden lg:block"></div>
+            {/* Level 2: Executives (Tree Structure) */}
+            <div className="relative w-full max-w-5xl mb-20">
+              {/* Horizontal Connector Line (Desktop) */}
+              <div className="absolute -top-8 left-[16%] right-[16%] h-8 border-x-0 border-t-2 border-indigo-300 dark:border-indigo-800 hidden lg:block rounded-t-3xl"></div>
+              {/* Center vertical line connecting to President's line */}
+              <div className="absolute -top-16 left-1/2 -translate-x-1/2 h-8 w-0.5 bg-indigo-300 dark:bg-indigo-800 hidden lg:block"></div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative pt-10 lg:pt-0 justify-items-center">
-                {organizationChart.map((node, index) => {
-                  // Skip President in this loop
-                  if (node.id === 'president') return null;
-
-                  // Get leaders but FILTER OUT those already displayed
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                {executiveChart.map((node, index) => {
+                  // Get leaders
                   const rawLeaders = getLeadersForNode(node.roleKeywords);
-                  const uniqueLeaders = rawLeaders.filter(l => !appLeadersCombined.has(l.id));
+                  const uniqueLeaders = rawLeaders.filter(l => !displayedMembers.has(l.id));
+                  uniqueLeaders.forEach(l => displayedMembers.add(l.id));
 
-                  // Mark these as displayed
-                  uniqueLeaders.forEach(l => appLeadersCombined.add(l.id));
-
-                  const deptMembers = getDepartmentMembers(node.department);
-                  // Filter out members who have ALREADY been displayed as leaders or in previous groups
-                  const uniqueDeptMembers = deptMembers.filter(m => !appLeadersCombined.has(m.id));
-
-                  // Mark valid dept members as displayed
-                  uniqueDeptMembers.forEach(m => appLeadersCombined.add(m.id));
-
-                  // If no unique leaders and no members, hide this node
-                  if (uniqueLeaders.length === 0 && uniqueDeptMembers.length === 0) return null;
+                  if (uniqueLeaders.length === 0) return null;
 
                   return (
-                    // Widen the node container to allow 2 cards side-by-side (max-w-xl)
                     <div key={node.id} className="flex flex-col items-center relative w-full">
-
                       {/* Vertical connector to node (Desktop) */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-8 w-0.5 bg-indigo-300 dark:bg-indigo-800 hidden lg:block"></div>
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 h-8 w-0.5 bg-indigo-300 dark:bg-indigo-800 hidden lg:block"></div>
 
-                      {/* Node Title */}
                       <ScrollReveal direction="up" delay={index * 0.1} className="w-full flex flex-col items-center">
-                        <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4 text-center min-h-[3rem] flex items-center justify-center bg-white dark:bg-slate-900 px-4 py-2 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 relative z-10">
+                        <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-6 text-center min-h-[3rem] flex items-center justify-center bg-white dark:bg-slate-900 px-6 py-2 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 relative z-10 w-full max-w-[200px]">
                           {node.title}
                         </h3>
 
-                        {/* Leaders - Flex for singles, Grid for multiples */}
-                        {uniqueLeaders.length === 1 ? (
-                          <div className="flex justify-center mb-4 w-full">
-                            <MemberCard key={uniqueLeaders[0].id} member={uniqueLeaders[0]} />
-                          </div>
-                        ) : uniqueLeaders.length > 1 ? (
-                          <div className="flex flex-wrap justify-center gap-3 mb-4 w-full">
-                            {uniqueLeaders.map(leader => (
-                              <MemberCard key={leader.id} member={leader} />
-                            ))}
-                          </div>
-                        ) : null}
-                      </ScrollReveal>
-
-
-                      {/* Dept Members (if any fall into this bucket but aren't leaders) */}
-                      {uniqueDeptMembers.length > 0 && (
-                        <div className="flex flex-wrap justify-center gap-3">
-                          {uniqueDeptMembers.map(member => (
-                            <SmallMemberCard key={member.id} member={member} />
+                        <div className="flex justify-center w-full">
+                          {uniqueLeaders.map(leader => (
+                            <MemberCard key={leader.id} member={leader} />
                           ))}
                         </div>
-                      )}
-
+                      </ScrollReveal>
                     </div>
                   )
                 })}
               </div>
             </div>
+
+            {/* Level 3: Board Members (Grid Structure) */}
+            {boardNode && (
+              <div className="relative w-full border-t border-slate-200 dark:border-slate-800 pt-16">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 text-sm font-medium tracking-widest uppercase">
+                  Yönetim Kurulu Üyeleri
+                </div>
+
+                <ScrollReveal direction="up" className="w-full">
+                  {(() => {
+                    // Logic for Board Members
+                    const rawLeaders = getLeadersForNode(boardNode.roleKeywords);
+                    const uniqueLeaders = rawLeaders.filter(l => !displayedMembers.has(l.id));
+                    uniqueLeaders.forEach(l => displayedMembers.add(l.id));
+
+                    // Also include any 'Board' department members if they exist and aren't leaders
+                    // (Though usually Board Members are defined by role)
+
+                    if (uniqueLeaders.length === 0) return null;
+
+                    return (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+                        {uniqueLeaders.map(member => (
+                          <MemberCard key={member.id} member={member} />
+                        ))}
+                      </div>
+                    )
+                  })()}
+                </ScrollReveal>
+              </div>
+            )}
 
           </div>
         </div>
@@ -212,17 +217,17 @@ function MemberCard({ member, isPresident = false }: { member: TeamMember, isPre
 
   return (
     <div className={`
-      relative bg-white dark:bg-slate-800 rounded-2xl p-4 text-center shadow-md hover:shadow-xl transition-all
+      relative bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all
       border border-slate-100 dark:border-slate-700
-      ${isPresident ? 'w-72 ring-4 ring-indigo-500/10' : 'w-48'}
+      ${isPresident ? 'w-full max-w-sm ring-4 ring-indigo-500/10' : 'w-full max-w-[18rem]'}
     `}>
       {member.imageUrl ? (
-        <div className={`${isPresident ? 'w-32 h-32' : 'w-20 h-20'} mx-auto rounded-full overflow-hidden mb-3 border-4 border-indigo-100 dark:border-slate-700 shadow-inner`}>
+        <div className={`${isPresident ? 'w-40 h-40' : 'w-28 h-28'} mx-auto rounded-full overflow-hidden mb-3 border-4 border-indigo-100 dark:border-slate-700 shadow-inner`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
         </div>
       ) : (
-        <div className={`${isPresident ? 'w-32 h-32 text-4xl' : 'w-20 h-20 text-xl'} mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold mb-3 shadow-inner`}>
+        <div className={`${isPresident ? 'w-40 h-40 text-5xl' : 'w-28 h-28 text-2xl'} mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold mb-3 shadow-inner`}>
           {member.name.charAt(0)}
         </div>
       )}
