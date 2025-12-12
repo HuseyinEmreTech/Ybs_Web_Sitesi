@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import PageTransition from '@/components/PageTransition'
+import { Analytics } from '@vercel/analytics/next'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -94,6 +95,7 @@ export default function RootLayout({
             })
           }}
         />
+        <Analytics />
       </body>
     </html>
   )
