@@ -32,7 +32,7 @@ export default async function HomePage() {
           <div className="max-w-3xl">
             <ScrollReveal direction="left">
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6">
-                <AnimatedGradientText>YBS Kulübü</AnimatedGradientText>
+                <AnimatedGradientText>İste YBS Topluluğu</AnimatedGradientText>
               </h1>
             </ScrollReveal>
             <ScrollReveal direction="left" delay={0.1}>
