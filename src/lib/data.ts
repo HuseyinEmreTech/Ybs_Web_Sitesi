@@ -347,8 +347,16 @@ export async function validateUser(email: string, password: string): Promise<Use
         const isValid = await bcrypt.compare(password, user.password)
         return isValid ? user : null
     } else {
-        // Legacy plain text password
-        return user.password === password ? user : null
+        // Legacy plain text password - migrate to bcrypt on successful login
+        if (user.password === password) {
+            // Auto-migrate to hashed password for security
+            await prisma.user.update({
+                where: { id: user.id },
+                data: { password: hashPassword(password) }
+            })
+            return user
+        }
+        return null
     }
 }
 

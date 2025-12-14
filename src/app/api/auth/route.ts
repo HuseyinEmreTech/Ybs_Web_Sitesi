@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 import { validateUser } from '@/lib/data'
 import { cookies } from 'next/headers'
+import { randomUUID } from 'crypto'
 
-// Simple session token generation
+// Cryptographically secure session token generation
 function generateToken(): string {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36)
+    return randomUUID() + '-' + randomUUID()
 }
 
 export async function POST(request: Request) {
