@@ -241,11 +241,13 @@ const guideSections: GuideSection[] = [
             'Eğer kendi bilgisayarınızdaki bir resmi kullanmak istiyorsanız, önce "hizliresim.com", "imgbb.com" gibi bir siteye yükleyin.',
             'Yükleme tamamlandıktan sonra verilen "Doğrudan Bağlantı" (Direct Link) veya görselin kendisine sağ tıklayıp aldığınız adresi kullanın.',
             'Kopyaladığınız adresi Admin panelindeki ilgili "Görsel URL" kutucuğuna yapıştırın.',
+            'YENİ: Linki yapıştırdığınızda hemen altında "Önizleme" (Preview) çıkacaktır. Eğer resminiz görünüyorsa link doğrudur.',
+            'Eğer "Yüklenemedi" hatası alırsanız linkin doğrudan bir resim dosyasına (jpg/png) gittiğinden emin olun.',
         ],
         tips: [
             'Doğru bir görsel linki genellikle ".jpg", ".png", ".jpeg", ".webp" ile biter.',
             'Linki tarayıcı adres çubuğuna yapıştırdığınızda sadece resim görünmelidir.',
-            'Google Drive veya Dropbox linkleri genellikle doğrudan çalışmaz.',
+            'Yeni eklenen "Site Ayarları" sayfasından site logosunu da aynı yöntemle güncelleyebilirsiniz.',
         ]
     },
 ]
@@ -401,7 +403,7 @@ export default function RehberPage() {
                                 Admin paneli sürekli geliştirilmektedir. Yeni özellikler eklendikçe rehber güncellenecektir.
                             </p>
                             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg text-sm font-medium">
-                                📅 Son güncelleme: Aralık 2024
+                                📅 Son güncelleme: 15/12/2025
                             </span>
                         </div>
                     </div>

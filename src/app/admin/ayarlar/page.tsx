@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import type { SiteSettings } from '@/lib/settings'
+import ImageInput from '@/components/admin/ImageInput'
 
 export default function SettingsAdminPage() {
     const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -105,6 +106,16 @@ export default function SettingsAdminPage() {
                                 className="w-full px-4 py-2 border rounded-lg bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none"
                             />
                         </div>
+
+                        {/* Logo Input */}
+                        <ImageInput
+                            label="Site Logosu (URL)"
+                            value={settings.logoUrl || ''}
+                            onChange={(val) => setSettings({ ...settings, logoUrl: val })}
+                            placeholder="https://example.com/logo.png"
+                            helpText="Logonun şeffaf arka planlı (PNG/WEBP) olması önerilir."
+                        />
+
                         <div>
                             <label className="block text-sm font-medium mb-1">Site Açıklaması (Footer)</label>
                             <textarea
