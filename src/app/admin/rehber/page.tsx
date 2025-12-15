@@ -214,6 +214,24 @@ const guideSections: GuideSection[] = [
             'Teknoloji etiketleri arama için faydalıdır',
         ]
     },
+    {
+        id: 'gorsel-url',
+        title: "Görsel URL'si Nasıl Alınır?",
+        icon: '🖼️',
+        description: 'Sitemize resim eklemek için görselin internet üzerindeki adresine (URL) ihtiyacınız vardır. Bu rehberde görsel adresini nasıl alacağınızı öğrenebilirsiniz.',
+        steps: [
+            'Google Görseller veya herhangi bir web sitesinde beğendiğiniz resmin üzerine SAĞ TIKLAYIN.',
+            'Açılan menüden "Bütününü yeni sekmede aç" veya "Resim adresini kopyala" seçeneğine tıklayın. (Tarayıcıya göre değişebilir: "Copy Image Address", "Kopyala: Resim Adresi")',
+            'Eğer kendi bilgisayarınızdaki bir resmi kullanmak istiyorsanız, önce "hizliresim.com", "imgbb.com" gibi bir siteye yükleyin.',
+            'Yükleme tamamlandıktan sonra verilen "Doğrudan Bağlantı" (Direct Link) veya görselin kendisine sağ tıklayıp aldığınız adresi kullanın.',
+            'Kopyaladığınız adresi Admin panelindeki ilgili "Görsel URL" kutucuğuna yapıştırın.',
+        ],
+        tips: [
+            'Doğru bir görsel linki genellikle ".jpg", ".png", ".jpeg", ".webp" ile biter.',
+            'Linki tarayıcı adres çubuğuna yapıştırdığınızda sadece resim görünmelidir.',
+            'Google Drive veya Dropbox linkleri genellikle doğrudan çalışmaz.',
+        ]
+    },
 ]
 
 export default function RehberPage() {
@@ -270,8 +288,8 @@ export default function RehberPage() {
                                     key={section.id}
                                     onClick={() => setActiveSection(section.id)}
                                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeSection === section.id
-                                            ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-medium'
-                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
+                                        ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-medium'
+                                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                                         }`}
                                 >
                                     <span className="text-lg">{section.icon}</span>

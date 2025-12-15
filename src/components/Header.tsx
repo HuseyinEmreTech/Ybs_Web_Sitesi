@@ -137,7 +137,7 @@ export default function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="lg:hidden fixed inset-0 z-40 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl flex flex-col pt-24 px-6"
+              className="lg:hidden fixed inset-0 z-40 bg-white dark:bg-slate-950 flex flex-col pt-24 px-6"
             >
               <motion.div
                 className="flex flex-col gap-4"
