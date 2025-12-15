@@ -33,14 +33,18 @@ export default function HeroLogo({ logoUrl, siteName }: HeroLogoProps) {
                 }}
                 className="relative w-full h-full rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-2xl flex items-center justify-center p-6 sm:p-8"
             >
-                <div className="relative w-full h-full rounded-full overflow-hidden shadow-inner ring-1 ring-white/30 dark:ring-white/10">
-                    <Image
-                        src={logoUrl}
-                        alt={siteName}
-                        fill
-                        className="object-cover"
-                        priority
-                    />
+                <div className="relative w-full h-full rounded-full overflow-hidden shadow-inner ring-1 ring-white/30 dark:ring-white/10 flex items-center justify-center bg-slate-100 dark:bg-slate-800">
+                    {logoUrl ? (
+                        <Image
+                            src={logoUrl}
+                            alt={siteName}
+                            fill
+                            className="object-cover"
+                            priority
+                        />
+                    ) : (
+                        <span className="text-4xl font-bold text-indigo-500">{siteName.charAt(0)}</span>
+                    )}
                 </div>
             </motion.div>
 

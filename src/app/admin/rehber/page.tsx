@@ -215,6 +215,22 @@ const guideSections: GuideSection[] = [
         ]
     },
     {
+        id: 'sorun-giderme',
+        title: 'Sorun Giderme (Troubleshooting)',
+        icon: '🔧',
+        description: 'Karşılaşabileceğiniz olası sorunlar ve çözüm önerileri.',
+        steps: [
+            'Eğer siteye erişemiyorsanız, internet bağlantınızı kontrol edin.',
+            'Sayfa bembeyaz açılıyorsa veya "Bir Şeyler Ters Gitti" hatası görüyorsanız sayfayı yenileyin.',
+            'Görseller görünmüyorsa, eklediğiniz URL\'in herkese açık olduğundan emin olun.',
+            'Değişiklikleriniz görünmüyorsa sayfayı yenileyin (F5 veya Ctrl+R).',
+        ],
+        tips: [
+            'Hata almaya devam ederseniz yönetici ile iletişime geçin.',
+            'Yeni eklenen özellikler için sayfayı yenilemeniz gerekebilir.',
+        ]
+    },
+    {
         id: 'gorsel-url',
         title: "Görsel URL'si Nasıl Alınır?",
         icon: '🖼️',
