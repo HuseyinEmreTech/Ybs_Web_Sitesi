@@ -352,3 +352,31 @@ body {
     linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
 }
+
+/* Gradient Borders */
+.border-gradient-t {
+  border-top: 1px solid transparent;
+  background: 
+    linear-gradient(#f8fafc, #f8fafc) padding-box,
+    linear-gradient(90deg, #6366f1, #a855f7, #ec4899) border-box;
+}
+
+.dark .border-gradient-t {
+  background: 
+    linear-gradient(#020617, #020617) padding-box,
+    linear-gradient(90deg, #6366f1, #a855f7, #ec4899) border-box;
+}
+
+/* Card Glow Effect */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+.dark .hover-glow:hover {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}

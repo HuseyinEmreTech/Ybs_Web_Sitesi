@@ -7,6 +7,8 @@ import SmoothScroll from '@/components/SmoothScroll'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import PageTransition from '@/components/PageTransition'
 import { Analytics } from '@vercel/analytics/next'
+import { ToastProvider } from '@/components/Toast'
+import ScrollProgress from '@/components/ScrollProgress'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -71,12 +73,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SmoothScroll />
-          <Header />
-          <main className="pt-16 min-h-screen">
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer />
+          <ToastProvider>
+            <ScrollProgress />
+            <SmoothScroll />
+            <Header />
+            <main className="pt-16 min-h-screen">
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer />
+          </ToastProvider>
         </ThemeProvider>
         <script
           type="application/ld+json"
@@ -97,6 +102,6 @@ export default function RootLayout({
         />
         <Analytics />
       </body>
-    </html>
+    </html >
   )
 }

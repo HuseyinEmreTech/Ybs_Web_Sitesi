@@ -80,6 +80,8 @@ export interface Settings {
     stats: Stats
     socialLinks: SocialLinks
     contact: SettingsContact
+    logoUrl?: string
+    siteName?: string
     updatedAt: string
 }
 
@@ -387,6 +389,8 @@ export async function getSettings(): Promise<Settings> {
         // Cast JSON fields
         socialLinks: (settings.socialMedia as unknown as SocialLinks) || { instagram: '', twitter: '', linkedin: '', github: '' },
         contact: (settings.contact as unknown as SettingsContact) || { email: '', phone: '', address: '' },
+        logoUrl: settings.logoUrl || undefined,
+        siteName: settings.siteName || undefined,
         updatedAt: settings.updatedAt.toISOString(),
     }
 }

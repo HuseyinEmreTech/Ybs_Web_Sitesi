@@ -217,8 +217,8 @@ function MemberCard({ member, isPresident = false }: { member: TeamMember, isPre
 
   return (
     <div className={`
-      relative bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all
-      border border-slate-100 dark:border-slate-700
+      relative bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-md border border-slate-100 dark:border-slate-700
+      hover-glow transition-all
       ${isPresident ? 'w-full max-w-sm ring-4 ring-indigo-500/10' : 'w-full max-w-[18rem]'}
     `}>
       {member.imageUrl ? (
