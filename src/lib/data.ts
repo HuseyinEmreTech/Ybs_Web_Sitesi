@@ -111,15 +111,20 @@ export function hashPassword(password: string): string {
 // --- POSTS ---
 
 export async function getPosts(): Promise<Post[]> {
-    const posts = await prisma.post.findMany({
-        orderBy: { publishedAt: 'desc' }
-    })
-    return posts.map(p => ({
-        ...p,
-        publishedAt: p.publishedAt.toISOString(),
-        createdAt: p.createdAt.toISOString(),
-        updatedAt: p.updatedAt.toISOString(),
-    }))
+    try {
+        const posts = await prisma.post.findMany({
+            orderBy: { publishedAt: 'desc' }
+        })
+        return posts.map(p => ({
+            ...p,
+            publishedAt: p.publishedAt.toISOString(),
+            createdAt: p.createdAt.toISOString(),
+            updatedAt: p.updatedAt.toISOString(),
+        }))
+    } catch (error) {
+        console.error('getPosts error:', error)
+        return []
+    }
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
@@ -172,15 +177,20 @@ export async function deletePost(id: string): Promise<void> {
 // --- EVENTS ---
 
 export async function getEvents(): Promise<Event[]> {
-    const events = await prisma.event.findMany({
-        orderBy: { date: 'asc' }
-    })
-    return events.map(e => ({
-        ...e,
-        date: e.date.toISOString(),
-        createdAt: e.createdAt.toISOString(),
-        updatedAt: e.updatedAt.toISOString(),
-    }))
+    try {
+        const events = await prisma.event.findMany({
+            orderBy: { date: 'asc' }
+        })
+        return events.map(e => ({
+            ...e,
+            date: e.date.toISOString(),
+            createdAt: e.createdAt.toISOString(),
+            updatedAt: e.updatedAt.toISOString(),
+        }))
+    } catch (error) {
+        console.error('getEvents error:', error)
+        return []
+    }
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {
@@ -365,10 +375,38 @@ export async function validateUser(email: string, password: string): Promise<Use
 // --- SETTINGS ---
 
 export async function getSettings(): Promise<Settings> {
-    const settings = await prisma.settings.findFirst()
+    try {
+        const settings = await prisma.settings.findFirst()
 
-    if (!settings) {
-        // Return default structure
+        if (!settings) {
+            // Return default structure
+            return {
+                id: 'default',
+                stats: {
+                    activeMembers: '0',
+                    events: '0',
+                    projects: '0',
+                    yearsOfExperience: '0'
+                },
+                socialLinks: { instagram: '', twitter: '', linkedin: '', github: '' },
+                contact: { email: '', phone: '', address: '' },
+                updatedAt: new Date().toISOString()
+            }
+        }
+
+        return {
+            ...settings,
+            stats: (settings.stats as unknown as Stats) || { activeMembers: '0', events: '0', projects: '0', yearsOfExperience: '0' },
+            // Cast JSON fields
+            socialLinks: (settings.socialMedia as unknown as SocialLinks) || { instagram: '', twitter: '', linkedin: '', github: '' },
+            contact: (settings.contact as unknown as SettingsContact) || { email: '', phone: '', address: '' },
+            logoUrl: settings.logoUrl || undefined,
+            siteName: settings.siteName || undefined,
+            updatedAt: settings.updatedAt.toISOString(),
+        }
+    } catch (error) {
+        console.error('getSettings error:', error)
+        // Return safe default on error
         return {
             id: 'default',
             stats: {
@@ -381,17 +419,6 @@ export async function getSettings(): Promise<Settings> {
             contact: { email: '', phone: '', address: '' },
             updatedAt: new Date().toISOString()
         }
-    }
-
-    return {
-        ...settings,
-        stats: (settings.stats as unknown as Stats) || { activeMembers: '0', events: '0', projects: '0', yearsOfExperience: '0' },
-        // Cast JSON fields
-        socialLinks: (settings.socialMedia as unknown as SocialLinks) || { instagram: '', twitter: '', linkedin: '', github: '' },
-        contact: (settings.contact as unknown as SettingsContact) || { email: '', phone: '', address: '' },
-        logoUrl: settings.logoUrl || undefined,
-        siteName: settings.siteName || undefined,
-        updatedAt: settings.updatedAt.toISOString(),
     }
 }
 

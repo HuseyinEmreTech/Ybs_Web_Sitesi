@@ -8,6 +8,37 @@ import { clsx } from 'clsx'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import AnimatedGradientText from '@/components/AnimatedGradientText'
 
+import { createPortal } from 'react-dom'
+
+function MobileMenuPortal({ children, isOpen }: { children: React.ReactNode, isOpen: boolean }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  if (!mounted) return null
+
+  return createPortal(
+    <AnimatePresence mode="wait">
+      {isOpen && children}
+    </AnimatePresence>,
+    document.body
+  )
+}
+
 const navigation = [
   { name: 'Ana Sayfa', href: '/' },
   { name: 'Hakkımızda', href: '/hakkimizda' },
@@ -131,56 +162,62 @@ export default function Header() {
         </div>
 
         {/* Mobile Navigation */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="lg:hidden fixed inset-0 z-40 bg-white dark:bg-slate-950 flex flex-col pt-24 px-6"
+        <MobileMenuPortal isOpen={mobileMenuOpen}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="lg:hidden fixed inset-0 z-[9999] bg-white dark:bg-slate-950 flex flex-col pt-24 px-6 overflow-y-auto"
+          >
+            {/* Close Button at top right explicitly */}
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="absolute top-6 right-6 p-2 text-slate-600 dark:text-slate-300"
             >
-              <motion.div
-                className="flex flex-col gap-4"
-                initial="closed"
-                animate="open"
-                exit="closed"
-                variants={{
-                  open: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
-                  closed: { transition: { staggerChildren: 0.05, staggerDirection: -1 } }
-                }}
-              >
-                {navigation.map((item) => {
-                  const isActive = pathname === item.href
-                  return (
-                    <motion.div
-                      key={item.name}
-                      variants={{
-                        open: { y: 0, opacity: 1 },
-                        closed: { y: 20, opacity: 0 }
-                      }}
+              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <motion.div
+              className="flex flex-col gap-4 mt-8"
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={{
+                open: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+                closed: { transition: { staggerChildren: 0.05, staggerDirection: -1 } }
+              }}
+            >
+              {navigation.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <motion.div
+                    key={item.name}
+                    variants={{
+                      open: { y: 0, opacity: 1 },
+                      closed: { y: 20, opacity: 0 }
+                    }}
+                  >
+                    <Link
+                      href={item.href}
+                      className={clsx(
+                        "block px-4 py-4 text-2xl font-bold rounded-2xl transition-all",
+                        isActive
+                          ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400"
+                          : "text-foreground hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Link
-                        href={item.href}
-                        className={clsx(
-                          "block px-4 py-4 text-2xl font-bold rounded-2xl transition-all",
-                          isActive
-                            ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400"
-                            : "text-foreground hover:bg-slate-100 dark:hover:bg-slate-800/50"
-                        )}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    </motion.div>
-                  )
-                })}
-              </motion.div>
+                      {item.name}
+                    </Link>
+                  </motion.div>
+                )
+              })}
             </motion.div>
-          )}
-        </AnimatePresence>
+          </motion.div>
+        </MobileMenuPortal>
       </nav>
-    </motion.header>
+    </motion.header >
   )
 }
-
-
