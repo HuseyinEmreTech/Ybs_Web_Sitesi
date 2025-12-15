@@ -13,6 +13,7 @@ interface Event {
     description: string
     date: string
     eventType: string
+    imageUrl?: string | null
 }
 
 interface EventsClientProps {
@@ -40,8 +41,8 @@ export default function EventsClient({ upcomingEvents, pastEvents, allEvents }: 
                             <button
                                 onClick={() => setViewMode('list')}
                                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${viewMode === 'list'
-                                        ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
-                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
+                                    ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
                                     }`}
                             >
                                 📋 Liste
@@ -49,8 +50,8 @@ export default function EventsClient({ upcomingEvents, pastEvents, allEvents }: 
                             <button
                                 onClick={() => setViewMode('calendar')}
                                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${viewMode === 'calendar'
-                                        ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
-                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
+                                    ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
                                     }`}
                             >
                                 📅 Takvim
@@ -92,6 +93,7 @@ export default function EventsClient({ upcomingEvents, pastEvents, allEvents }: 
                                             href={`/etkinlikler/${event.slug}`}
                                             date={event.date}
                                             category={event.eventType}
+                                            imageUrl={event.imageUrl || undefined}
                                             index={index}
                                         />
                                     ))}
@@ -123,6 +125,7 @@ export default function EventsClient({ upcomingEvents, pastEvents, allEvents }: 
                                             href={`/etkinlikler/${event.slug}`}
                                             date={event.date}
                                             category={event.eventType}
+                                            imageUrl={event.imageUrl || undefined}
                                             index={index}
                                         />
                                     ))}

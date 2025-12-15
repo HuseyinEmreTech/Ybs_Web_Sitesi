@@ -40,6 +40,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               })}
             </time>
           </div>
+
+          {post.imageUrl && (
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 shadow-lg">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          )}
+
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
             {post.title}
           </h1>
@@ -66,7 +78,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             ← Tüm Yazılara Dön
           </a>
         </div>
-      </div>
-    </article>
+      </div >
+    </article >
   )
 }

@@ -125,6 +125,7 @@ export default async function HomePage() {
                 href={`/etkinlikler/${event.slug}`}
                 date={event.date}
                 category={event.eventType}
+                imageUrl={event.imageUrl || undefined}
                 index={index}
               />
             ))}
@@ -162,6 +163,7 @@ export default async function HomePage() {
                 href={`/blog/${post.slug}`}
                 date={post.publishedAt}
                 category={post.category}
+                imageUrl={post.imageUrl || undefined}
                 index={index}
               />
             ))}

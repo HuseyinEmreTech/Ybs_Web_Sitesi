@@ -11,6 +11,7 @@ interface CardProps {
   title: string
   description?: string
   image?: SanityImage
+  imageUrl?: string | null
   href: string
   date?: string
   category?: string
@@ -23,6 +24,7 @@ export default function Card({
   title,
   description,
   image,
+  imageUrl,
   href,
   date,
   category,
@@ -48,7 +50,14 @@ export default function Card({
         )}>
           {/* Image */}
           <div className="aspect-video relative overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
-            {image ? (
+            {imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={imageUrl}
+                alt={title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            ) : image ? (
               <Image
                 src={urlFor(image).width(600).height(340).url()}
                 alt={title}

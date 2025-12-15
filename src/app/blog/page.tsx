@@ -30,6 +30,7 @@ export default async function BlogPage() {
               href={`/blog/${post.slug}`}
               date={post.publishedAt}
               category={post.category}
+              imageUrl={post.imageUrl || undefined}
               index={index}
             />
           ))}
