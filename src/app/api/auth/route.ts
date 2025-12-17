@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 import { validateUser } from '@/lib/data'
 import { cookies } from 'next/headers'
-import { randomUUID } from 'crypto'
+import { SignJWT, jwtVerify } from 'jose'
 
-// Cryptographically secure session token generation
-function generateToken(): string {
-    return randomUUID() + '-' + randomUUID()
-}
+// Secret for JWT signing
+const AUTH_SECRET = new TextEncoder().encode(
+    process.env.AUTH_SECRET || 'development_secret_key_change_in_production'
+)
 
 export async function POST(request: Request) {
     try {
@@ -28,12 +28,21 @@ export async function POST(request: Request) {
             )
         }
 
-        // Create session token
-        const token = generateToken()
+        // Create JWT
+        const token = await new SignJWT({
+            email: user.email,
+            name: user.name,
+            imageUrl: user.imageUrl,
+            role: user.role
+        })
+            .setProtectedHeader({ alg: 'HS256' })
+            .setIssuedAt()
+            .setExpirationTime('7d')
+            .sign(AUTH_SECRET)
 
         // Set cookie
         const cookieStore = await cookies()
-        cookieStore.set('admin_session', token, {
+        cookieStore.set('admin_token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
@@ -41,14 +50,15 @@ export async function POST(request: Request) {
             path: '/',
         })
 
-        // Store session info in cookie as well (simplified approach)
-        cookieStore.set('admin_user', JSON.stringify({
+        // Also set a user info cookie for client-side usage (NOT for auth verification)
+        // This is safe because the actual verification happens via the httpOnly signed token
+        cookieStore.set('admin_user_info', JSON.stringify({
             email: user.email,
             name: user.name,
             imageUrl: user.imageUrl,
             role: user.role,
         }), {
-            httpOnly: true,
+            httpOnly: false, // Accessible by JS for UI
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             maxAge: 60 * 60 * 24 * 7,
@@ -76,6 +86,9 @@ export async function POST(request: Request) {
 export async function DELETE() {
     try {
         const cookieStore = await cookies()
+        cookieStore.delete('admin_token')
+        cookieStore.delete('admin_user_info')
+        // Clean up legacy cookies if they exist
         cookieStore.delete('admin_session')
         cookieStore.delete('admin_user')
 
@@ -92,18 +105,21 @@ export async function DELETE() {
 export async function GET() {
     try {
         const cookieStore = await cookies()
-        const session = cookieStore.get('admin_session')
-        const userCookie = cookieStore.get('admin_user')
+        const token = cookieStore.get('admin_token')?.value
 
-        if (!session || !userCookie) {
+        if (!token) {
             return NextResponse.json({ authenticated: false })
         }
 
-        const user = JSON.parse(userCookie.value)
-        return NextResponse.json({
-            authenticated: true,
-            user,
-        })
+        try {
+            const { payload } = await jwtVerify(token, AUTH_SECRET)
+            return NextResponse.json({
+                authenticated: true,
+                user: payload,
+            })
+        } catch (err) {
+            return NextResponse.json({ authenticated: false })
+        }
     } catch (error) {
         console.error('Session check error:', error)
         return NextResponse.json({ authenticated: false })
