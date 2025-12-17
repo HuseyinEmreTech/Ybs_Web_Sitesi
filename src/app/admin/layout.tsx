@@ -48,7 +48,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             }
         } catch (error) {
             console.error('Auth check failed:', error)
-            router.push('/admin')
+            // Clear any potential invalid state
+            setUser(null)
+            // Redirect to login - middleware will NO LONGER auto-redirect back, breaking the loop
+            if (pathname !== '/admin') {
+                router.push('/admin')
+            }
         } finally {
             setLoading(false)
         }

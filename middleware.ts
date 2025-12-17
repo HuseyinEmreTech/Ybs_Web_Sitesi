@@ -55,16 +55,8 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith('/admin')) {
         // Allow public access to login page
         if (request.nextUrl.pathname === '/admin') {
-            // If already logged in, redirect to dashboard
-            const token = request.cookies.get('admin_token')?.value
-            if (token) {
-                try {
-                    await jwtVerify(token, AUTH_SECRET)
-                    return NextResponse.redirect(new URL('/admin/dashboard', request.url))
-                } catch (error) {
-                    // Invalid token, stay on login page
-                }
-            }
+            // Allow access to login page - do NOT auto-redirect to dashboard here to prevent loops
+            // The client-side code will handle redirection if already logged in
             return response
         }
 
