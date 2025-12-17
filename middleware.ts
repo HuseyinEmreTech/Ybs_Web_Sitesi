@@ -9,12 +9,10 @@ const AUTH_SECRET = new TextEncoder().encode(
 )
 
 export async function middleware(request: NextRequest) {
-    const response = NextResponse.next()
-
-    // 1. Add Security Headers
+    const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
     const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live;
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https://cdn.sanity.io https://lh3.googleusercontent.com;
     font-src 'self';
@@ -25,8 +23,21 @@ export async function middleware(request: NextRequest) {
     block-all-mixed-content;
     upgrade-insecure-requests;
 `
+    // Replace newline characters and extra spaces
+    const contentSecurityPolicyHeaderValue = cspHeader
+        .replace(/\s{2,}/g, ' ')
+        .trim()
 
-    response.headers.set('Content-Security-Policy', cspHeader.replace(/\s{2,}/g, ' ').trim())
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-nonce', nonce)
+    requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
+
+    const response = NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    })
+    response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
     response.headers.set('X-Content-Type-Options', 'nosniff')
     response.headers.set('X-Frame-Options', 'DENY')
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
