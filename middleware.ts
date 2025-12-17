@@ -2,11 +2,16 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 
-// Secret for JWT signing
-// In production, this should be a strong secret in env variables
-const AUTH_SECRET = new TextEncoder().encode(
-    process.env.AUTH_SECRET || 'development_secret_key_change_in_production'
-)
+// Secret for JWT signing - MUST be set in production
+const getAuthSecret = () => {
+    const secret = process.env.AUTH_SECRET
+    if (!secret && process.env.NODE_ENV === 'production') {
+        throw new Error('AUTH_SECRET environment variable is required in production')
+    }
+    return new TextEncoder().encode(secret || 'development_secret_key_change_in_production')
+}
+
+const AUTH_SECRET = getAuthSecret()
 
 export async function middleware(request: NextRequest) {
     const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
@@ -15,7 +20,7 @@ export async function middleware(request: NextRequest) {
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http:;
     style-src 'self' 'nonce-${nonce}' https://cdn.sanity.io;
     connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://vercel.live https://vitals.vercel-insights.com;
-    img-src 'self' blob: data: https://cdn.sanity.io https://lh3.googleusercontent.com;
+    img-src 'self' blob: data: https://cdn.sanity.io https://lh3.googleusercontent.com https://images.unsplash.com https://cdn.example.com;
     font-src 'self' data:;
     object-src 'none';
     base-uri 'self';

@@ -2,11 +2,18 @@ import { NextResponse } from 'next/server'
 import { validateUser } from '@/lib/data'
 import { cookies } from 'next/headers'
 import { SignJWT, jwtVerify } from 'jose'
+import { rateLimit } from '@/lib/rateLimit'
 
-// Secret for JWT signing
-const AUTH_SECRET = new TextEncoder().encode(
-    process.env.AUTH_SECRET || 'development_secret_key_change_in_production'
-)
+// Secret for JWT signing - MUST be set in production
+const getAuthSecret = () => {
+    const secret = process.env.AUTH_SECRET
+    if (!secret && process.env.NODE_ENV === 'production') {
+        throw new Error('AUTH_SECRET environment variable is required in production')
+    }
+    return new TextEncoder().encode(secret || 'development_secret_key_change_in_production')
+}
+
+const AUTH_SECRET = getAuthSecret()
 
 export async function POST(request: Request) {
     try {
@@ -16,6 +23,29 @@ export async function POST(request: Request) {
             return NextResponse.json(
                 { error: 'E-posta ve şifre gerekli' },
                 { status: 400 }
+            )
+        }
+
+        // Rate limiting: 5 attempts per minute per IP
+        const forwarded = request.headers.get('x-forwarded-for')
+        const ip = forwarded ? forwarded.split(',')[0] : 'unknown'
+        const identifier = `login:${ip}`
+
+        const { success, remaining, resetAt } = await rateLimit(identifier, {
+            uniqueTokenPerInterval: 5,
+            interval: 60 * 1000 // 1 minute
+        })
+
+        if (!success) {
+            return NextResponse.json(
+                { error: 'Çok fazla deneme. Lütfen daha sonra tekrar deneyin.' },
+                {
+                    status: 429,
+                    headers: {
+                        'X-RateLimit-Remaining': '0',
+                        'X-RateLimit-Reset': new Date(resetAt).toISOString()
+                    }
+                }
             )
         }
 

@@ -1,13 +1,21 @@
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import Section from '@/components/Section'
 import Card from '@/components/Card'
 import Button from '@/components/Button'
 import ScrollReveal from '@/components/ScrollReveal'
-import AnimatedGradientText from '@/components/AnimatedGradientText'
-import MatrixRain from '@/components/MatrixRain'
 import CountUp from '@/components/CountUp'
 import HeroLogo from '@/components/HeroLogo'
 import { getPosts, getEvents, getSettings, type Post, type Event } from '@/lib/data'
+
+// Dynamic imports for performance
+const MatrixRain = dynamic(() => import('@/components/MatrixRain'), {
+  loading: () => <div className="absolute inset-0" />
+})
+
+const AnimatedGradientText = dynamic(() => import('@/components/AnimatedGradientText'), {
+  loading: () => <span>İste YBS Topluluğu</span>
+})
 
 export const revalidate = 60
 

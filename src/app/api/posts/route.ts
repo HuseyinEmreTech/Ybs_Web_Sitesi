@@ -4,7 +4,9 @@ import { getPosts, createPost, updatePost, deletePost, generateSlug, type Post }
 export async function GET() {
     try {
         const posts = await getPosts()
-        return NextResponse.json(posts)
+        const response = NextResponse.json(posts)
+        response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate=30')
+        return response
     } catch (error) {
         console.error('Get posts error:', error)
         return NextResponse.json({ error: 'Veriler alınamadı' }, { status: 500 })
