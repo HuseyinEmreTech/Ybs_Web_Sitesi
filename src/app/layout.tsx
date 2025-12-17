@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
@@ -9,6 +10,7 @@ import PageTransition from '@/components/PageTransition'
 import { Analytics } from '@vercel/analytics/next'
 import { ToastProvider } from '@/components/Toast'
 import ScrollProgress from '@/components/ScrollProgress'
+import StyledComponentsRegistry from '@/lib/registry'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -59,32 +61,37 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const nonce = (await headers()).get('x-nonce') || ''
+
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ToastProvider>
-            <ScrollProgress />
-            <SmoothScroll />
-            <Header />
-            <main className="pt-16 min-h-screen">
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
-          </ToastProvider>
-        </ThemeProvider>
+        <StyledComponentsRegistry nonce={nonce}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ToastProvider>
+              <ScrollProgress />
+              <SmoothScroll />
+              <Header />
+              <main className="pt-16 min-h-screen">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+            </ToastProvider>
+          </ThemeProvider>
+        </StyledComponentsRegistry>
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',

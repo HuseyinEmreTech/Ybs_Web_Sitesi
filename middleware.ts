@@ -11,9 +11,9 @@ const AUTH_SECRET = new TextEncoder().encode(
 export async function middleware(request: NextRequest) {
     const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
     const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https: http:;
-    style-src 'self' 'unsafe-inline';
+    default-src 'none';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http:;
+    style-src 'self' 'nonce-${nonce}' https://cdn.sanity.io;
     connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://vercel.live https://vitals.vercel-insights.com;
     img-src 'self' blob: data: https://cdn.sanity.io https://lh3.googleusercontent.com;
     font-src 'self' data:;
