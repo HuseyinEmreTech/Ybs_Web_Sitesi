@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { TableSkeleton } from '@/components/admin/LoadingSkeleton'
 
 interface User {
     email: string
@@ -27,7 +30,7 @@ export default function UsersManagement() {
             const data = await res.json()
             setUsers(Array.isArray(data) ? data : [])
         } catch (error) {
-            console.error('Failed to fetch users:', error)
+            logger.error('Failed to fetch users', { error })
         } finally {
             setLoading(false)
         }
@@ -98,8 +101,22 @@ export default function UsersManagement() {
 
             fetchUsers()
         } catch (error) {
-            console.error('Failed to delete user:', error)
+            logger.error('Failed to delete user', { error, userEmail: email })
         }
+    }
+
+    if (loading) {
+        return (
+            <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Kullanıcılar</h1>
+                        <p className="text-slate-500 dark:text-slate-400">Admin paneline giriş yapabilecek kullanıcıları yönetin</p>
+                    </div>
+                </div>
+                <TableSkeleton rows={5} />
+            </div>
+        )
     }
 
     return (

@@ -7,7 +7,7 @@ import { getOrganizationChart } from '@/lib/organization'
 
 export const metadata: Metadata = {
   title: 'Yönetim Kurulu',
-  description: 'YBS Kulübü yönetim kurulu',
+  description: 'İste YBS Topluluğu yönetim kurulu üyeleri ve organizasyon yapısı',
 }
 
 export const revalidate = 60 // Cache for 60 seconds (ISR)
@@ -194,7 +194,7 @@ export default async function EkipPage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">Yönetime Katılın</h2>
           <p className="mt-4 text-slate-600 dark:text-slate-300 max-w-xl mx-auto">
-            YBS Kulübü'nde aktif rol almak ve yönetim tecrübesi kazanmak ister misiniz?
+            İste YBS Topluluğu'nda aktif rol almak ve yönetim tecrübesi kazanmak ister misiniz?
           </p>
           <div className="mt-8">
             <Button

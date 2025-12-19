@@ -51,22 +51,28 @@ const navigation = [
   { name: 'Geliştirici', href: '/emegi-gecenler' },
 ]
 
-export default function Header() {
+interface HeaderProps {
+  initialSiteName?: string
+}
+
+export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: HeaderProps) {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [siteName, setSiteName] = useState('YBS Kulübü')
+  const [siteName, setSiteName] = useState(initialSiteName)
 
-
-  // Fetch site name from settings
+  // Optionally update site name client-side if it changes (for admin updates)
+  // This runs after initial render, so no delay for first paint
   useEffect(() => {
     fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
-        if (data.siteName) setSiteName(data.siteName)
+        if (data.siteName && data.siteName !== siteName) {
+          setSiteName(data.siteName)
+        }
       })
       .catch(() => { })
-  }, [])
+  }, [siteName])
 
   // Handle scroll effect
   useEffect(() => {

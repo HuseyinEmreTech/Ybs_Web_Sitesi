@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { TableSkeleton } from '@/components/admin/LoadingSkeleton'
 
 interface Event {
     id: string
@@ -52,7 +55,7 @@ export default function EventsManagement() {
             const data = await res.json()
             setEvents(Array.isArray(data) ? data : [])
         } catch (error) {
-            console.error('Failed to fetch events:', error)
+            logger.error('Failed to fetch events', { error })
         } finally {
             setLoading(false)
         }
@@ -76,7 +79,7 @@ export default function EventsManagement() {
                 resetForm()
             }
         } catch (error) {
-            console.error('Failed to save event:', error)
+            logger.error('Failed to save event', { error, eventId: editing?.id })
         }
     }
 
@@ -89,7 +92,7 @@ export default function EventsManagement() {
                 fetchEvents()
             }
         } catch (error) {
-            console.error('Failed to delete event:', error)
+            logger.error('Failed to delete event', { error, eventId })
         }
     }
 
@@ -254,8 +257,8 @@ export default function EventsManagement() {
             {/* Events List */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
                 {loading ? (
-                    <div className="p-12 flex justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <div className="p-12">
+                        <TableSkeleton rows={5} />
                     </div>
                 ) : filteredEvents.length === 0 ? (
                     <div className="p-8 text-center text-slate-500">

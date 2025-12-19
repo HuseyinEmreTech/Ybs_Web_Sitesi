@@ -6,7 +6,7 @@ import ProjectsView from '@/components/ProjectsView'
 
 export const metadata: Metadata = {
   title: 'Projeler',
-  description: 'YBS Kulübü projeleri ve çalışmaları',
+  description: 'İste YBS Topluluğu projeleri ve çalışmaları - Yazılım geliştirme, araştırma ve inovasyon projeleri',
 }
 
 export const revalidate = 60 // ISR: Cache for 60 seconds

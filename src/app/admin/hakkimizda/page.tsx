@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import type { AboutData } from '@/lib/types'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { CardSkeleton } from '@/components/admin/LoadingSkeleton'
 
 export default function AboutAdminPage() {
     const [data, setData] = useState<AboutData | null>(null)
@@ -30,7 +33,7 @@ export default function AboutAdminPage() {
                 setLoading(false)
             })
             .catch(err => {
-                console.error(err)
+                logger.error('Failed to fetch about data', { error: err })
                 setError(err.message || 'Veriler yüklenirken bir hata oluştu.')
                 setLoading(false)
             })
@@ -53,14 +56,22 @@ export default function AboutAdminPage() {
                 alert('Hata oluştu')
             }
         } catch (error) {
-            console.error(error)
+            logger.error('Failed to save about data', { error })
             alert('Hata oluştu')
         } finally {
             setSaving(false)
         }
     }
 
-    if (loading) return <div className="p-8 text-center text-slate-500">Yükleniyor...</div>
+    if (loading) {
+        return (
+            <div className="space-y-6">
+                <CardSkeleton />
+                <CardSkeleton />
+                <CardSkeleton />
+            </div>
+        )
+    }
 
     if (error) {
         return (

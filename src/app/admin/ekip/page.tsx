@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import ImageInput from '@/components/admin/ImageInput'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
 
 
 interface TeamMember {
@@ -66,7 +68,7 @@ export default function TeamManagement() {
             const data = await res.json()
             setMembers(Array.isArray(data) ? data : [])
         } catch (error) {
-            console.error('Failed to fetch team:', error)
+            logger.error('Failed to fetch team members', { error })
         }
     }
 
@@ -76,7 +78,7 @@ export default function TeamManagement() {
             const data = await res.json()
             setChart(Array.isArray(data) ? data : [])
         } catch (error) {
-            console.error('Failed to fetch chart:', error)
+            logger.error('Failed to fetch organization chart', { error })
         }
     }
 
@@ -112,7 +114,7 @@ export default function TeamManagement() {
                 resetForm()
             }
         } catch (error) {
-            console.error('Failed to save member:', error)
+            logger.error('Failed to save team member', { error, memberId: editing?.id })
         }
     }
 
@@ -122,7 +124,7 @@ export default function TeamManagement() {
             const res = await fetch(`/api/team?id=${id}`, { method: 'DELETE' })
             if (res.ok) fetchMembers()
         } catch (error) {
-            console.error('Failed to delete member:', error)
+            logger.error('Failed to delete team member', { error, memberId })
         }
     }
 
@@ -309,8 +311,8 @@ export default function TeamManagement() {
 
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
                 {loading ? (
-                    <div className="p-12 flex justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <div className="p-12">
+                        <TableSkeleton rows={5} />
                     </div>
                 ) : filteredMembers.length === 0 ? (
                     <div className="p-8 text-center text-slate-500">

@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import ImageInput from '@/components/admin/ImageInput'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { TableSkeleton } from '@/components/admin/LoadingSkeleton'
 
 interface Post {
     id: string
@@ -48,7 +51,7 @@ export default function BlogManagement() {
             const data = await res.json()
             setPosts(Array.isArray(data) ? data : [])
         } catch (error) {
-            console.error('Failed to fetch posts:', error)
+            logger.error('Failed to fetch posts', { error })
         } finally {
             setLoading(false)
         }
@@ -72,7 +75,7 @@ export default function BlogManagement() {
                 resetForm()
             }
         } catch (error) {
-            console.error('Failed to save post:', error)
+            logger.error('Failed to save post', { error, postId: editing?.id })
         }
     }
 
@@ -85,7 +88,7 @@ export default function BlogManagement() {
                 fetchPosts()
             }
         } catch (error) {
-            console.error('Failed to delete post:', error)
+            logger.error('Failed to delete post', { error, postId })
         }
     }
 
@@ -224,8 +227,8 @@ export default function BlogManagement() {
             {/* Posts List */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
                 {loading ? (
-                    <div className="p-12 flex justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <div className="p-12">
+                        <TableSkeleton rows={5} />
                     </div>
                 ) : filteredPosts.length === 0 ? (
                     <div className="p-8 text-center text-slate-500">

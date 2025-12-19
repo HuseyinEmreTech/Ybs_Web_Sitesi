@@ -6,7 +6,7 @@ import ContactForm from '@/components/ContactForm'
 
 export const metadata: Metadata = {
   title: 'İletişim',
-  description: 'YBS Kulübü ile iletişime geçin',
+  description: 'İste YBS Topluluğu ile iletişime geçin - Sorularınız, önerileriniz ve işbirliği teklifleri için',
 }
 
 export default async function IletisimPage() {

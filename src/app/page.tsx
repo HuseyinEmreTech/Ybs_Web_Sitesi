@@ -77,7 +77,7 @@ export default async function HomePage() {
             {/* Logo Content */}
             <div className="order-1 lg:order-2 flex justify-center">
               <ScrollReveal direction="right" delay={0.2}>
-                <HeroLogo logoUrl={settings.logoUrl || '/ekip/logo.jpeg'} siteName={settings.siteName || 'YBS Kulübü'} />
+                <HeroLogo logoUrl={settings.logoUrl || '/ekip/logo.jpeg'} siteName={settings.siteName || 'İste YBS Topluluğu'} />
               </ScrollReveal>
             </div>
           </div>
@@ -210,7 +210,7 @@ export default async function HomePage() {
             Kulübümüze Katılın
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-            YBS Kulübü olarak teknoloji, yönetim ve kariyer alanlarında
+            İste YBS Topluluğu olarak teknoloji, yönetim ve kariyer alanlarında
             etkinlikler düzenliyoruz. Siz de aramıza katılın!
           </p>
           <div className="mt-8 flex justify-center gap-4">

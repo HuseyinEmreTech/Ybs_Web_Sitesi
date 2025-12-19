@@ -7,7 +7,7 @@ export const revalidate = 60 // ISR: Cache for 60 seconds
 
 export const metadata = {
   title: 'Blog',
-  description: 'YBS Kulübü blog yazıları ve haberleri',
+  description: 'İste YBS Topluluğu blog yazıları ve haberleri - Teknoloji, yönetim ve kariyer içerikleri',
 }
 
 export default async function BlogPage() {

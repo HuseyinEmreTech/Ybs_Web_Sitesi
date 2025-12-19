@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
 
 type OrganizationNode = {
     id: string;
@@ -47,7 +49,7 @@ export default function StructurePage() {
             setNodes(await nodesRes.json())
             setMembers(await membersRes.json())
         } catch (error) {
-            console.error(error)
+            logger.error('Failed to load organization data', { error })
             setError('Yapılandırma verileri yüklenemedi.')
         } finally {
             setLoading(false)
@@ -199,7 +201,16 @@ export default function StructurePage() {
     //     !leaders.find(l => l.id === m.id)
     // ) : [];
 
-    if (loading) return <div className="p-8 text-center text-slate-500">Yükleniyor...</div>
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <LoadingSpinner size="lg" />
+                    <p className="mt-4 text-slate-600 dark:text-slate-400">Yükleniyor...</p>
+                </div>
+            </div>
+        )
+    }
 
     if (error) {
         return (

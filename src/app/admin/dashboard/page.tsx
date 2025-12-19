@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 interface Stats {
     posts: number
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
                 positions: Array.isArray(org) ? org.length : 0,
             })
         } catch (error) {
-            console.error('Failed to fetch stats:', error)
+            logger.error('Failed to fetch dashboard stats', { error })
         } finally {
             setLoading(false)
         }

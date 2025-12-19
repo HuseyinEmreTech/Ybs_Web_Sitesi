@@ -7,7 +7,7 @@ import { getOrganizationChart } from '@/lib/organization'
 
 export const metadata: Metadata = {
     title: 'Koordinatörlükler',
-    description: 'YBS Kulübü çalışma grupları ve koordinatörlükler',
+    description: 'İste YBS Topluluğu çalışma grupları ve koordinatörlükler - Teknoloji, eğitim ve organizasyon ekipleri',
 }
 
 export const revalidate = 60 // Cache for 60 seconds (ISR)

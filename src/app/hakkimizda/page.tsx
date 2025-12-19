@@ -4,7 +4,7 @@ import { getAboutData } from '@/lib/about'
 
 export const metadata: Metadata = {
   title: 'Hakkımızda',
-  description: 'YBS Kulübü hakkında bilgi edinin - Misyonumuz, vizyonumuz ve tarihçemiz',
+  description: 'İste YBS Topluluğu hakkında bilgi edinin - Misyonumuz, vizyonumuz, değerlerimiz ve tarihçemiz',
 }
 
 export default async function HakkimizdaPage() {

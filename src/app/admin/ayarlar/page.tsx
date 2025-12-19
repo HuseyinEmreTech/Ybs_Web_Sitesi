@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import type { SiteSettings } from '@/lib/settings'
 import ImageInput from '@/components/admin/ImageInput'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { CardSkeleton } from '@/components/admin/LoadingSkeleton'
 
 export default function SettingsAdminPage() {
     const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -28,7 +31,7 @@ export default function SettingsAdminPage() {
                 setLoading(false)
             })
             .catch(err => {
-                console.error(err)
+                logger.error('Failed to fetch settings', { error: err })
                 setError('Ayarlar yüklenirken bir hata oluştu.')
                 setLoading(false)
             })
@@ -51,14 +54,21 @@ export default function SettingsAdminPage() {
                 alert('Hata oluştu')
             }
         } catch (error) {
-            console.error(error)
+            logger.error('Failed to save settings', { error })
             alert('Hata oluştu')
         } finally {
             setSaving(false)
         }
     }
 
-    if (loading) return <div className="p-8 text-center text-slate-500">Ayarlar yükleniyor...</div>
+    if (loading) {
+        return (
+            <div className="space-y-6">
+                <CardSkeleton />
+                <CardSkeleton />
+            </div>
+        )
+    }
 
     if (error) {
         return (

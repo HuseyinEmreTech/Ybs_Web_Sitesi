@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { TableSkeleton } from '@/components/admin/LoadingSkeleton'
 
 interface Project {
     id: string
@@ -29,7 +32,7 @@ export default function AdminProjectsPage() {
                 setProjects(data)
             }
         } catch (error) {
-            console.error('Projects fetch error:', error)
+            logger.error('Failed to fetch projects', { error })
         } finally {
             setLoading(false)
         }
@@ -46,12 +49,24 @@ export default function AdminProjectsPage() {
                 alert('Silme işlemi başarısız oldu')
             }
         } catch (error) {
-            console.error('Delete error:', error)
+            logger.error('Failed to delete project', { error, projectId: id })
             alert('Bir hata oluştu')
         }
     }
 
-    if (loading) return <div className="p-8">Yükleniyor...</div>
+    if (loading) {
+        return (
+            <div>
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Projeler</h1>
+                        <p className="text-slate-500 dark:text-slate-400">Projeleri yönetin ve düzenleyin</p>
+                    </div>
+                </div>
+                <TableSkeleton rows={5} />
+            </div>
+        )
+    }
 
     return (
         <div>

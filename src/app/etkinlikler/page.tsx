@@ -5,7 +5,7 @@ export const revalidate = 60 // ISR: Cache for 60 seconds
 
 export const metadata = {
   title: 'Etkinlikler',
-  description: 'YBS Kulübü etkinlikleri',
+  description: 'İste YBS Topluluğu etkinlikleri - Seminerler, workshoplar, konferanslar ve sosyal aktiviteler',
 }
 
 export default async function EventsPage() {

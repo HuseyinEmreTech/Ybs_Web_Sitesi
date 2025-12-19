@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import type { ContactMessage } from '@/lib/messages'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { CardSkeleton } from '@/components/admin/LoadingSkeleton'
 
 export default function MessagesAdminPage() {
     const [messages, setMessages] = useState<ContactMessage[]>([])
@@ -24,7 +27,7 @@ export default function MessagesAdminPage() {
             const data = await res.json()
             setMessages(data)
         } catch (error) {
-            console.error('Failed to fetch messages', error)
+            logger.error('Failed to fetch messages', { error })
             setError('Mesajlar yüklenemedi.')
         } finally {
             setLoading(false)
@@ -48,7 +51,7 @@ export default function MessagesAdminPage() {
                 setError('Yetkiniz yok. Lütfen giriş yapın.')
             }
         } catch (error) {
-            console.error(error)
+            logger.error('Failed to mark message as read', { error, messageId: id })
             setError('İşlem başarısız oldu.')
         }
     }
@@ -66,12 +69,26 @@ export default function MessagesAdminPage() {
                 setError('Yetkiniz yok. Lütfen giriş yapın.')
             }
         } catch (error) {
-            console.error(error)
+            logger.error('Failed to delete message', { error, messageId: id })
             setError('İşlem başarısız oldu.')
         }
     }
 
-    if (loading) return <div className="p-8 text-center text-slate-500">Mesajlar yükleniyor...</div>
+    if (loading) {
+        return (
+            <div className="space-y-8 pb-12">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Gelen Kutusu</h1>
+                    <p className="text-slate-500 dark:text-slate-400">İletişim formundan gelen mesajları yönetin.</p>
+                </div>
+                <div className="grid gap-4">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                        <CardSkeleton key={i} />
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     if (error) {
         return (

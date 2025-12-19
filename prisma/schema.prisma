@@ -65,7 +65,7 @@ model TeamMember {
 
 model Settings {
   id              String   @id @default("default") // Singleton pattern
-  siteName        String   @default("YBS Kulübü")
+  siteName        String   @default("İste YBS Topluluğu")
   description     String   @default("")
   logoUrl         String?  @default("/ekip/logo.jpeg")
   contact         Json     // Stores { email, phone, address }

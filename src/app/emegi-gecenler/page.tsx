@@ -5,7 +5,7 @@ import path from 'path'
 
 export const metadata: Metadata = {
     title: 'Geliştirici',
-    description: 'Bu siteyi kodlayan geliştirici',
+    description: 'İste YBS Topluluğu web sitesini geliştiren ekip',
 }
 
 interface Developer {

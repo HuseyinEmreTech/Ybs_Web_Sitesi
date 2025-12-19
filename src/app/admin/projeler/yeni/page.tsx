@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { TeamMember } from '@/lib/data'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
 
 // Simple slugify helper
 const simpleSlugify = (text: string) =>
@@ -44,7 +46,9 @@ export default function NewProjectPage() {
                     .then(r => r.json())
                     .then(d => setTeamMembers(Array.isArray(d) ? d : []))
             })
-            .catch(err => console.error('Failed to fetch team', err))
+                    .catch(err => {
+                        logger.error('Failed to fetch team members', { error: err })
+                    })
     }, [])
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +82,7 @@ export default function NewProjectPage() {
 
             router.push('/admin/projeler')
         } catch (error) {
-            console.error(error)
+            logger.error('Failed to create project', { error })
             alert('Proje oluşturulurken bir hata oluştu')
         } finally {
             setLoading(false)

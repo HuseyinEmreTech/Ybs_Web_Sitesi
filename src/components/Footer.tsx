@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getSettings } from '@/lib/settings'
 import ScrollToTop from '@/components/ScrollToTop'
 
@@ -29,7 +30,13 @@ export default async function Footer() {
             {/* Brand */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <img src={settings.logoUrl} alt="YBS Logo" className="w-8 h-8 rounded-lg object-cover" />
+                <Image 
+                  src={settings.logoUrl} 
+                  alt={`${settings.siteName} Logo`} 
+                  width={32}
+                  height={32}
+                  className="rounded-lg object-cover"
+                />
                 <span className="font-semibold text-foreground">{settings.siteName}</span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md">

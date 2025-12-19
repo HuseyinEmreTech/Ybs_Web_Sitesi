@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import type { TeamMember, Project } from '@/lib/data'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
 
 export default function EditProjectPage() {
     const router = useRouter()
@@ -64,7 +66,7 @@ export default function EditProjectPage() {
                     router.push('/admin/projeler')
                 }
             } catch (err) {
-                console.error(err)
+                logger.error('Failed to load project data', { error: err, projectId: id })
             } finally {
                 setInitialLoading(false)
             }
@@ -97,14 +99,23 @@ export default function EditProjectPage() {
 
             router.push('/admin/projeler')
         } catch (error) {
-            console.error(error)
+            logger.error('Failed to update project', { error, projectId: id })
             alert('Proje güncellenirken bir hata oluştu')
         } finally {
             setLoading(false)
         }
     }
 
-    if (initialLoading) return <div className="p-8">Yükleniyor...</div>
+    if (initialLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <LoadingSpinner size="lg" />
+                    <p className="mt-4 text-slate-600 dark:text-slate-400">Yükleniyor...</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="max-w-2xl mx-auto">

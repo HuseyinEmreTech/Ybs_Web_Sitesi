@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
+import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { ErrorBoundary } from '@/components/admin/ErrorBoundary'
 
 interface User {
     email: string
@@ -47,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 router.push('/admin')
             }
         } catch (error) {
-            console.error('Auth check failed:', error)
+            logger.error('Auth check failed', { error })
             // Clear any potential invalid state
             setUser(null)
             // Redirect to login - middleware will NO LONGER auto-redirect back, breaking the loop
@@ -72,7 +75,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (loading) {
         return (
             <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
+                <div className="text-center">
+                    <LoadingSpinner size="lg" />
+                    <p className="mt-4 text-slate-600 dark:text-slate-400">Yükleniyor...</p>
+                </div>
             </div>
         )
     }
@@ -152,7 +158,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Main Content */}
             <main className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : ''}`}>
                 <div className="p-6 lg:p-8">
-                    {children}
+                    <ErrorBoundary>
+                        {children}
+                    </ErrorBoundary>
                 </div>
             </main>
         </div>

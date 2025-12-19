@@ -28,8 +28,8 @@ export interface SiteSettings {
 }
 
 const defaultSettings: SiteSettings = {
-    siteName: 'YBS Kulübü',
-    description: '',
+    siteName: 'İste YBS Topluluğu',
+    description: 'İskenderun Teknik Üniversitesi Yönetim Bilişim Sistemleri Topluluğu',
     logoUrl: '/ekip/logo.jpeg',
     contact: { email: '', phone: '', address: '' },
     socialMedia: { instagram: '', twitter: '', linkedin: '', github: '' },
