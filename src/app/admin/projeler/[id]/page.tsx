@@ -58,7 +58,7 @@ export default function EditProjectPage() {
                     setImageUrl(project.imageUrl || '')
                     setGithubUrl(project.githubUrl || '')
                     setLiveUrl(project.liveUrl || '')
-                    setSelectedMembers(project.teamMembers.map((m) => m.id))
+                    setSelectedMembers(project.teamMembers.map((m: TeamMember) => m.id))
                 } else {
                     alert('Proje bulunamadı')
                     router.push('/admin/projeler')
