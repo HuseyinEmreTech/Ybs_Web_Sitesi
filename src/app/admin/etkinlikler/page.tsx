@@ -92,7 +92,7 @@ export default function EventsManagement() {
                 fetchEvents()
             }
         } catch (error) {
-            logger.error('Failed to delete event', { error, eventId })
+            logger.error('Failed to delete event', { error, eventId: id })
         }
     }
 

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import ImageInput from '@/components/admin/ImageInput'
 import { logger } from '@/lib/logger'
 import LoadingSpinner from '@/components/admin/LoadingSpinner'
+import { TableSkeleton } from '@/components/admin/LoadingSkeleton'
 
 
 interface TeamMember {
@@ -124,7 +125,7 @@ export default function TeamManagement() {
             const res = await fetch(`/api/team?id=${id}`, { method: 'DELETE' })
             if (res.ok) fetchMembers()
         } catch (error) {
-            logger.error('Failed to delete team member', { error, memberId })
+            logger.error('Failed to delete team member', { error, memberId: id })
         }
     }
 

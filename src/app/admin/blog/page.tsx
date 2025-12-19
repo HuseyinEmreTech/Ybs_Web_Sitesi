@@ -88,7 +88,7 @@ export default function BlogManagement() {
                 fetchPosts()
             }
         } catch (error) {
-            logger.error('Failed to delete post', { error, postId })
+            logger.error('Failed to delete post', { error, postId: id })
         }
     }
 
