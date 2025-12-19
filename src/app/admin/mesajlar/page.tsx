@@ -13,8 +13,14 @@ export default function MessagesAdminPage() {
         setLoading(true)
         setError('')
         try {
-            const res = await fetch('/api/contact')
-            if (!res.ok) throw new Error('API hatası')
+            const res = await fetch('/api/messages')
+            if (!res.ok) {
+                if (res.status === 401) {
+                    setError('Yetkiniz yok. Lütfen giriş yapın.')
+                    return
+                }
+                throw new Error('API hatası')
+            }
             const data = await res.json()
             setMessages(data)
         } catch (error) {
@@ -31,14 +37,19 @@ export default function MessagesAdminPage() {
 
     const handleMarkAsRead = async (id: string) => {
         try {
-            const res = await fetch('/api/contact', {
-                method: 'POST',
+            const res = await fetch('/api/messages', {
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'read', id })
             })
-            if (res.ok) fetchMessages()
+            if (res.ok) {
+                fetchMessages()
+            } else if (res.status === 401) {
+                setError('Yetkiniz yok. Lütfen giriş yapın.')
+            }
         } catch (error) {
             console.error(error)
+            setError('İşlem başarısız oldu.')
         }
     }
 
@@ -46,14 +57,17 @@ export default function MessagesAdminPage() {
         if (!confirm('Bu mesajı silmek istediğinize emin misiniz?')) return
 
         try {
-            const res = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'delete', id })
+            const res = await fetch(`/api/messages?id=${id}`, {
+                method: 'DELETE'
             })
-            if (res.ok) fetchMessages()
+            if (res.ok) {
+                fetchMessages()
+            } else if (res.status === 401) {
+                setError('Yetkiniz yok. Lütfen giriş yapın.')
+            }
         } catch (error) {
             console.error(error)
+            setError('İşlem başarısız oldu.')
         }
     }
 
@@ -135,7 +149,7 @@ export default function MessagesAdminPage() {
                                 </div>
                             </div>
                             <div className="prose prose-sm dark:prose-invert max-w-none bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg">
-                                <p className="whitespace-pre-wrap">{message.message}</p>
+                                <p className="whitespace-pre-wrap break-words">{message.message}</p>
                             </div>
                         </div>
                     ))}

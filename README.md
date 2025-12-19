@@ -39,10 +39,18 @@ Projeyi bilgisayarınızda çalıştırmak için aşağıdaki adımları izleyin
     ```
 
 3.  **Çevre Değişkenlerini Ayarlayın:**
-    `.env` dosyasını oluşturun ve gerekli veritabanı bağlantı bilgilerini ekleyin. (Vercel projenizden `POSTGRES_PRISMA_URL` vb. bilgileri almanız gerekmektedir.)
+    `.env.local` dosyasını oluşturun ve `.env.example` dosyasındaki şablonu kullanarak gerekli değişkenleri ekleyin:
     ```env
-    POSTGRES_PRISMA_URL="..."
-    POSTGRES_URL_NON_POOLING="..."
+    # Zorunlu
+    AUTH_SECRET="güvenli-bir-secret-key"
+    POSTGRES_PRISMA_URL="postgresql://..."
+    POSTGRES_URL_NON_POOLING="postgresql://..."
+    
+    # Opsiyonel (Sanity kullanıyorsanız)
+    NEXT_PUBLIC_SANITY_PROJECT_ID="..."
+    NEXT_PUBLIC_SANITY_DATASET="production"
+    
+    # Opsiyonel (İlk admin kullanıcı için)
     ADMIN_EMAIL="admin@ybskulubu.com"
     ADMIN_PASSWORD="guclu-bir-sifre"
     ```

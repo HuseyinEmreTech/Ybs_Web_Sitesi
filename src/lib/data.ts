@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { Prisma } from '@prisma/client'
+import { logger } from '@/lib/logger'
 
 // Types (Mirrors of Prisma Models but with String dates for frontend compatibility)
 // We keep the interfaces close to what they were to minimize frontend breakage
@@ -122,7 +123,7 @@ export async function getPosts(): Promise<Post[]> {
             updatedAt: p.updatedAt.toISOString(),
         }))
     } catch (error) {
-        console.error('getPosts error:', error)
+        logger.error('getPosts error', { error })
         return []
     }
 }
@@ -188,7 +189,7 @@ export async function getEvents(): Promise<Event[]> {
             updatedAt: e.updatedAt.toISOString(),
         }))
     } catch (error) {
-        console.error('getEvents error:', error)
+        logger.error('getEvents error', { error })
         return []
     }
 }
@@ -405,7 +406,7 @@ export async function getSettings(): Promise<Settings> {
             updatedAt: settings.updatedAt.toISOString(),
         }
     } catch (error) {
-        console.error('getSettings error:', error)
+        logger.error('getSettings error', { error })
         // Return safe default on error
         return {
             id: 'default',

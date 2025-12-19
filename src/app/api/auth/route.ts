@@ -3,6 +3,7 @@ import { validateUser } from '@/lib/data'
 import { cookies } from 'next/headers'
 import { SignJWT, jwtVerify } from 'jose'
 import { rateLimit } from '@/lib/rateLimit'
+import { logger } from '@/lib/logger'
 
 // Secret for JWT signing - MUST be set in production
 const getAuthSecret = () => {
@@ -105,7 +106,7 @@ export async function POST(request: Request) {
             },
         })
     } catch (error) {
-        console.error('Auth error:', error)
+        logger.error('Auth error', { error })
         return NextResponse.json(
             { error: 'Bir hata oluştu' },
             { status: 500 }
@@ -124,7 +125,7 @@ export async function DELETE() {
 
         return NextResponse.json({ success: true })
     } catch (error) {
-        console.error('Logout error:', error)
+        logger.error('Logout error', { error })
         return NextResponse.json(
             { error: 'Çıkış yapılırken hata oluştu' },
             { status: 500 }
@@ -151,7 +152,7 @@ export async function GET() {
             return NextResponse.json({ authenticated: false })
         }
     } catch (error) {
-        console.error('Session check error:', error)
+        logger.error('Session check error', { error })
         return NextResponse.json({ authenticated: false })
     }
 }

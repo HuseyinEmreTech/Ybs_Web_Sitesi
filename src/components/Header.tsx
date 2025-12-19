@@ -85,21 +85,24 @@ export default function Header() {
       className={clsx(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         scrolled
-          ? 'glass dark:glass shadow-sm py-2'
-          : 'bg-transparent py-6'
+          ? 'glass dark:glass shadow-sm'
+          : 'bg-transparent'
       )}
     >
-      <nav className="mx-auto max-w-7xl px-6 lg:px-8 h-full">
+      <nav className={clsx(
+        'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8',
+        scrolled ? 'h-16' : 'h-20 sm:h-24'
+      )}>
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <AnimatedGradientText className="font-bold text-xl sm:text-2xl tracking-tight hover:scale-105 transition-transform duration-300">
+            <AnimatedGradientText className="font-bold text-lg sm:text-xl md:text-2xl tracking-tight hover:scale-105 transition-transform duration-300">
               {siteName}
             </AnimatedGradientText>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:gap-x-8 items-center">
+          <div className="hidden lg:flex lg:gap-x-6 xl:gap-x-8 items-center">
             {navigation.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
               return (
@@ -107,7 +110,7 @@ export default function Header() {
                   key={item.name}
                   href={item.href}
                   className={clsx(
-                    "relative text-sm font-bold transition-colors group",
+                    "relative text-sm xl:text-base font-semibold transition-colors group whitespace-nowrap",
                     isActive ? "text-indigo-600 dark:text-indigo-400" : "text-foreground hover:text-slate-600 dark:hover:text-slate-300"
                   )}
                 >
@@ -126,21 +129,21 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Actions */}
-          <div className="flex items-center gap-4 lg:hidden">
+          <div className="flex items-center gap-3 lg:hidden">
             <ThemeToggle />
             <button
               type="button"
-              className="p-2 text-slate-600 dark:text-slate-300"
+              className="p-2 -mr-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Menüyü aç"
             >
-              <span className="sr-only">Menüyü aç</span>
               {mobileMenuOpen ? (
                 <svg
                   suppressHydrationWarning
                   className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={1.5}
+                  strokeWidth={2}
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -151,7 +154,7 @@ export default function Header() {
                   className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={1.5}
+                  strokeWidth={2}
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -167,20 +170,21 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 z-[9999] bg-white dark:bg-slate-950 flex flex-col pt-24 px-6 overflow-y-auto"
+            className="lg:hidden fixed inset-0 z-[9999] bg-white dark:bg-slate-950 flex flex-col pt-20 sm:pt-24 px-4 sm:px-6 overflow-y-auto"
           >
             {/* Close Button at top right explicitly */}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-6 right-6 p-2 text-slate-600 dark:text-slate-300"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+              aria-label="Menüyü kapat"
             >
-              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <svg className="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
             <motion.div
-              className="flex flex-col gap-4 mt-8"
+              className="flex flex-col gap-3 sm:gap-4 mt-6 sm:mt-8"
               initial="closed"
               animate="open"
               exit="closed"
@@ -202,7 +206,7 @@ export default function Header() {
                     <Link
                       href={item.href}
                       className={clsx(
-                        "block px-4 py-4 text-2xl font-bold rounded-2xl transition-all",
+                        "block px-4 py-3 sm:py-4 text-lg sm:text-xl font-semibold rounded-xl transition-all",
                         isActive
                           ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400"
                           : "text-foreground hover:bg-slate-100 dark:hover:bg-slate-800/50"

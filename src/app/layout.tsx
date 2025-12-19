@@ -82,7 +82,7 @@ export default async function RootLayout({
               <ScrollProgress />
               <SmoothScroll />
               <Header />
-              <main className="pt-16 min-h-screen">
+              <main className="pt-20 sm:pt-24 min-h-screen">
                 <PageTransition>{children}</PageTransition>
               </main>
               <Footer />
@@ -109,6 +109,6 @@ export default async function RootLayout({
         />
         <Analytics />
       </body>
-    </html >
+    </html>
   )
 }

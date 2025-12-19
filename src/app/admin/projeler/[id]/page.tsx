@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import type { TeamMember, Project } from '@/lib/data'
 
 export default function EditProjectPage() {
     const router = useRouter()
     const { id } = useParams() as { id: string }
     const [loading, setLoading] = useState(false)
     const [initialLoading, setInitialLoading] = useState(true)
-    const [teamMembers, setTeamMembers] = useState<any[]>([])
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
 
     // Form state
     const [title, setTitle] = useState('')
@@ -46,7 +47,7 @@ export default function EditProjectPage() {
                 // Fetching all
                 const projectsRes = await fetch('/api/projects')
                 const projectsData = await projectsRes.json()
-                const project = Array.isArray(projectsData) ? projectsData.find((p: any) => p.id === id) : null
+                const project = Array.isArray(projectsData) ? projectsData.find((p: Project) => p.id === id) : null
 
                 if (project) {
                     setTitle(project.title)
@@ -57,7 +58,7 @@ export default function EditProjectPage() {
                     setImageUrl(project.imageUrl || '')
                     setGithubUrl(project.githubUrl || '')
                     setLiveUrl(project.liveUrl || '')
-                    setSelectedMembers(project.teamMembers.map((m: any) => m.id))
+                    setSelectedMembers(project.teamMembers.map((m) => m.id))
                 } else {
                     alert('Proje bulunamadı')
                     router.push('/admin/projeler')

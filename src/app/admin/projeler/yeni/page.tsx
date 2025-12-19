@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import type { TeamMember } from '@/lib/data'
 
 // Simple slugify helper
 const simpleSlugify = (text: string) =>
@@ -17,7 +18,7 @@ const simpleSlugify = (text: string) =>
 export default function NewProjectPage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const [teamMembers, setTeamMembers] = useState<any[]>([])
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
 
     // Form state
     const [title, setTitle] = useState('')

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 // fs/promises and path imports removed as they are no longer needed
 
 
@@ -44,15 +45,14 @@ export async function getSettings(): Promise<SiteSettings> {
 
         if (settings) {
             // Cast JSON fields to expected types
-            const contact = settings.contact as SiteSettings['contact'] || defaultSettings.contact
-            const socialMedia = settings.socialMedia as SiteSettings['socialMedia'] || defaultSettings.socialMedia
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const stats = settings.stats as any || defaultSettings.stats
+            const contact = (settings.contact as SiteSettings['contact']) || defaultSettings.contact
+            const socialMedia = (settings.socialMedia as SiteSettings['socialMedia']) || defaultSettings.socialMedia
+            const stats = (settings.stats as SiteSettings['stats']) || defaultSettings.stats
 
             return {
                 siteName: settings.siteName,
                 description: settings.description,
-                logoUrl: (settings as any).logoUrl || defaultSettings.logoUrl,
+                logoUrl: settings.logoUrl || defaultSettings.logoUrl,
                 contact: { ...defaultSettings.contact, ...contact },
                 socialMedia: { ...defaultSettings.socialMedia, ...socialMedia },
                 stats: { ...defaultSettings.stats, ...stats },
@@ -62,7 +62,7 @@ export async function getSettings(): Promise<SiteSettings> {
 
         return defaultSettings
     } catch (error) {
-        console.error('Failed to fetch settings:', error)
+        logger.error('Failed to fetch settings', { error })
         return defaultSettings
     }
 }
@@ -90,7 +90,7 @@ export async function saveSettings(settings: SiteSettings) {
             }
         })
     } catch (error) {
-        console.error('Failed to save settings:', error)
+        logger.error('Failed to save settings', { error })
         throw error
     }
 }

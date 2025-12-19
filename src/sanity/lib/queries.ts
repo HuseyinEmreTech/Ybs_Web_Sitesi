@@ -1,5 +1,8 @@
 import { groq } from 'next-sanity'
 
+// PortableText content type - using a generic array type for Sanity block content
+type PortableTextBlock = Array<Record<string, unknown>>
+
 // ============ POSTS ============
 export const postsQuery = groq`
   *[_type == "post"] | order(publishedAt desc) {
@@ -167,7 +170,7 @@ export interface Post {
   publishedAt?: string
   excerpt?: string
   mainImage?: SanityImage
-  body?: any[]
+  body?: PortableTextBlock[]
   category?: string
 }
 
@@ -179,7 +182,7 @@ export interface Event {
   endDate?: string
   location?: string
   description?: string
-  content?: any[]
+  content?: PortableTextBlock[]
   image?: SanityImage
   eventType?: string
   registrationLink?: string
@@ -203,7 +206,7 @@ export interface Project {
   title: string
   slug?: { current: string }
   description?: string
-  content?: any[]
+  content?: PortableTextBlock[]
   image?: SanityImage
   technologies?: string[]
   status?: string
@@ -219,7 +222,7 @@ export interface SiteSettings {
   description?: string
   logo?: SanityImage
   heroImage?: SanityImage
-  aboutText?: any[]
+  aboutText?: PortableTextBlock[]
   mission?: string
   vision?: string
   email?: string

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
-// fs and path imports removed
-
+import { Prisma } from '@prisma/client'
+import { logger } from '@/lib/logger'
 
 export type OrganizationNode = {
     id: string;
@@ -23,7 +23,7 @@ export async function getOrganizationChart(): Promise<OrganizationNode[]> {
 
         return []
     } catch (error) {
-        console.error('Failed to read organization chart:', error)
+        logger.error('Failed to read organization chart', { error })
         return []
     }
 }
@@ -32,14 +32,14 @@ export async function saveOrganizationChart(chart: OrganizationNode[]): Promise<
     try {
         await prisma.organizationChart.upsert({
             where: { id: 'default' },
-            update: { nodes: chart as any }, // strict typing for Json might need 'as any' or proper InputJsonValue
+            update: { nodes: chart as Prisma.InputJsonValue },
             create: {
                 id: 'default',
-                nodes: chart as any
+                nodes: chart as Prisma.InputJsonValue
             }
         })
     } catch (error) {
-        console.error('Failed to save organization chart:', error)
+        logger.error('Failed to save organization chart', { error })
         throw error
     }
 }

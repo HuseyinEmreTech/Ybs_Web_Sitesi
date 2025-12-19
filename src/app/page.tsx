@@ -77,7 +77,6 @@ export default async function HomePage() {
             {/* Logo Content */}
             <div className="order-1 lg:order-2 flex justify-center">
               <ScrollReveal direction="right" delay={0.2}>
-                {/* @ts-ignore - Settings type needs update but data likely exists */}
                 <HeroLogo logoUrl={settings.logoUrl || '/ekip/logo.jpeg'} siteName={settings.siteName || 'YBS Kulübü'} />
               </ScrollReveal>
             </div>

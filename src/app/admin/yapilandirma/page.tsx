@@ -173,7 +173,7 @@ export default function StructurePage() {
         saveNodes(newNodes);
     }
 
-    function updateSchemaNode(index: number, field: keyof OrganizationNode, value: any) {
+    function updateSchemaNode(index: number, field: keyof OrganizationNode, value: string | string[] | number | undefined) {
         const newNodes = [...nodes]
         newNodes[index] = { ...newNodes[index], [field]: value }
         setNodes(newNodes)

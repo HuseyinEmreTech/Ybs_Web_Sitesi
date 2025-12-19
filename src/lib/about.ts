@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { AboutData } from '@/lib/types'
+import { logger } from '@/lib/logger'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -13,7 +14,7 @@ export async function getAboutData(): Promise<AboutData> {
         })
 
         if (record) {
-            console.log('getAboutData: Found in DB')
+            logger.debug('getAboutData: Found in DB')
             return {
                 hero: record.hero as AboutData['hero'],
                 story: record.story as AboutData['story'],
@@ -23,19 +24,19 @@ export async function getAboutData(): Promise<AboutData> {
             }
         }
 
-        console.log('getAboutData: Not found in DB, trying file...')
+        logger.debug('getAboutData: Not found in DB, trying file...')
         // Fallback: Try JSON file
         try {
             const fileData = await fs.readFile(DATA_FILE, 'utf-8')
             const parsed = JSON.parse(fileData)
 
             // Migrate to DB
-            console.log('getAboutData: Migrating from file to DB...')
+            logger.info('getAboutData: Migrating from file to DB...')
             await saveAboutData(parsed)
 
             return parsed
         } catch (fileError) {
-            console.log('getAboutData: File not found or invalid, using defaults')
+            logger.debug('getAboutData: File not found or invalid, using defaults')
         }
 
         return {
@@ -46,14 +47,14 @@ export async function getAboutData(): Promise<AboutData> {
             values: []
         }
     } catch (error) {
-        console.error('getAboutData Error:', error)
+        logger.error('getAboutData Error', { error })
         throw error
     }
 }
 
 export async function saveAboutData(data: AboutData) {
     try {
-        console.log('saveAboutData: Saving to DB...')
+        logger.debug('saveAboutData: Saving to DB...')
         await prisma.about.upsert({
             where: { id: 'default' },
             create: {
@@ -72,9 +73,9 @@ export async function saveAboutData(data: AboutData) {
                 values: data.values
             }
         })
-        console.log('saveAboutData: Saved successfully')
+        logger.info('saveAboutData: Saved successfully')
     } catch (error) {
-        console.error('saveAboutData Error:', error)
+        logger.error('saveAboutData Error', { error })
         throw error
     }
 }

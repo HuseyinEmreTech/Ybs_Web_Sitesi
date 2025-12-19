@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export interface ContactMessage {
     id: string
@@ -26,7 +27,7 @@ export async function getMessages(): Promise<ContactMessage[]> {
             read: msg.read
         }))
     } catch (error) {
-        console.error('Failed to fetch messages:', error)
+        logger.error('Failed to fetch messages', { error })
         return []
     }
 }
@@ -48,7 +49,7 @@ export async function saveMessage(data: Omit<ContactMessage, 'id' | 'createdAt' 
             createdAt: newMessage.createdAt.toISOString()
         }
     } catch (error) {
-        console.error('Failed to save message:', error)
+        logger.error('Failed to save message', { error })
         throw error
     }
 }
@@ -60,7 +61,7 @@ export async function markAsRead(id: string) {
             data: { read: true }
         })
     } catch (error) {
-        console.error('Failed to mark message as read:', error)
+        logger.error('Failed to mark message as read', { error })
     }
 }
 
@@ -70,6 +71,6 @@ export async function deleteMessage(id: string) {
             where: { id }
         })
     } catch (error) {
-        console.error('Failed to delete message:', error)
+        logger.error('Failed to delete message', { error })
     }
 }
