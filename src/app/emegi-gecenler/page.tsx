@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import AnimatedGradientText from '@/components/AnimatedGradientText'
 import fs from 'fs/promises'
 import path from 'path'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
     title: 'Geliştirici',
@@ -62,10 +63,16 @@ export default async function DeveloperPage() {
                 <div className="flex justify-center">
                     <div className="glass-card p-10 text-center max-w-lg w-full transform hover:scale-105 transition-all duration-300">
                         {/* Large Profile Image */}
-                        <div className="w-48 h-48 mx-auto rounded-full overflow-hidden mb-8 border-8 border-white/50 dark:border-slate-700 shadow-2xl ring-4 ring-indigo-500/30">
+                        <div className="w-48 h-48 mx-auto rounded-full overflow-hidden mb-8 border-8 border-white/50 dark:border-slate-700 shadow-2xl ring-4 ring-indigo-500/30 relative">
                             {developer.image ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={developer.image} alt={developer.name} className="w-full h-full object-cover" />
+                                <Image
+                                    src={developer.image}
+                                    alt={developer.name}
+                                    fill
+                                    className="object-cover"
+                                    sizes="192px"
+                                    priority
+                                />
                             ) : (
                                 <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-6xl font-bold">
                                     {developer.name.charAt(0)}

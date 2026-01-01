@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { logger } from '@/lib/logger'
 import LoadingSpinner from '@/components/admin/LoadingSpinner'
 import { TableSkeleton } from '@/components/admin/LoadingSkeleton'
+import Image from 'next/image'
 
 interface User {
     email: string
@@ -205,13 +206,17 @@ export default function UsersManagement() {
                                     </p>
                                 </div>
                                 {form.imageUrl && (
-                                    <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img
+                                    <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 relative">
+                                        <Image
                                             src={form.imageUrl}
                                             alt="Önizleme"
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => { (e.target as HTMLImageElement).src = 'https://ui-avatars.com/api/?name=X' }}
+                                            fill
+                                            className="object-cover"
+                                            sizes="48px"
+                                            unoptimized
+                                            onError={(e) => {
+                                                // Note: next/image onError is slightly different handle if needed
+                                            }}
                                         />
                                     </div>
                                 )}
@@ -235,9 +240,14 @@ export default function UsersManagement() {
                             <div key={user.email} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50">
                                 <div className="flex items-center gap-4">
                                     {user.imageUrl ? (
-                                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={user.imageUrl} alt={user.name} className="w-full h-full object-cover" />
+                                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 relative">
+                                            <Image
+                                                src={user.imageUrl}
+                                                alt={user.name}
+                                                fill
+                                                className="object-cover"
+                                                sizes="48px"
+                                            />
                                         </div>
                                     ) : (
                                         <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-lg">

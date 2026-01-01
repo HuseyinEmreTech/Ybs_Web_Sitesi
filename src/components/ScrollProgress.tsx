@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { m, useScroll, useSpring } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 
 export default function ScrollProgress() {
@@ -18,7 +18,7 @@ export default function ScrollProgress() {
     if (!pathname.startsWith('/blog')) return null
 
     return (
-        <motion.div
+        <m.div
             className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 origin-left z-[100]"
             style={{ scaleX }}
         />

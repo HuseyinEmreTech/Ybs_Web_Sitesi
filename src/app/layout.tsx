@@ -12,6 +12,7 @@ import { ToastProvider } from '@/components/Toast'
 import ScrollProgress from '@/components/ScrollProgress'
 import StyledComponentsRegistry from '@/lib/registry'
 import { getSettings } from '@/lib/data'
+import { MotionProvider } from '@/components/MotionProvider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -68,7 +69,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const nonce = (await headers()).get('x-nonce') || ''
-  
+
   // Fetch settings server-side for better performance
   let siteName = 'İste YBS Topluluğu'
   try {
@@ -82,14 +83,14 @@ export default async function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <StyledComponentsRegistry nonce={nonce}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ToastProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ToastProvider>
+            <MotionProvider>
               <ScrollProgress />
               <SmoothScroll />
               <Header initialSiteName={siteName} />
@@ -97,9 +98,9 @@ export default async function RootLayout({
                 <PageTransition>{children}</PageTransition>
               </main>
               <Footer />
-            </ToastProvider>
-          </ThemeProvider>
-        </StyledComponentsRegistry>
+            </MotionProvider>
+          </ToastProvider>
+        </ThemeProvider>
         <script
           type="application/ld+json"
           nonce={nonce}

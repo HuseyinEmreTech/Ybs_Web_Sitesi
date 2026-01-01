@@ -86,14 +86,23 @@ export interface Settings {
     updatedAt: string
 }
 
-// Helpers
+/**
+ * Generates a unique ID based on timestamp and randomness.
+ * @returns {string} A base-36 unique identifier.
+ */
 export function generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2)
 }
 
-// Slug generator
+/**
+ * Generates a URL-friendly slug from a string, handling Turkish characters.
+ * @param {string} text - The text to slugify.
+ * @returns {string} The slugified string.
+ */
 export function generateSlug(text: string): string {
     return text
+        .replace(/İ/g, 'i')
+        .replace(/I/g, 'ı')
         .toLowerCase()
         .replace(/ğ/g, 'g')
         .replace(/ü/g, 'u')
@@ -111,6 +120,10 @@ export function hashPassword(password: string): string {
 
 // --- POSTS ---
 
+/**
+ * Fetches all blog posts from the database, ordered by publication date descending.
+ * @returns {Promise<Post[]>} A list of post objects with ISO-formatted dates.
+ */
 export async function getPosts(): Promise<Post[]> {
     try {
         const posts = await prisma.post.findMany({
@@ -177,6 +190,10 @@ export async function deletePost(id: string): Promise<void> {
 
 // --- EVENTS ---
 
+/**
+ * Fetches all events from the database, ordered by date ascending.
+ * @returns {Promise<Event[]>} A list of event objects with ISO-formatted dates.
+ */
 export async function getEvents(): Promise<Event[]> {
     try {
         const events = await prisma.event.findMany({
@@ -194,6 +211,11 @@ export async function getEvents(): Promise<Event[]> {
     }
 }
 
+/**
+ * Fetches a single event by its slug.
+ * @param {string} slug - The slug of the event to fetch.
+ * @returns {Promise<Event | null>} The event object or null if not found.
+ */
 export async function getEventBySlug(slug: string): Promise<Event | null> {
     const event = await prisma.event.findUnique({ where: { slug } })
     if (!event) return null
@@ -467,6 +489,10 @@ export interface Project {
     updatedAt: string
 }
 
+/**
+ * Fetches all projects from the database, including their team members.
+ * @returns {Promise<Project[]>} A list of projects with nested team member data.
+ */
 export async function getProjects(): Promise<Project[]> {
     const projects = await prisma.project.findMany({
         orderBy: { createdAt: 'desc' },

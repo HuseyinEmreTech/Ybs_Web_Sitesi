@@ -1,0 +1,38 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90m/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi[39m
+
+ [31m❯[39m src/lib/utils.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 17[2mms[22m[39m
+[31m       [31m×[31m should convert Turkish characters to ASCII[39m[32m 11[2mms[22m[39m
+       [32m✓[39m should handle special characters and spaces[32m 0[2mms[22m[39m
+       [32m✓[39m should return true for valid emails[32m 1[2mms[22m[39m
+       [32m✓[39m should return false for invalid emails[32m 0[2mms[22m[39m
+       [32m✓[39m should return true for valid slugs[32m 0[2mms[22m[39m
+       [32m✓[39m should return false for invalid slugs[32m 0[2mms[22m[39m
+       [32m✓[39m should return true for valid http/https URLs[32m 0[2mms[22m[39m
+       [32m✓[39m should return false for invalid protocols or strings[32m 0[2mms[22m[39m
+       [32m✓[39m should return true for empty string (optional fields)[32m 0[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/lib/utils.test.ts[2m > [22mUtility Functions[2m > [22mgenerateSlug[2m > [22mshould convert Turkish characters to ASCII
+[31m[1mAssertionError[22m: expected 'i-ste-ybs-toplulugu-i-le-gelecege' to be 'iste-ybs-toplulugu-ile-gelecege' // Object.is equality[39m
+
+Expected: [32m"iste-ybs-toplulugu-ile-gelecege"[39m
+Received: [31m"i[7m-[27mste-ybs-toplulugu-i[7m-[27mle-gelecege"[39m
+
+[36m [2m❯[22m src/lib/utils.test.ts:[2m18:41[22m[39m
+    [90m 16| [39m            [35mconst[39m input [33m=[39m [32m'İste YBS Topluluğu İle Geleceğe'[39m[33m;[39m
+    [90m 17| [39m            [35mconst[39m expected [33m=[39m [32m'iste-ybs-toplulugu-ile-gelecege'[39m[33m;[39m
+    [90m 18| [39m            [34mexpect[39m([34mgenerateSlug[39m(input))[33m.[39m[34mtoBe[39m(expected)[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m 19| [39m        })[33m;[39m
+    [90m 20| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 15:11:26
+[2m   Duration [22m 1.13s[2m (transform 116ms, setup 94ms, import 114ms, tests 17ms, environment 627ms)[22m
+

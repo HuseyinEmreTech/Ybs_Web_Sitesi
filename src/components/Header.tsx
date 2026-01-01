@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import AnimatedGradientText from '@/components/AnimatedGradientText'
@@ -61,18 +61,8 @@ export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: Hea
   const [scrolled, setScrolled] = useState(false)
   const [siteName, setSiteName] = useState(initialSiteName)
 
-  // Optionally update site name client-side if it changes (for admin updates)
-  // This runs after initial render, so no delay for first paint
-  useEffect(() => {
-    fetch('/api/settings')
-      .then(res => res.json())
-      .then(data => {
-        if (data.siteName && data.siteName !== siteName) {
-          setSiteName(data.siteName)
-        }
-      })
-      .catch(() => { })
-  }, [siteName])
+  // Site name is now fully server-rendered with ISR (revalidate: 60)
+  // No client-side fetch needed - reduces network overhead
 
   // Handle scroll effect
   useEffect(() => {
@@ -84,7 +74,7 @@ export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: Hea
   }, [])
 
   return (
-    <motion.header
+    <m.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -141,7 +131,9 @@ export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: Hea
               type="button"
               className="p-2 -mr-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Menüyü aç"
+              aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {mobileMenuOpen ? (
                 <svg
@@ -172,10 +164,14 @@ export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: Hea
 
         {/* Mobile Navigation */}
         <MobileMenuPortal isOpen={mobileMenuOpen}>
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobil Menü"
             className="lg:hidden fixed inset-0 z-[9999] bg-white dark:bg-slate-950 flex flex-col pt-20 sm:pt-24 px-4 sm:px-6 overflow-y-auto"
           >
             {/* Close Button at top right explicitly */}
@@ -189,7 +185,7 @@ export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: Hea
               </svg>
             </button>
 
-            <motion.div
+            <m.div
               className="flex flex-col gap-3 sm:gap-4 mt-6 sm:mt-8"
               initial="closed"
               animate="open"
@@ -202,7 +198,7 @@ export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: Hea
               {navigation.map((item) => {
                 const isActive = pathname === item.href
                 return (
-                  <motion.div
+                  <m.div
                     key={item.name}
                     variants={{
                       open: { y: 0, opacity: 1 },
@@ -221,13 +217,13 @@ export default function Header({ initialSiteName = 'İste YBS Topluluğu' }: Hea
                     >
                       {item.name}
                     </Link>
-                  </motion.div>
+                  </m.div>
                 )
               })}
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         </MobileMenuPortal>
       </nav>
-    </motion.header >
+    </m.header >
   )
 }

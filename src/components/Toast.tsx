@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 
 type ToastType = 'success' | 'error' | 'info' | 'warning'
 
@@ -89,7 +89,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <div className="fixed bottom-6 left-6 z-[100] flex flex-col gap-2">
                 <AnimatePresence>
                     {toasts.map(toast => (
-                        <motion.div
+                        <m.div
                             key={toast.id}
                             initial={{ opacity: 0, x: -100, scale: 0.8 }}
                             animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -106,7 +106,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
-                        </motion.div>
+                        </m.div>
                     ))}
                 </AnimatePresence>
             </div>

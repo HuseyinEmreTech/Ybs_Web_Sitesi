@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Image from 'next/image'
 
 interface HeroLogoProps {
@@ -10,7 +10,7 @@ interface HeroLogoProps {
 
 export default function HeroLogo({ logoUrl, siteName }: HeroLogoProps) {
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{
@@ -24,7 +24,7 @@ export default function HeroLogo({ logoUrl, siteName }: HeroLogoProps) {
             <div className="absolute inset-0 bg-indigo-500/30 dark:bg-indigo-500/20 rounded-full blur-3xl animate-pulse" />
 
             {/* Glass Container */}
-            <motion.div
+            <m.div
                 animate={{ y: [0, -15, 0] }}
                 transition={{
                     duration: 6,
@@ -46,14 +46,14 @@ export default function HeroLogo({ logoUrl, siteName }: HeroLogoProps) {
                         <span className="text-4xl font-bold text-indigo-500">{siteName.charAt(0)}</span>
                     )}
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* Orbiting Elements (Decorative) */}
-            <motion.div
+            <m.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 -m-4 border border-indigo-500/20 rounded-full border-dashed"
             />
-        </motion.div>
+        </m.div>
     )
 }

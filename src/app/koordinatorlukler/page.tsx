@@ -4,6 +4,7 @@ import AnimatedGradientText from '@/components/AnimatedGradientText'
 import Button from '@/components/Button'
 import ScrollReveal from '@/components/ScrollReveal'
 import { getOrganizationChart } from '@/lib/organization'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
     title: 'Koordinatörlükler',
@@ -167,9 +168,14 @@ function CoordinatorCard({ member, small = false }: { member: TeamMember, small?
     return (
         <div className="flex flex-col items-center">
             {member.imageUrl ? (
-                <div className={`${sizeClasses} rounded-full overflow-hidden mb-2 border-2 border-slate-200 dark:border-slate-700`}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
+                <div className={`${sizeClasses} rounded-full overflow-hidden mb-2 border-2 border-slate-200 dark:border-slate-700 relative`}>
+                    <Image
+                        src={member.imageUrl}
+                        alt={member.name}
+                        fill
+                        className="object-cover"
+                        sizes={small ? "48px" : "80px"}
+                    />
                 </div>
             ) : (
                 <div className={`${sizeClasses} rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold ${small ? 'text-sm' : 'text-xl'} mb-2`}>

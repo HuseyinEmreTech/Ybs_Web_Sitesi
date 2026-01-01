@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getPostBySlug, getPosts } from '@/lib/data'
+import Image from 'next/image'
 
 export const revalidate = 300 // ISR: Cache for 5 minutes
 
@@ -43,11 +44,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {post.imageUrl && (
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 shadow-lg">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={post.imageUrl}
                 alt={post.title}
-                className="object-cover w-full h-full"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
               />
             </div>
           )}

@@ -4,6 +4,7 @@ import AnimatedGradientText from '@/components/AnimatedGradientText'
 import Button from '@/components/Button'
 import ScrollReveal from '@/components/ScrollReveal'
 import { getOrganizationChart } from '@/lib/organization'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Yönetim Kurulu',
@@ -222,9 +223,15 @@ function MemberCard({ member, isPresident = false }: { member: TeamMember, isPre
       ${isPresident ? 'w-full max-w-sm ring-4 ring-indigo-500/10' : 'w-full max-w-[18rem]'}
     `}>
       {member.imageUrl ? (
-        <div className={`${isPresident ? 'w-40 h-40' : 'w-28 h-28'} mx-auto rounded-full overflow-hidden mb-3 border-4 border-indigo-100 dark:border-slate-700 shadow-inner`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
+        <div className={`${isPresident ? 'w-40 h-40' : 'w-28 h-28'} mx-auto rounded-full overflow-hidden mb-3 border-4 border-indigo-100 dark:border-slate-700 shadow-inner relative`}>
+          <Image
+            src={member.imageUrl}
+            alt={member.name}
+            fill
+            className="object-cover"
+            sizes={isPresident ? "160px" : "112px"}
+            priority={isPresident}
+          />
         </div>
       ) : (
         <div className={`${isPresident ? 'w-40 h-40 text-5xl' : 'w-28 h-28 text-2xl'} mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold mb-3 shadow-inner`}>
@@ -267,9 +274,14 @@ function SmallMemberCard({ member }: { member: TeamMember }) {
   return (
     <div className="flex flex-col items-center p-2 rounded-lg hover:bg-white hover:shadow-sm dark:hover:bg-slate-800 transition-colors cursor-default group w-20">
       {member.imageUrl ? (
-        <div className="w-10 h-10 rounded-full overflow-hidden mb-1 border border-slate-200 dark:border-slate-700">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
+        <div className="w-10 h-10 rounded-full overflow-hidden mb-1 border border-slate-200 dark:border-slate-700 relative">
+          <Image
+            src={member.imageUrl}
+            alt={member.name}
+            fill
+            className="object-cover"
+            sizes="40px"
+          />
         </div>
       ) : (
         <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold mb-1">

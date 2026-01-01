@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
@@ -14,7 +14,7 @@ model User {
   password  String
   name      String
   imageUrl  String?
-  role      String   @default("editor") // 'admin' | 'editor'
+  role      String   @default("editor")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -47,66 +47,64 @@ model Event {
   updatedAt   DateTime @updatedAt
 }
 
-// ... (User, Post, Event models remain unchanged)
-
 model TeamMember {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   role        String
   department  String
   bio         String
   imageUrl    String?
-  socialLinks Json     // Stores { linkedin, twitter, github, instagram }
-  order       Int      @default(0)
-  projects    Project[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  socialLinks Json
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  projects    Project[] @relation("ProjectToTeamMember")
 }
 
 model Settings {
-  id              String   @id @default("default") // Singleton pattern
-  siteName        String   @default("İste YBS Topluluğu")
+  id              String   @id @default("default")
+  siteName        String   @default("YBS Kulübü")
   description     String   @default("")
-  logoUrl         String?  @default("/ekip/logo.jpeg")
-  contact         Json     // Stores { email, phone, address }
-  socialMedia     Json     // Stores { instagram, twitter, linkedin, github }
-  stats           Json     // Stores { activeMembers, events, projects, yearsOfExperience }
+  contact         Json
+  socialMedia     Json
+  stats           Json
   maintenanceMode Boolean  @default(false)
   updatedAt       DateTime @updatedAt
+  logoUrl         String?  @default("/ekip/logo.jpeg")
 }
 
 model OrganizationChart {
-  id        String   @id @default("default") // Singleton pattern
-  nodes     Json     // Stores OrganizationNode[]
+  id        String   @id @default("default")
+  nodes     Json
   updatedAt DateTime @updatedAt
 }
 
 model Project {
-  id           String   @id @default(cuid())
+  id           String       @id @default(cuid())
   title        String
-  slug         String   @unique
+  slug         String       @unique
   description  String
   content      String
-  image        String?  // Frontend expects 'image' for cover.
-  imageUrl     String?  // Consistent naming.
+  image        String?
+  imageUrl     String?
   technologies String[]
-  status       String   // 'devam', 'tamamlandi', 'planlaniyor'
+  status       String
   year         String?
   githubUrl    String?
   liveUrl      String?
-  teamMembers  TeamMember[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  teamMembers  TeamMember[] @relation("ProjectToTeamMember")
 }
 
 model About {
-  id          String   @id @default("default")
-  hero        Json     // { title, description }
-  story       Json     // { title, content }
-  mission     Json     // { title, description }
-  vision      Json     // { title, description }
-  values      Json     // { title, description }[]
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default("default")
+  hero      Json
+  story     Json
+  mission   Json
+  vision    Json
+  values    Json
+  updatedAt DateTime @updatedAt
 }
 
 model Message {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 
 interface Event {
     id: string
@@ -183,7 +183,7 @@ export default function Calendar({ events }: CalendarProps) {
             {/* Selected Day Events */}
             <AnimatePresence>
                 {selectedDate && selectedDayEvents.length > 0 && (
-                    <motion.div
+                    <m.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
@@ -210,7 +210,7 @@ export default function Calendar({ events }: CalendarProps) {
                                 ))}
                             </div>
                         </div>
-                    </motion.div>
+                    </m.div>
                 )}
             </AnimatePresence>
         </div>

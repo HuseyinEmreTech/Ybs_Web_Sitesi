@@ -1,0 +1,8 @@
+POSTGRES_PRISMA_URL="postgresql://neondb_owner:npg_ozDj3N9BMcXd@ep-twilight-breeze-agcwd8b8-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+POSTGRES_URL_NON_POOLING="postgresql://neondb_owner:npg_ozDj3N9BMcXd@ep-twilight-breeze-agcwd8b8-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+DATABASE_URL="postgresql://neondb_owner:npg_ozDj3N9BMcXd@ep-twilight-breeze-agcwd8b8-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+ADMIN_EMAIL="huseyinemre.tech@gmail.com"
+ADMIN_PASSWORD="YbsAdmin@2024!"
+NEXT_PUBLIC_SANITY_PROJECT_ID="380tqd52"
+NEXT_PUBLIC_SANITY_DATASET="production"
+NEXT_PUBLIC_SANITY_API_VERSION="2025-12-07"

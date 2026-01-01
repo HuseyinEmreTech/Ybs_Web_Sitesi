@@ -1,0 +1,240 @@
+
+> ybs-web-sitesi@0.1.0 lint
+> eslint
+
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/middleware.ts
+  72:18  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/scripts/create-admin.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/ayarlar/page.tsx
+  7:8  warning  'LoadingSpinner' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/blog/page.tsx
+  7:8  warning  'LoadingSpinner' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/ekip/page.tsx
+   7:8   warning  'LoadingSpinner' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  61:22  error    Error: Cannot access variable before it is declared
+
+`fetchMembers` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/ekip/page.tsx:61:22
+  59 |
+  60 |     useEffect(() => {
+> 61 |         Promise.all([fetchMembers(), fetchChart()]).finally(() => setLoading(false))
+     |                      ^^^^^^^^^^^^ `fetchMembers` accessed before it is declared
+  62 |         if (searchParams.get('new') === 'true') {
+  63 |             setShowForm(true)
+  64 |         }
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/ekip/page.tsx:67:5
+  65 |     }, [searchParams])
+  66 |
+> 67 |     async function fetchMembers() {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |         try {
+     | ^^^^^^^^^^^^^
+> 69 |             const res = await fetch('/api/team')
+     | ^^^^^^^^^^^^^
+> 70 |             const data = await res.json()
+     | ^^^^^^^^^^^^^
+> 71 |             setMembers(Array.isArray(data) ? data : [])
+     | ^^^^^^^^^^^^^
+> 72 |         } catch (error) {
+     | ^^^^^^^^^^^^^
+> 73 |             logger.error('Failed to fetch team members', { error })
+     | ^^^^^^^^^^^^^
+> 74 |         }
+     | ^^^^^^^^^^^^^
+> 75 |     }
+     | ^^^^^^ `fetchMembers` is declared here
+  76 |
+  77 |     async function fetchChart() {
+  78 |         try {                                  react-hooks/immutability
+  61:38  error    Error: Cannot access variable before it is declared
+
+`fetchChart` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/ekip/page.tsx:61:38
+  59 |
+  60 |     useEffect(() => {
+> 61 |         Promise.all([fetchMembers(), fetchChart()]).finally(() => setLoading(false))
+     |                                      ^^^^^^^^^^ `fetchChart` accessed before it is declared
+  62 |         if (searchParams.get('new') === 'true') {
+  63 |             setShowForm(true)
+  64 |         }
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/ekip/page.tsx:77:5
+  75 |     }
+  76 |
+> 77 |     async function fetchChart() {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 78 |         try {
+     | ^^^^^^^^^^^^^
+> 79 |             const res = await fetch('/api/organization')
+     | ^^^^^^^^^^^^^
+> 80 |             const data = await res.json()
+     | ^^^^^^^^^^^^^
+> 81 |             setChart(Array.isArray(data) ? data : [])
+     | ^^^^^^^^^^^^^
+> 82 |         } catch (error) {
+     | ^^^^^^^^^^^^^
+> 83 |             logger.error('Failed to fetch organization chart', { error })
+     | ^^^^^^^^^^^^^
+> 84 |         }
+     | ^^^^^^^^^^^^^
+> 85 |     }
+     | ^^^^^^ `fetchChart` is declared here
+  86 |
+  87 |     async function handleSubmit(e: React.FormEvent) {
+  88 |         e.preventDefault()  react-hooks/immutability
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/etkinlikler/page.tsx
+  6:8  warning  'LoadingSpinner' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/hakkimizda/page.tsx
+  6:8  warning  'LoadingSpinner' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/kullanicilar/page.tsx
+    5:8    warning  'LoadingSpinner' is defined but never used                       @typescript-eslint/no-unused-vars
+   85:18   warning  'error' is defined but never used                                @typescript-eslint/no-unused-vars
+  205:164  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  217:55   warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/layout.tsx
+  40:8  warning  React Hook useEffect has a missing dependency: 'checkAuth'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/mesajlar/page.tsx
+  6:8  warning  'LoadingSpinner' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/page.tsx
+   33:18  warning  'err' is defined but never used                                                                                                                        @typescript-eslint/no-unused-vars
+  111:25  error    Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/projeler/page.tsx
+   7:8   warning  'LoadingSpinner' is defined but never used   @typescript-eslint/no-unused-vars
+  21:11  warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/admin/projeler/yeni/page.tsx
+   7:8   warning  'LoadingSpinner' is defined but never used  @typescript-eslint/no-unused-vars
+  40:19  warning  'data' is defined but never used            @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/about/route.ts
+  23:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/auth/route.ts
+   35:26  warning  'remaining' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  151:18  warning  'err' is defined but never used                 @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/contact/route.ts
+  16:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/projects/[id]/route.ts
+   2:10  warning  'getProjectBySlug' is defined but never used  @typescript-eslint/no-unused-vars
+  17:27  warning  'request' is defined but never used           @typescript-eslint/no-unused-vars
+  17:45  warning  'props' is defined but never used             @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/projects/route.ts
+  2:43  warning  'Project' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/settings/route.ts
+  10:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  22:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/team/route.ts
+  2:85  warning  'TeamMember' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/api/users/route.ts
+  28:40  warning  'password' is defined but never used           @typescript-eslint/no-unused-vars
+  83:17  warning  'password' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/blog/[slug]/page.tsx
+   2:25  warning  'getPosts' is defined but never used                                                                                                                        @typescript-eslint/no-unused-vars
+  77:11  error    Do not use an `<a>` element to navigate to `/blog/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/blog/page.tsx
+  4:25  warning  'Post' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/ekip/page.tsx
+   75:9   warning  'getDepartmentMembers' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  198:31  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  273:10  warning  'SmallMemberCard' is defined but never used                      @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/emegi-gecenler/page.tsx
+  32:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/etkinlikler/EventsClient.tsx
+  4:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/etkinlikler/[slug]/page.tsx
+  93:11  error  Do not use an `<a>` element to navigate to `/etkinlikler/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/koordinatorlukler/page.tsx
+  64:43  warning  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/layout.tsx
+  13:8  warning  'StyledComponentsRegistry' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/app/page.tsx
+  9:49  warning  'Post' is defined but never used   @typescript-eslint/no-unused-vars
+  9:60  warning  'Event' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/components/Header.tsx
+  17:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/components/Header.tsx:17:5
+  15 |
+  16 |   useEffect(() => {
+> 17 |     setMounted(true)
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  18 |     return () => setMounted(false)
+  19 |   }, [])
+  20 |  react-hooks/set-state-in-effect
+  62:20  warning  'setSiteName' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/components/ThemeToggle.tsx
+  9:13  warning  'theme' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/components/admin/ImageInput.tsx
+  19:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/components/admin/ImageInput.tsx:19:9
+  17 |     // Reset error when value changes
+  18 |     useEffect(() => {
+> 19 |         setPreviewError(false)
+     |         ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |     }, [value])
+  21 |
+  22 |     return (  react-hooks/set-state-in-effect
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/lib/about.ts
+  38:18  warning  'fileError' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/lib/utils.test.ts
+  3:25  warning  'validateLength' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/src/middleware.ts
+  40:18  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/huseyinemre/Desktop/Repostiroy/Ybs_Web_Sitesi/test-fs.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 57 problems (15 errors, 42 warnings)
+

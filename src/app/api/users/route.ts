@@ -3,9 +3,25 @@ import { getUsers, createUser, updateUser, deleteUser, hashPassword, type User }
 import { requireAuth } from '@/lib/auth'
 import { validateEmail, sanitizeString, validateLength } from '@/lib/validation'
 import { logger } from '@/lib/logger'
+import { rateLimit } from '@/lib/rateLimit'
+import { headers } from 'next/headers'
+
+async function applyRateLimit(type: string, limit: number = 20) {
+    const headerList = await headers()
+    const ip = headerList.get('x-forwarded-for') || 'anonymous'
+    return await rateLimit(`${type}_${ip}`, {
+        uniqueTokenPerInterval: limit,
+        interval: 60 * 1000
+    })
+}
 
 export async function GET() {
     try {
+        const rl = await applyRateLimit('get_users', 20)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication
         const users = await getUsers()
         // Don't return passwords
@@ -22,10 +38,15 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        const rl = await applyRateLimit('mutate_users', 10)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication
-        
+
         const body = await request.json()
-        
+
         // Validation
         if (!body.email || !validateEmail(body.email)) {
             return NextResponse.json({ error: 'Geçersiz e-posta adresi' }, { status: 400 })
@@ -72,8 +93,13 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
     try {
+        const rl = await applyRateLimit('mutate_users', 10)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication
-        
+
         const body = await request.json()
         const { currentEmail, ...updates } = body
 
@@ -83,33 +109,33 @@ export async function PUT(request: Request) {
 
         // Validation and sanitization
         const updateData: Partial<User> = {}
-        
+
         if (updates.email !== undefined) {
             if (!validateEmail(updates.email)) {
                 return NextResponse.json({ error: 'Geçersiz e-posta adresi' }, { status: 400 })
             }
             updateData.email = updates.email.toLowerCase().trim()
         }
-        
+
         if (updates.name !== undefined) {
             if (!validateLength(updates.name, 1, 100)) {
                 return NextResponse.json({ error: 'İsim 1-100 karakter arasında olmalıdır' }, { status: 400 })
             }
             updateData.name = sanitizeString(updates.name, 100)
         }
-        
+
         if (updates.password !== undefined) {
             if (!validateLength(updates.password, 8, 100)) {
                 return NextResponse.json({ error: 'Şifre 8-100 karakter arasında olmalıdır' }, { status: 400 })
             }
             updateData.password = hashPassword(updates.password)
         }
-        
+
         if (updates.role !== undefined) {
             const validRoles = ['admin', 'editor']
             updateData.role = validRoles.includes(updates.role) ? updates.role : 'editor'
         }
-        
+
         if (updates.imageUrl !== undefined) {
             updateData.imageUrl = updates.imageUrl ? sanitizeString(updates.imageUrl, 500) : null
         }
@@ -129,8 +155,13 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
     try {
+        const rl = await applyRateLimit('mutate_users', 10)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication
-        
+
         const { searchParams } = new URL(request.url)
         const email = searchParams.get('email')
 

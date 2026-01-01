@@ -5,6 +5,7 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
+            disallow: ['/admin', '/studio'],
         },
         sitemap: 'https://ybskulubu.com/sitemap.xml',
     }

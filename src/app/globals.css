@@ -279,8 +279,6 @@ body {
 
 /* Glassmorphism Utilities */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -392,4 +390,15 @@ body {
 
 .dark .hover-glow:hover {
   box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+/* Performance Optimizations */
+.glass-card {
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.animate-float,
+.animate-float-delayed {
+  will-change: transform;
 }

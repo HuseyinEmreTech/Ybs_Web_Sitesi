@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSettings, saveSettings } from '@/lib/settings'
+import { requireAuth } from '@/lib/auth'
+import { logger } from '@/lib/logger'
 
 export async function GET() {
     try {
@@ -12,10 +14,16 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        await requireAuth()
+
         const data = await request.json()
         await saveSettings(data)
         return NextResponse.json({ success: true })
-    } catch (error) {
+    } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+        logger.error('Save settings error', { error })
         return NextResponse.json({ error: 'Failed to save settings' }, { status: 500 })
     }
 }

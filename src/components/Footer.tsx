@@ -11,7 +11,7 @@ const footerLinks = {
     { name: 'Koordinatörlükler', href: '/koordinatorlukler' },
     { name: 'İletişim', href: '/iletisim' },
   ],
-  icerîkler: [
+  icerikler: [
     { name: 'Blog', href: '/blog' },
     { name: 'Etkinlikler', href: '/etkinlikler' },
     { name: 'Projeler', href: '/projeler' },
@@ -30,9 +30,9 @@ export default async function Footer() {
             {/* Brand */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <Image 
-                  src={settings.logoUrl} 
-                  alt={`${settings.siteName} Logo`} 
+                <Image
+                  src={settings.logoUrl}
+                  alt={`${settings.siteName} Logo`}
                   width={32}
                   height={32}
                   className="rounded-lg object-cover"
@@ -83,7 +83,7 @@ export default async function Footer() {
                   </div>
                 </summary>
                 <ul className="space-y-2 mt-2 sm:mt-0">
-                  {footerLinks.icerîkler.map((link) => (
+                  {footerLinks.icerikler.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}

@@ -1,13 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 
 export default function NotFound() {
     return (
         <div className="min-h-[70vh] flex items-center justify-center px-6">
             <div className="text-center">
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
@@ -15,9 +15,9 @@ export default function NotFound() {
                     <h1 className="text-9xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
                         404
                     </h1>
-                </motion.div>
+                </m.div>
 
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
@@ -39,7 +39,7 @@ export default function NotFound() {
                             Destek Al <span aria-hidden="true">&rarr;</span>
                         </Link>
                     </div>
-                </motion.div>
+                </m.div>
             </div>
         </div>
     )

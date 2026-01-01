@@ -6,6 +6,7 @@ import ImageInput from '@/components/admin/ImageInput'
 import { logger } from '@/lib/logger'
 import LoadingSpinner from '@/components/admin/LoadingSpinner'
 import { TableSkeleton } from '@/components/admin/LoadingSkeleton'
+import Image from 'next/image'
 
 
 interface TeamMember {
@@ -325,9 +326,14 @@ export default function TeamManagement() {
                             <div key={member.id} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                                 <div className="flex items-center gap-4">
                                     {member.imageUrl ? (
-                                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
+                                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 relative">
+                                            <Image
+                                                src={member.imageUrl}
+                                                alt={member.name}
+                                                fill
+                                                className="object-cover"
+                                                sizes="48px"
+                                            />
                                         </div>
                                     ) : (
                                         <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-lg">

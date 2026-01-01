@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useInView, Variant } from 'framer-motion'
+import { m, useInView, Variant } from 'framer-motion'
 import { useRef, ReactNode } from 'react'
 
 type AnimationDirection = 'up' | 'down' | 'left' | 'right' | 'fade'
@@ -18,24 +18,24 @@ interface ScrollRevealProps {
 const getVariants = (direction: AnimationDirection) => {
     const directions: Record<AnimationDirection, { initial: Variant; animate: Variant }> = {
         up: {
-            initial: { opacity: 0, y: 60, filter: 'blur(4px)' },
-            animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+            initial: { opacity: 0, y: 60 },
+            animate: { opacity: 1, y: 0 },
         },
         down: {
-            initial: { opacity: 0, y: -60, filter: 'blur(4px)' },
-            animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+            initial: { opacity: 0, y: -60 },
+            animate: { opacity: 1, y: 0 },
         },
         left: {
-            initial: { opacity: 0, x: -60, filter: 'blur(4px)' },
-            animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+            initial: { opacity: 0, x: -60 },
+            animate: { opacity: 1, x: 0 },
         },
         right: {
-            initial: { opacity: 0, x: 60, filter: 'blur(4px)' },
-            animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+            initial: { opacity: 0, x: 60 },
+            animate: { opacity: 1, x: 0 },
         },
         fade: {
-            initial: { opacity: 0, scale: 0.95, filter: 'blur(4px)' },
-            animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
+            initial: { opacity: 0, scale: 0.95 },
+            animate: { opacity: 1, scale: 1 },
         },
     }
     return directions[direction]
@@ -55,7 +55,7 @@ export default function ScrollReveal({
     const variants = getVariants(direction)
 
     return (
-        <motion.div
+        <m.div
             ref={ref}
             initial="initial"
             animate={isInView ? 'animate' : 'initial'}
@@ -68,7 +68,7 @@ export default function ScrollReveal({
             className={className}
         >
             {children}
-        </motion.div>
+        </m.div>
     )
 }
 
@@ -90,7 +90,7 @@ export function StaggerContainer({
     const isInView = useInView(ref, { once, amount: 0.2 })
 
     return (
-        <motion.div
+        <m.div
             ref={ref}
             initial="initial"
             animate={isInView ? 'animate' : 'initial'}
@@ -105,7 +105,7 @@ export function StaggerContainer({
             className={className}
         >
             {children}
-        </motion.div>
+        </m.div>
     )
 }
 
@@ -124,7 +124,7 @@ export function StaggerItem({
     const variants = getVariants(direction)
 
     return (
-        <motion.div
+        <m.div
             variants={{
                 initial: variants.initial,
                 animate: {
@@ -138,6 +138,6 @@ export function StaggerItem({
             className={className}
         >
             {children}
-        </motion.div>
+        </m.div>
     )
 }

@@ -15,11 +15,23 @@ class Logger {
         }
 
         const timestamp = new Date().toISOString()
+
+        // Better error handling for logs
+        const processedContext = { ...context }
+        if (context?.error instanceof Error) {
+            processedContext.error = {
+                ...context.error,
+                message: context.error.message,
+                stack: context.error.stack,
+                name: context.error.name,
+            }
+        }
+
         const logData = {
             timestamp,
             level,
             message,
-            ...context,
+            ...processedContext,
         }
 
         // In development, use console for better DX
@@ -27,10 +39,14 @@ class Logger {
             const consoleMethod = level === 'error' ? console.error :
                 level === 'warn' ? console.warn :
                     console.log
-            consoleMethod(`[${timestamp}] ${level.toUpperCase()}: ${message}`, context || '')
+
+            if (context?.error instanceof Error) {
+                consoleMethod(`[${timestamp}] ${level.toUpperCase()}: ${message}`, context.error)
+            } else {
+                consoleMethod(`[${timestamp}] ${level.toUpperCase()}: ${message}`, context || '')
+            }
         } else {
             // In production, use structured logging (JSON)
-            // This can be piped to external logging services like Datadog, Sentry, etc.
             console.log(JSON.stringify(logData))
         }
     }

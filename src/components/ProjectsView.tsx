@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Project } from '@/lib/data'
 import Section from '@/components/Section'
 
@@ -89,12 +89,12 @@ export default function ProjectsView({ initialProjects }: ProjectsViewProps) {
             {/* Grid */}
             <AnimatePresence mode='popLayout'>
                 {filteredProjects.length > 0 ? (
-                    <motion.div
+                    <m.div
                         layout
                         className="grid gap-8 md:grid-cols-2"
                     >
                         {filteredProjects.map((project) => (
-                            <motion.article
+                            <m.article
                                 layout
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -110,6 +110,7 @@ export default function ProjectsView({ initialProjects }: ProjectsViewProps) {
                                             src={project.imageUrl}
                                             alt={project.title}
                                             fill
+                                            sizes="(max-width: 768px) 100vw, 50vw"
                                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                                         />
                                     ) : (
@@ -192,9 +193,9 @@ export default function ProjectsView({ initialProjects }: ProjectsViewProps) {
                                         )}
                                     </div>
                                 </div>
-                            </motion.article>
+                            </m.article>
                         ))}
-                    </motion.div>
+                    </m.div>
                 ) : (
                     <div className="text-center py-16">
                         <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">

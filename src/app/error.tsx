@@ -12,12 +12,8 @@ export default function Error({
     reset: () => void
 }) {
     useEffect(() => {
-        // Log the error to an error reporting service
-        logger.error('Page error occurred', {
-            error: error.message,
-            digest: error.digest,
-            stack: error.stack,
-        })
+        // Log the error to our enhanced structured logger
+        logger.error('Page error occurred', { error })
     }, [error])
 
     return (

@@ -3,9 +3,25 @@ import { getPosts, createPost, updatePost, deletePost, generateSlug, type Post }
 import { requireAuth } from '@/lib/auth'
 import { sanitizeString, validateLength, validateUrl } from '@/lib/validation'
 import { logger } from '@/lib/logger'
+import { rateLimit } from '@/lib/rateLimit'
+import { headers } from 'next/headers'
+
+async function applyRateLimit(type: string, limit: number = 20) {
+    const headerList = await headers()
+    const ip = headerList.get('x-forwarded-for') || 'anonymous'
+    return await rateLimit(`${type}_${ip}`, {
+        uniqueTokenPerInterval: limit,
+        interval: 60 * 1000
+    })
+}
 
 export async function GET() {
     try {
+        const rl = await applyRateLimit('get_posts', 60)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         const posts = await getPosts()
         const response = NextResponse.json(posts)
         response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate=30')
@@ -18,8 +34,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        const rl = await applyRateLimit('mutate_posts', 10)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication for creating posts
-        
+
         const body = await request.json()
 
         // Validation
@@ -56,8 +77,13 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
     try {
+        const rl = await applyRateLimit('mutate_posts', 10)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication
-        
+
         const body = await request.json()
 
         if (!body.id) {
@@ -66,7 +92,7 @@ export async function PUT(request: Request) {
 
         // Validation and sanitization
         const updateData: Partial<Post> = {}
-        
+
         if (body.title) {
             if (!validateLength(body.title, 1, 200)) {
                 return NextResponse.json({ error: 'Başlık 1-200 karakter arasında olmalıdır' }, { status: 400 })
@@ -74,7 +100,7 @@ export async function PUT(request: Request) {
             updateData.title = sanitizeString(body.title, 200)
             updateData.slug = generateSlug(body.title)
         }
-        
+
         if (body.excerpt !== undefined) updateData.excerpt = sanitizeString(body.excerpt, 500)
         if (body.content !== undefined) updateData.content = sanitizeString(body.content, 50000)
         if (body.category !== undefined) updateData.category = sanitizeString(body.category, 50)
@@ -100,8 +126,13 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
     try {
+        const rl = await applyRateLimit('mutate_posts', 10)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication
-        
+
         const { searchParams } = new URL(request.url)
         const id = searchParams.get('id')
 

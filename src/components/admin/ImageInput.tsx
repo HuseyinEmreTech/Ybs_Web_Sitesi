@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface ImageInputProps {
     label: string
@@ -51,12 +52,13 @@ export default function ImageInput({ label, value, onChange, placeholder, helpTe
                                 <span className="text-[10px] font-medium">Yüklenemedi</span>
                             </div>
                         ) : (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
+                            <Image
                                 src={value}
                                 alt="Önizleme"
+                                fill
                                 onError={() => setPreviewError(true)}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                className="object-cover transition-transform duration-300 group-hover:scale-110"
+                                unoptimized // Previews don't need optimization/caching as much as stability
                             />
                         )}
 

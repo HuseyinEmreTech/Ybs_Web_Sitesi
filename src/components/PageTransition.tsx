@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
 
@@ -70,7 +70,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
 
     return (
         <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
                 key={pathname}
                 initial="initial"
                 animate="enter"
@@ -79,7 +79,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
                 className="page-transition-wrapper"
             >
                 {children}
-            </motion.div>
+            </m.div>
         </AnimatePresence>
     )
 }

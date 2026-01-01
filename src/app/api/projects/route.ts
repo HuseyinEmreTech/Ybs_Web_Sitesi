@@ -3,9 +3,25 @@ import { getProjects, createProject, type Project } from '@/lib/data'
 import { requireAuth } from '@/lib/auth'
 import { sanitizeString, validateLength, validateUrl, validateSlug } from '@/lib/validation'
 import { logger } from '@/lib/logger'
+import { rateLimit } from '@/lib/rateLimit'
+import { headers } from 'next/headers'
+
+async function applyRateLimit(type: string, limit: number = 20) {
+    const headerList = await headers()
+    const ip = headerList.get('x-forwarded-for') || 'anonymous'
+    return await rateLimit(`${type}_${ip}`, {
+        uniqueTokenPerInterval: limit,
+        interval: 60 * 1000
+    })
+}
 
 export async function GET() {
     try {
+        const rl = await applyRateLimit('get_projects', 60)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         const projects = await getProjects()
         return NextResponse.json(projects)
     } catch (error) {
@@ -16,8 +32,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        const rl = await applyRateLimit('mutate_projects', 10)
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+        }
+
         await requireAuth() // Require authentication
-        
+
         const body = await request.json()
 
         // Validation
@@ -47,11 +68,11 @@ export async function POST(request: Request) {
             slug: body.slug,
             description: sanitizeString(body.description || '', 1000),
             content: sanitizeString(body.content || '', 50000),
-            technologies: Array.isArray(body.technologies) 
+            technologies: Array.isArray(body.technologies)
                 ? body.technologies.map((t: string) => sanitizeString(t, 50)).filter(Boolean)
                 : [],
-            status: ['devam', 'tamamlandi', 'planlaniyor'].includes(body.status) 
-                ? body.status 
+            status: ['devam', 'tamamlandi', 'planlaniyor'].includes(body.status)
+                ? body.status
                 : 'planlaniyor',
             imageUrl: body.imageUrl || body.image || null,
             year: body.year || new Date().getFullYear().toString(),

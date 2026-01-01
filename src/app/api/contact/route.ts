@@ -2,14 +2,21 @@ import { NextResponse } from 'next/server'
 import { getMessages, saveMessage } from '@/lib/messages'
 import { validateEmail, sanitizeString, validateLength } from '@/lib/validation'
 import { logger } from '@/lib/logger'
+import { rateLimit } from '@/lib/rateLimit'
+import { requireAuth } from '@/lib/auth'
+import { headers } from 'next/headers'
 
 export async function GET() {
     try {
-        // This endpoint should be admin-only, but we'll keep it public for now
-        // In production, add authentication check here
+        // Secure admin-only endpoint
+        await requireAuth()
+
         const messages = await getMessages()
         return NextResponse.json(messages)
-    } catch (error) {
+    } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
         logger.error('Get messages error', { error })
         return NextResponse.json({ error: 'Failed' }, { status: 500 })
     }
@@ -17,11 +24,23 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        // 1. Rate Limiting
+        const headerList = await headers()
+        const ip = headerList.get('x-forwarded-for') || 'anonymous'
+        const rl = await rateLimit(`contact_${ip}`, {
+            uniqueTokenPerInterval: 3, // 3 messages per minute
+            interval: 60 * 1000
+        })
+
+        if (!rl.success) {
+            return NextResponse.json(
+                { error: 'Çok fazla istek gönderdiniz. Lütfen biraz bekleyin.' },
+                { status: 429 }
+            )
+        }
+
         const body = await request.json()
 
-        // Only allow message creation from public endpoint
-        // Admin actions (read/delete) should be in separate authenticated endpoints
-        
         // Validation
         if (!body.name || !body.email || !body.message) {
             return NextResponse.json({ error: 'Ad, e-posta ve mesaj alanları zorunludur' }, { status: 400 })
