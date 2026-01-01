@@ -10,7 +10,6 @@ import PageTransition from '@/components/PageTransition'
 import { Analytics } from '@vercel/analytics/next'
 import { ToastProvider } from '@/components/Toast'
 import ScrollProgress from '@/components/ScrollProgress'
-import StyledComponentsRegistry from '@/lib/registry'
 import { getSettings } from '@/lib/data'
 import { MotionProvider } from '@/components/MotionProvider'
 
